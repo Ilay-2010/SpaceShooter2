@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Space Shooter - Enhanced Edition</title>
+  <title>Space Shooter by Ilay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
     html, body {
@@ -203,9 +203,20 @@
       font-weight: 900;
     }
 
+    .difficulty-indicator {
+      color: #ffaa00;
+      font-size: 14px;
+      text-shadow: 0 0 5px rgba(255, 170, 0, 0.8);
+    }
+
+    .difficulty-hard {
+      color: #ff4444;
+      text-shadow: 0 0 5px rgba(255, 68, 68, 0.8);
+    }
+
     /* Enhanced Mobile Controls */
     #mobile-controls {
-      position: absolute;
+      position: fixed;
       bottom: 30px;
       left: 20px;
       right: 20px;
@@ -230,6 +241,8 @@
       flex-shrink: 0;
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
       pointer-events: auto;
+      touch-action: none;
+      user-select: none;
     }
 
     #joystick {
@@ -243,11 +256,12 @@
       top: calc(50% - 40px);
       border: 2px solid rgba(255, 255, 255, 0.8);
       box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-      transition: all 0.1s ease;
+      transition: transform 0.1s ease;
       pointer-events: none;
+      user-select: none;
     }
 
-    #joystick:active {
+    #joystick.active {
       transform: scale(0.95);
       box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
     }
@@ -273,6 +287,7 @@
       cursor: pointer;
       user-select: none;
       pointer-events: auto;
+      touch-action: manipulation;
     }
 
     #shoot-button::before {
@@ -285,13 +300,99 @@
       transition: opacity 0.3s;
     }
 
-    #shoot-button:active {
+    #shoot-button.active {
       transform: scale(0.95);
       box-shadow: 0 0 30px rgba(255, 50, 50, 0.8);
     }
 
-    #shoot-button:active::before {
+    #shoot-button.active::before {
       opacity: 1;
+    }
+
+    /* Difficulty Selection */
+    #difficulty-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 150;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    #difficulty-screen h1 {
+      font-size: 6vw;
+      margin-bottom: 30px;
+      color: #00ffff;
+      text-shadow: 0 0 30px rgba(0, 255, 255, 1);
+      animation: title-glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes title-glow {
+      0% { text-shadow: 0 0 30px rgba(0, 255, 255, 1); }
+      100% { text-shadow: 0 0 50px rgba(0, 255, 255, 1), 0 0 80px rgba(0, 255, 255, 0.5); }
+    }
+
+    .difficulty-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .difficulty-btn {
+      padding: 20px 40px;
+      font-size: 1.5em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      min-width: 250px;
+    }
+
+    .difficulty-btn.easy {
+      background: linear-gradient(45deg, #00ff88, #00cc66);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .difficulty-btn.easy:hover {
+      background: linear-gradient(45deg, #00cc66, #00aa44);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(0, 255, 136, 0.8);
+    }
+
+    .difficulty-btn.hard {
+      background: linear-gradient(45deg, #ff4444, #cc0000);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+    }
+
+    .difficulty-btn.hard:hover {
+      background: linear-gradient(45deg, #cc0000, #aa0000);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(255, 68, 68, 0.8);
+    }
+
+    .difficulty-description {
+      font-size: 0.9em;
+      margin-top: 10px;
+      opacity: 0.8;
+      line-height: 1.4;
     }
 
     /* Enhanced Game Over Screen */
@@ -352,7 +453,7 @@
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin-top: 20px;
+      margin: 10px;
     }
 
     #game-over-screen button:hover {
@@ -423,6 +524,16 @@
       #game-over-screen p {
         font-size: 6vw;
       }
+
+      #difficulty-screen h1 {
+        font-size: 10vw;
+      }
+
+      .difficulty-btn {
+        font-size: 1.2em;
+        padding: 15px 30px;
+        min-width: 200px;
+      }
     }
 
     /* Loading Screen */
@@ -479,6 +590,20 @@
     </div>
   </div>
 
+  <div id="difficulty-screen">
+    <h1>SELECT DIFFICULTY</h1>
+    <div class="difficulty-buttons">
+      <button class="difficulty-btn easy" id="easy-btn">
+        EASY MODE
+        <div class="difficulty-description">Standard gameplay - enemies don't shoot back</div>
+      </button>
+      <button class="difficulty-btn hard" id="hard-btn">
+        HARD MODE
+        <div class="difficulty-description">Intense combat - enemies shoot back at you!</div>
+      </button>
+    </div>
+  </div>
+
   <canvas id="game"></canvas>
 
   <div id="hud">
@@ -494,6 +619,10 @@
       <span class="hud-label">SHIELD:</span>
       <span class="hud-value" id="shield-time">0</span>
     </div>
+    <div class="hud-item">
+      <span class="hud-label">DIFFICULTY:</span>
+      <span class="hud-value difficulty-indicator" id="difficulty-display">EASY</span>
+    </div>
   </div>
 
   <div id="mobile-controls">
@@ -507,6 +636,7 @@
     <h1>GAME OVER</h1>
     <p>FINAL SCORE: <span id="final-score">0</span></p>
     <button id="restart-button">RESTART MISSION</button>
+    <button id="difficulty-button">CHANGE DIFFICULTY</button>
   </div>
 
   <script>
@@ -514,6 +644,7 @@
     let loadingProgress = 0;
     const loadingProgressBar = document.getElementById('loading-progress');
     const loadingScreen = document.getElementById('loading-screen');
+    const difficultyScreen = document.getElementById('difficulty-screen');
 
     function updateLoadingProgress() {
       loadingProgress += Math.random() * 15 + 5;
@@ -522,11 +653,21 @@
       if (loadingProgress >= 100) {
         setTimeout(() => {
           loadingScreen.style.display = 'none';
-          initGame();
+          showDifficultyScreen();
         }, 500);
       } else {
         setTimeout(updateLoadingProgress, 100);
       }
+    }
+
+    function showDifficultyScreen() {
+      difficultyScreen.style.display = 'flex';
+    }
+
+    function hideDifficultyScreen() {
+      difficultyScreen.style.display = 'none';
+      resizeCanvas();
+      initGame();
     }
 
     // Start loading
@@ -543,39 +684,44 @@
     let powerUps = [];
     let particles = [];
     let explosions = [];
+    let enemyBullets = [];
     let shieldActive = false;
     let shieldTimer = 0;
     let gameRunning = false;
     let animationFrameId;
     let currentLives = 3;
+    let difficulty = 'easy';
     const maxLives = 6;
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     const scoreSpan = document.getElementById("score");
     const shieldTimeSpan = document.getElementById("shield-time");
+    const difficultyDisplay = document.getElementById("difficulty-display");
     const gameOverScreen = document.getElementById("game-over-screen");
     const finalScoreSpan = document.getElementById("final-score");
     const restartButton = document.getElementById("restart-button");
+    const difficultyButton = document.getElementById("difficulty-button");
     const mobileControlsDiv = document.getElementById("mobile-controls");
     const joystickContainer = document.getElementById("joystick-container");
     const joystick = document.getElementById("joystick");
     const shootButton = document.getElementById("shoot-button");
+    const easyBtn = document.getElementById("easy-btn");
+    const hardBtn = document.getElementById("hard-btn");
 
-    // Object pools for performance optimization
-    const particlePool = [];
-    const explosionPool = [];
-    const bulletPool = [];
-    const enemyPool = [];
+    // Difficulty selection
+    easyBtn.addEventListener('click', () => {
+      difficulty = 'easy';
+      difficultyDisplay.textContent = 'EASY';
+      difficultyDisplay.className = 'hud-value difficulty-indicator';
+      hideDifficultyScreen();
+    });
 
-    function getFromPool(pool, createFn) {
-      return pool.length > 0 ? pool.pop() : createFn();
-    }
-
-    function returnToPool(pool, obj) {
-      if (pool.length < 100) { // Limit pool size
-        pool.push(obj);
-      }
-    }
+    hardBtn.addEventListener('click', () => {
+      difficulty = 'hard';
+      difficultyDisplay.textContent = 'HARD';
+      difficultyDisplay.className = 'hud-value difficulty-indicator difficulty-hard';
+      hideDifficultyScreen();
+    });
 
     // Heart system functions
     function createHearts() {
@@ -679,7 +825,7 @@
     let stars = [];
     function createStars() {
       stars = [];
-      const starCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 10000)); // Adaptive star count
+      const starCount = Math.min(200, Math.floor((canvas.width * canvas.height) / 5000));
       for (let i = 0; i < starCount; i++) {
         stars.push({
           x: Math.random() * canvas.width,
@@ -695,10 +841,6 @@
     // Enhanced Particle class
     class Particle {
       constructor(x, y, angle, speed, color = null, size = null) {
-        this.reset(x, y, angle, speed, color, size);
-      }
-
-      reset(x, y, angle, speed, color = null, size = null) {
         this.x = x;
         this.y = y;
         this.velX = Math.cos(angle) * speed;
@@ -714,22 +856,17 @@
 
       update() {
         if (!this.active) return;
-        
         this.x += this.velX;
         this.y += this.velY;
         this.velY += this.gravity;
         this.alpha -= this.decay;
         this.size *= 0.98;
         this.life -= this.decay;
-        
-        if (this.life <= 0) {
-          this.active = false;
-        }
+        if (this.life <= 0) this.active = false;
       }
 
       draw() {
         if (!this.active) return;
-        
         ctx.save();
         ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
@@ -745,10 +882,6 @@
     // Enhanced Explosion class
     class Explosion {
       constructor(x, y, size = 50) {
-        this.reset(x, y, size);
-      }
-
-      reset(x, y, size = 50) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -761,34 +894,27 @@
         for (let i = 0; i < 15; i++) {
           const angle = (Math.PI * 2 * i) / 15;
           const speed = Math.random() * 8 + 4;
-          const particle = getFromPool(particlePool, () => new Particle(0, 0, 0, 0));
-          particle.reset(x, y, angle, speed, '#ff4444', 8);
-          this.particles.push(particle);
+          this.particles.push(new Particle(x, y, angle, speed, '#ff4444', 8));
         }
       }
 
       update() {
         if (!this.active) return;
-        
         this.life -= 0.05;
         this.size = this.maxSize * this.life;
         
         for (let i = this.particles.length - 1; i >= 0; i--) {
           this.particles[i].update();
           if (!this.particles[i].active) {
-            returnToPool(particlePool, this.particles[i]);
             this.particles.splice(i, 1);
           }
         }
         
-        if (this.life <= 0) {
-          this.active = false;
-        }
+        if (this.life <= 0) this.active = false;
       }
 
       draw() {
         if (!this.active) return;
-        
         // Draw explosion ring
         ctx.save();
         ctx.globalAlpha = this.life;
@@ -823,10 +949,11 @@
         this.doubleTimer = 0;
         this.lastShot = 0;
         this.shootCooldown = 150; // milliseconds
+        this.active = true;
       }
 
       update() {
-        if (!gameRunning) return;
+        if (!gameRunning || !this.active) return;
 
         let thrusting = false;
 
@@ -838,6 +965,7 @@
             thrusting = true;
           }
         } else {
+          // Mobile joystick movement
           const joystickRect = joystick.getBoundingClientRect();
           const joystickContainerRect = joystickContainer.getBoundingClientRect();
 
@@ -866,23 +994,23 @@
         this.x += this.vel.x;
         this.y += this.vel.y;
 
-        // Create engine particles (optimized)
-        if (thrusting && Math.random() < 0.7) { // Reduce particle frequency
-          const offsetAngle = this.angle + Math.PI + (Math.random() - 0.5) * 0.8;
-          const speed = Math.random() * 4 + 2;
-          const distance = 25 + Math.random() * 10;
-          const particle = getFromPool(particlePool, () => new Particle(0, 0, 0, 0));
-          particle.reset(
-            this.x - Math.cos(this.angle) * distance,
-            this.y - Math.sin(this.angle) * distance,
-            offsetAngle,
-            speed,
-            `hsl(${Math.random() * 60 + 10}, 100%, 60%)`
-          );
-          particles.push(particle);
+        // Create engine particles
+        if (thrusting && Math.random() < 0.3) {
+          for (let i = 0; i < 2; i++) {
+            const offsetAngle = this.angle + Math.PI + (Math.random() - 0.5) * 0.8;
+            const speed = Math.random() * 4 + 2;
+            const distance = 25 + Math.random() * 10;
+            particles.push(new Particle(
+              this.x - Math.cos(this.angle) * distance,
+              this.y - Math.sin(this.angle) * distance,
+              offsetAngle,
+              speed,
+              `hsl(${Math.random() * 60 + 10}, 100%, 60%)`
+            ));
+          }
         }
 
-        // Update stars parallax effect (optimized)
+        // Update stars parallax effect
         for (let star of stars) {
           star.x -= this.vel.x * star.speed * 0.5;
           star.y -= this.vel.y * star.speed * 0.5;
@@ -917,6 +1045,7 @@
       }
 
       draw() {
+        if (!this.active) return;
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
@@ -1021,55 +1150,44 @@
       }
 
       shoot() {
-        if (!this.canShoot()) return;
+        if (!this.canShoot() || !this.active) return;
         
         this.lastShot = Date.now();
-        const bullet = getFromPool(bulletPool, () => new Bullet(0, 0, 0));
-        bullet.reset(this.x, this.y, this.angle);
-        bullets.push(bullet);
+        bullets.push(new Bullet(this.x, this.y, this.angle, 'player'));
         
         if (this.doubleShot) {
-          const bullet2 = getFromPool(bulletPool, () => new Bullet(0, 0, 0));
-          bullet2.reset(this.x, this.y, this.angle + 0.15);
-          bullets.push(bullet2);
-          
-          const bullet3 = getFromPool(bulletPool, () => new Bullet(0, 0, 0));
-          bullet3.reset(this.x, this.y, this.angle - 0.15);
-          bullets.push(bullet3);
+          bullets.push(new Bullet(this.x, this.y, this.angle + 0.15, 'player'));
+          bullets.push(new Bullet(this.x, this.y, this.angle - 0.15, 'player'));
         }
       }
     }
 
-    // Enhanced Bullet class with fixed bugs and pooling
+    // Enhanced Bullet class
     class Bullet {
-      constructor(x, y, angle) {
-        this.reset(x, y, angle);
-      }
-
-      reset(x, y, angle) {
+      constructor(x, y, angle, owner = 'player') {
         this.x = x;
         this.y = y;
         this.angle = angle;
-        this.speed = 15;
+        this.owner = owner;
+        this.speed = owner === 'player' ? 15 : 8;
         this.vel = {
           x: Math.cos(angle) * this.speed,
           y: Math.sin(angle) * this.speed
         };
         
-        this.length = 30;
-        this.width = 3;
+        this.length = owner === 'player' ? 30 : 20;
+        this.width = owner === 'player' ? 3 : 2;
         this.energy = 100;
-        this.maxDistance = 1000;
+        this.maxDistance = owner === 'player' ? 1000 : 800;
         this.distanceTraveled = 0;
         this.trail = [];
-        this.maxTrailLength = 8;
+        this.maxTrailLength = owner === 'player' ? 8 : 5;
         this.glowIntensity = 1;
         this.active = true;
       }
 
       update() {
         if (!this.active) return;
-        
         // Update position
         this.x += this.vel.x;
         this.y += this.vel.y;
@@ -1085,24 +1203,21 @@
         this.energy = Math.max(0, 100 - (this.distanceTraveled / this.maxDistance) * 100);
         this.glowIntensity = this.energy / 100;
         
-        // Create particle effects (reduced frequency)
-        if (Math.random() < 0.1) {
+        // Create particle effects
+        if (Math.random() < 0.2) {
           const offsetAngle = this.angle + (Math.random() - 0.5) * 0.5;
-          const particle = getFromPool(particlePool, () => new Particle(0, 0, 0, 0));
-          particle.reset(
+          const color = this.owner === 'player' ? '#ff6666' : '#ffaa00';
+          particles.push(new Particle(
             this.x - Math.cos(this.angle) * 15,
             this.y - Math.sin(this.angle) * 15,
             offsetAngle,
             1,
-            '#ff6666',
+            color,
             2
-          );
-          particles.push(particle);
+          ));
         }
         
-        if (this.offscreen()) {
-          this.active = false;
-        }
+        if (this.offscreen()) this.active = false;
       }
 
       draw() {
@@ -1117,7 +1232,8 @@
           const trailSize = (i / this.trail.length) * this.width;
           
           ctx.globalAlpha = trailAlpha;
-          ctx.fillStyle = '#ff8888';
+          const trailColor = this.owner === 'player' ? '#ff8888' : '#ffcc88';
+          ctx.fillStyle = trailColor;
           ctx.beginPath();
           ctx.arc(point.x, point.y, trailSize, 0, Math.PI * 2);
           ctx.fill();
@@ -1130,13 +1246,20 @@
         
         // Glow effect
         ctx.shadowBlur = 20;
-        ctx.shadowColor = '#ff4444';
+        const shadowColor = this.owner === 'player' ? '#ff4444' : '#ffaa00';
+        ctx.shadowColor = shadowColor;
         
         // Main bullet body
         const gradient = ctx.createLinearGradient(-this.length/2, 0, this.length/2, 0);
-        gradient.addColorStop(0, 'rgba(255, 100, 100, 0.2)');
-        gradient.addColorStop(0.5, 'rgba(255, 255, 255, 1)');
-        gradient.addColorStop(1, 'rgba(255, 100, 100, 0.8)');
+        if (this.owner === 'player') {
+          gradient.addColorStop(0, 'rgba(255, 100, 100, 0.2)');
+          gradient.addColorStop(0.5, 'rgba(255, 255, 255, 1)');
+          gradient.addColorStop(1, 'rgba(255, 100, 100, 0.8)');
+        } else {
+          gradient.addColorStop(0, 'rgba(255, 170, 0, 0.2)');
+          gradient.addColorStop(0.5, 'rgba(255, 255, 100, 1)');
+          gradient.addColorStop(1, 'rgba(255, 170, 0, 0.8)');
+        }
         
         ctx.fillStyle = gradient;
         ctx.fillRect(-this.length/2, -this.width/2, this.length, this.width);
@@ -1155,13 +1278,9 @@
       }
     }
 
-    // Enhanced Enemy class with better AI and pooling
+    // Enhanced Enemy class with shooting capability
     class Enemy {
       constructor() {
-        this.reset();
-      }
-
-      reset() {
         const edge = Math.floor(Math.random() * 4);
         const padding = 100;
         
@@ -1185,6 +1304,7 @@
         this.angle = 0;
         this.targetAngle = 0;
         this.angleSpeed = 0.05;
+        this.active = true;
         
         // AI properties
         this.lastDirectionChange = 0;
@@ -1195,11 +1315,15 @@
         this.wanderAngle = Math.random() * Math.PI * 2;
         this.wanderSpeed = 0.02;
         
+        // Shooting properties (for hard mode)
+        this.lastShot = 0;
+        this.shootCooldown = 2000 + Math.random() * 1000; // 2-3 seconds
+        this.shootRange = 300;
+        
         // Visual properties
         this.pulsePhase = Math.random() * Math.PI * 2;
         this.trailPoints = [];
         this.maxTrailLength = 6;
-        this.active = true;
       }
 
       update(target, allEnemies) {
@@ -1242,13 +1366,32 @@
         
         // Update pulse
         this.pulsePhase += 0.1;
+        
+        // Shooting logic for hard mode
+        if (difficulty === 'hard' && target.active) {
+          const distanceToTarget = Math.hypot(target.x - this.x, target.y - this.y);
+          if (distanceToTarget < this.shootRange && Date.now() - this.lastShot > this.shootCooldown) {
+            this.shoot(target);
+          }
+        }
+      }
+
+      shoot(target) {
+        this.lastShot = Date.now();
+        const angleToTarget = Math.atan2(target.y - this.y, target.x - this.x);
+        
+        // Add some inaccuracy to make it fair
+        const inaccuracy = (Math.random() - 0.5) * 0.3;
+        const finalAngle = angleToTarget + inaccuracy;
+        
+        enemyBullets.push(new Bullet(this.x, this.y, finalAngle, 'enemy'));
       }
 
       getVectorTo(target) {
         const dx = target.x - this.x;
         const dy = target.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        return distance > 0 ? { x: dx / distance, y: dy / distance } : { x: 0, y: 0 };
+        return { x: dx / distance, y: dy / distance };
       }
 
       avoidBullets() {
@@ -1256,8 +1399,7 @@
         let avoidY = 0;
         
         for (let bullet of bullets) {
-          if (!bullet.active) continue;
-          
+          if (!bullet.active || bullet.owner !== 'player') continue;
           const dx = bullet.x - this.x;
           const dy = bullet.y - this.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
@@ -1341,7 +1483,6 @@
 
       draw() {
         if (!this.active) return;
-        
         ctx.save();
         
         // Draw trail
@@ -1388,6 +1529,16 @@
         ctx.arc(0, 0, this.radius * 0.3, 0, Math.PI * 2);
         ctx.fill();
         
+        // Hard mode indicator (weapon glow)
+        if (difficulty === 'hard') {
+          ctx.fillStyle = '#ffaa00';
+          ctx.shadowColor = '#ffaa00';
+          ctx.shadowBlur = 8;
+          ctx.beginPath();
+          ctx.arc(this.radius * 0.6, 0, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        
         ctx.restore();
       }
     }
@@ -1395,10 +1546,6 @@
     // Enhanced PowerUp class
     class PowerUp {
       constructor(type) {
-        this.reset(type);
-      }
-
-      reset(type) {
         this.x = Math.random() * (canvas.width - 200) + 100;
         this.y = Math.random() * (canvas.height - 200) + 100;
         this.type = type;
@@ -1413,35 +1560,31 @@
 
       update() {
         if (!this.active) return;
-        
         this.pulseTime += 0.08;
         this.glowIntensity = Math.sin(this.pulseTime) * 0.4 + 0.6;
         
         // Floating effect
         this.y = this.baseY + Math.sin(this.pulseTime * 2) * 5;
         
-        // Create particles (reduced frequency)
-        if (Math.random() < 0.1) {
+        // Create particles
+        if (Math.random() < 0.2) {
           const angle = Math.random() * Math.PI * 2;
           const speed = Math.random() * 2 + 1;
           const color = this.getParticleColor();
-          const particle = getFromPool(particlePool, () => new Particle(0, 0, 0, 0));
-          particle.reset(
+          this.particles.push(new Particle(
             this.x + Math.cos(angle) * this.radius,
             this.y + Math.sin(angle) * this.radius,
             angle,
             speed,
             color,
             3
-          );
-          this.particles.push(particle);
+          ));
         }
         
         // Update particles
         for (let i = this.particles.length - 1; i >= 0; i--) {
           this.particles[i].update();
           if (!this.particles[i].active) {
-            returnToPool(particlePool, this.particles[i]);
             this.particles.splice(i, 1);
           }
         }
@@ -1456,7 +1599,6 @@
 
       draw() {
         if (!this.active) return;
-        
         // Draw particles
         for (let particle of this.particles) {
           particle.draw();
@@ -1623,36 +1765,13 @@
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
 
-      // Clear arrays and return objects to pools
-      for (let bullet of bullets) {
-        returnToPool(bulletPool, bullet);
-      }
+      // Clear arrays
       bullets.length = 0;
-      
-      for (let enemy of enemies) {
-        returnToPool(enemyPool, enemy);
-      }
       enemies.length = 0;
-      
-      for (let powerUp of powerUps) {
-        for (let particle of powerUp.particles) {
-          returnToPool(particlePool, particle);
-        }
-      }
       powerUps.length = 0;
-      
-      for (let particle of particles) {
-        returnToPool(particlePool, particle);
-      }
       particles.length = 0;
-      
-      for (let explosion of explosions) {
-        for (let particle of explosion.particles) {
-          returnToPool(particlePool, particle);
-        }
-        returnToPool(explosionPool, explosion);
-      }
       explosions.length = 0;
+      enemyBullets.length = 0;
 
       // Reset ship
       ship.x = canvas.width / 2;
@@ -1661,11 +1780,11 @@
       ship.vel.y = 0;
       ship.doubleShot = false;
       ship.doubleTimer = 0;
+      ship.active = true;
 
       // Reset mobile controls
       if (isMobile) {
-        joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
-        joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
+        resetJoystick();
       } else {
         mouse.x = ship.x;
         mouse.y = ship.y;
@@ -1682,6 +1801,7 @@
 
     function gameOver() {
       gameRunning = false;
+      ship.active = false;
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
@@ -1689,9 +1809,7 @@
       gameOverScreen.style.display = "flex";
       
       // Create explosion at ship position
-      const explosion = getFromPool(explosionPool, () => new Explosion(0, 0, 0));
-      explosion.reset(ship.x, ship.y, 80);
-      explosions.push(explosion);
+      explosions.push(new Explosion(ship.x, ship.y, 80));
     }
 
     function gameLoop() {
@@ -1722,7 +1840,6 @@
         p.update();
         p.draw();
         if (!p.active) {
-          returnToPool(particlePool, p);
           particles.splice(i, 1);
         }
       }
@@ -1733,7 +1850,6 @@
         e.update();
         e.draw();
         if (!e.active) {
-          returnToPool(explosionPool, e);
           explosions.splice(i, 1);
         }
       }
@@ -1744,9 +1860,7 @@
 
       // Spawn enemies
       if (spawnTimer >= enemySpawnRate) {
-        const enemy = getFromPool(enemyPool, () => new Enemy());
-        enemy.reset();
-        enemies.push(enemy);
+        enemies.push(new Enemy());
         spawnTimer = 0;
         
         // Increase difficulty
@@ -1767,7 +1881,6 @@
       for (let i = enemies.length - 1; i >= 0; i--) {
         const e = enemies[i];
         if (!e.active) {
-          returnToPool(enemyPool, e);
           enemies.splice(i, 1);
           continue;
         }
@@ -1776,45 +1889,40 @@
         e.draw();
         
         // Check collision with ship
-        const dx = e.x - ship.x;
-        const dy = e.y - ship.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < e.radius + ship.radius) {
-          if (shieldActive) {
-            // Destroy enemy if shield is active
-            const explosion = getFromPool(explosionPool, () => new Explosion(0, 0, 0));
-            explosion.reset(e.x, e.y, 40);
-            explosions.push(explosion);
-            e.active = false;
-            score += 2; // Bonus points for shield kill
-            scoreSpan.textContent = score;
-          } else {
-            // Damage player
-            const explosion = getFromPool(explosionPool, () => new Explosion(0, 0, 0));
-            explosion.reset(e.x, e.y, 50);
-            explosions.push(explosion);
-            e.active = false;
-            setLives(lives - 1);
-            if (lives <= 0) {
-              gameOver();
-              return;
+        if (ship.active) {
+          const dx = e.x - ship.x;
+          const dy = e.y - ship.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < e.radius + ship.radius) {
+            if (shieldActive) {
+              // Destroy enemy if shield is active
+              explosions.push(new Explosion(e.x, e.y, 40));
+              e.active = false;
+              score += 2; // Bonus points for shield kill
+              scoreSpan.textContent = score;
+            } else {
+              // Damage player
+              explosions.push(new Explosion(e.x, e.y, 50));
+              e.active = false;
+              setLives(lives - 1);
+              if (lives <= 0) {
+                gameOver();
+                return;
+              }
             }
+            continue;
           }
-          continue;
         }
 
-        // Check collision with bullets
+        // Check collision with player bullets
         for (let j = bullets.length - 1; j >= 0; j--) {
           const b = bullets[j];
-          if (!b.active) continue;
-          
+          if (!b.active || b.owner !== 'player') continue;
           const bdx = e.x - b.x;
           const bdy = e.y - b.y;
           if (Math.hypot(bdx, bdy) < e.radius + b.width) {
             // Create explosion
-            const explosion = getFromPool(explosionPool, () => new Explosion(0, 0, 0));
-            explosion.reset(e.x, e.y, 30);
-            explosions.push(explosion);
+            explosions.push(new Explosion(e.x, e.y, 30));
             
             // Remove enemy and bullet
             e.active = false;
@@ -1825,6 +1933,47 @@
             enemiesKilled++;
             scoreSpan.textContent = score;
             break;
+          }
+        }
+      }
+
+      // Update enemy bullets (hard mode)
+      if (difficulty === 'hard') {
+        for (let i = enemyBullets.length - 1; i >= 0; i--) {
+          const b = enemyBullets[i];
+          if (!b.active) {
+            enemyBullets.splice(i, 1);
+            continue;
+          }
+          
+          b.update();
+          b.draw();
+          
+          if (b.offscreen()) {
+            b.active = false;
+            continue;
+          }
+          
+          // Check collision with ship
+          if (ship.active) {
+            const dx = ship.x - b.x;
+            const dy = ship.y - b.y;
+            if (Math.hypot(dx, dy) < ship.radius + b.width) {
+              if (shieldActive) {
+                // Bullet destroyed by shield
+                explosions.push(new Explosion(b.x, b.y, 20));
+                b.active = false;
+              } else {
+                // Damage player
+                explosions.push(new Explosion(b.x, b.y, 25));
+                b.active = false;
+                setLives(lives - 1);
+                if (lives <= 0) {
+                  gameOver();
+                  return;
+                }
+              }
+            }
           }
         }
       }
@@ -1849,29 +1998,29 @@
         p.update();
         p.draw();
         
-        const dx = p.x - ship.x;
-        const dy = p.y - ship.y;
-        if (Math.hypot(dx, dy) < p.radius + ship.radius) {
-          if (p.type === "life") {
-            setLives(Math.min(maxLives, lives + 1));
-          } else if (p.type === "double") {
-            ship.doubleShot = true;
-            ship.doubleTimer = 900; // 15 seconds
-          } else if (p.type === "shield") {
-            shieldActive = true;
-            shieldTimer = 600; // 10 seconds
-            shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
+        if (ship.active) {
+          const dx = p.x - ship.x;
+          const dy = p.y - ship.y;
+          if (Math.hypot(dx, dy) < p.radius + ship.radius) {
+            if (p.type === "life") {
+              setLives(Math.min(maxLives, lives + 1));
+            } else if (p.type === "double") {
+              ship.doubleShot = true;
+              ship.doubleTimer = 900; // 15 seconds
+            } else if (p.type === "shield") {
+              shieldActive = true;
+              shieldTimer = 600; // 10 seconds
+              shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
+            }
+            
+            // Create pickup effect
+            for (let j = 0; j < 10; j++) {
+              const angle = (Math.PI * 2 * j) / 10;
+              particles.push(new Particle(p.x, p.y, angle, 3, p.getParticleColor(), 5));
+            }
+            
+            p.active = false;
           }
-          
-          // Create pickup effect
-          for (let j = 0; j < 10; j++) {
-            const angle = (Math.PI * 2 * j) / 10;
-            const particle = getFromPool(particlePool, () => new Particle(0, 0, 0, 0));
-            particle.reset(p.x, p.y, angle, 3, p.getParticleColor(), 5);
-            particles.push(particle);
-          }
-          
-          p.active = false;
         }
       }
 
@@ -1879,13 +2028,14 @@
       for (let i = bullets.length - 1; i >= 0; i--) {
         const b = bullets[i];
         if (!b.active) {
-          returnToPool(bulletPool, b);
           bullets.splice(i, 1);
           continue;
         }
-        
         b.update();
         b.draw();
+        if (b.offscreen()) {
+          b.active = false;
+        }
       }
 
       animationFrameId = requestAnimationFrame(gameLoop);
@@ -1927,51 +2077,52 @@
     });
 
     // Enhanced Mobile Controls
-    let activeTouches = new Map();
+    let joystickActive = false;
     let joystickTouchId = null;
     let shootingInterval = null;
     let joystickCenter = { x: 0, y: 0 };
-    let joystickMaxDistance = 0;
+    let maxJoystickDistance = 0;
+
+    function resetJoystick() {
+      joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
+      joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
+      joystick.classList.remove('active');
+      joystickActive = false;
+      joystickTouchId = null;
+    }
+
+    function updateJoystickCenter() {
+      const containerRect = joystickContainer.getBoundingClientRect();
+      joystickCenter.x = containerRect.left + containerRect.width / 2;
+      joystickCenter.y = containerRect.top + containerRect.height / 2;
+      maxJoystickDistance = (containerRect.width / 2) - (joystick.clientWidth / 2) - 5;
+    }
 
     if (isMobile) {
       mobileControlsDiv.style.display = "flex";
 
-      // Calculate joystick properties
-      function updateJoystickProperties() {
-        const rect = joystickContainer.getBoundingClientRect();
-        joystickCenter.x = rect.left + rect.width / 2;
-        joystickCenter.y = rect.top + rect.height / 2;
-        joystickMaxDistance = (rect.width / 2) - (joystick.clientWidth / 2);
-      }
+      // Update joystick center on resize
+      window.addEventListener('resize', updateJoystickCenter);
+      updateJoystickCenter();
 
-      // Initial calculation
-      updateJoystickProperties();
-      window.addEventListener('resize', updateJoystickProperties);
-
-      // Joystick
+      // Joystick touch start
       joystickContainer.addEventListener("touchstart", (e) => {
-        if (!gameRunning) return;
+        if (!gameRunning || joystickTouchId !== null) return;
         e.preventDefault();
         
-        if (joystickTouchId === null) {
-          const touch = e.changedTouches[0];
-          joystickTouchId = touch.identifier;
-          
-          activeTouches.set(joystickTouchId, {
-            startX: touch.clientX,
-            startY: touch.clientY,
-            currentX: touch.clientX,
-            currentY: touch.clientY
-          });
-          
-          updateJoystickProperties();
-        }
+        const touch = e.changedTouches[0];
+        joystickTouchId = touch.identifier;
+        joystickActive = true;
+        joystick.classList.add('active');
+        
+        updateJoystickCenter();
       }, { passive: false });
 
       // Shoot Button
       shootButton.addEventListener("touchstart", (e) => {
         if (!gameRunning) return;
         e.preventDefault();
+        shootButton.classList.add('active');
         fireBullet();
         
         // Start continuous shooting
@@ -1979,74 +2130,53 @@
           if (gameRunning) {
             fireBullet();
           }
-        }, 150); // Faster shooting on mobile
+        }, 150);
       }, { passive: false });
 
       shootButton.addEventListener("touchend", (e) => {
         e.preventDefault();
+        shootButton.classList.remove('active');
         if (shootingInterval) {
           clearInterval(shootingInterval);
           shootingInterval = null;
         }
       }, { passive: false });
 
-      shootButton.addEventListener("touchcancel", (e) => {
-        e.preventDefault();
-        if (shootingInterval) {
-          clearInterval(shootingInterval);
-          shootingInterval = null;
-        }
-      }, { passive: false });
-
-      // Touch move and end events
+      // Global touch move
       document.addEventListener("touchmove", (e) => {
-        if (!gameRunning) return;
+        if (!gameRunning || joystickTouchId === null) return;
         e.preventDefault();
 
         for (let i = 0; i < e.changedTouches.length; i++) {
           const touch = e.changedTouches[i];
-          
-          if (touch.identifier === joystickTouchId && activeTouches.has(joystickTouchId)) {
-            const touchInfo = activeTouches.get(joystickTouchId);
-            touchInfo.currentX = touch.clientX;
-            touchInfo.currentY = touch.clientY;
-            
+          if (touch.identifier === joystickTouchId) {
             let deltaX = touch.clientX - joystickCenter.x;
             let deltaY = touch.clientY - joystickCenter.y;
 
             const distance = Math.hypot(deltaX, deltaY);
             
-            if (distance > joystickMaxDistance) {
+            if (distance > maxJoystickDistance) {
               const angle = Math.atan2(deltaY, deltaX);
-              deltaX = Math.cos(angle) * joystickMaxDistance;
-              deltaY = Math.sin(angle) * joystickMaxDistance;
+              deltaX = Math.cos(angle) * maxJoystickDistance;
+              deltaY = Math.sin(angle) * maxJoystickDistance;
             }
 
             joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px + ${deltaX}px)`;
             joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px + ${deltaY}px)`;
+            break;
           }
         }
       }, { passive: false });
 
+      // Global touch end
       document.addEventListener("touchend", (e) => {
         if (!gameRunning) return;
-        e.preventDefault();
 
         for (let i = 0; i < e.changedTouches.length; i++) {
           const touch = e.changedTouches[i];
-          
           if (touch.identifier === joystickTouchId) {
-            joystickTouchId = null;
-            activeTouches.delete(touch.identifier);
-            
-            // Reset joystick position with smooth animation
-            joystick.style.transition = 'all 0.2s ease-out';
-            joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
-            joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
-            
-            setTimeout(() => {
-              joystick.style.transition = 'all 0.1s ease';
-            }, 200);
+            resetJoystick();
+            break;
           }
         }
         
@@ -2054,43 +2184,37 @@
           clearInterval(shootingInterval);
           shootingInterval = null;
         }
+        shootButton.classList.remove('active');
       }, { passive: false });
 
+      // Touch cancel
       document.addEventListener("touchcancel", (e) => {
-        e.preventDefault();
-        
-        if (joystickTouchId !== null) {
-          joystickTouchId = null;
-          joystick.style.transition = 'all 0.2s ease-out';
-          joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
-          joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
-          
-          setTimeout(() => {
-            joystick.style.transition = 'all 0.1s ease';
-          }, 200);
-        }
-        
-        activeTouches.clear();
-        
+        resetJoystick();
         if (shootingInterval) {
           clearInterval(shootingInterval);
           shootingInterval = null;
         }
+        shootButton.classList.remove('active');
       }, { passive: false });
 
     } else {
       mobileControlsDiv.style.display = "none";
     }
 
-    // Restart button
+    // Restart and difficulty buttons
     restartButton.addEventListener("click", () => {
       resizeCanvas();
       initGame();
     });
 
+    difficultyButton.addEventListener("click", () => {
+      gameOverScreen.style.display = "none";
+      showDifficultyScreen();
+    });
+
     // Initialize
     resizeCanvas();
-    // Game will be initialized after loading screen
+    // Game will be initialized after difficulty selection
   </script>
 </body>
 </html>
