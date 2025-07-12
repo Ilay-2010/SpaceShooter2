@@ -529,8 +529,6 @@
 
     #joystick-container {
       position: relative;
-      width: 120px;
-      height: 120px;
       background: radial-gradient(circle, rgba(0, 255, 255, 0.15), rgba(0, 255, 255, 0.03));
       border-radius: 50%;
       border: 2px solid rgba(0, 255, 255, 0.3);
@@ -552,17 +550,19 @@
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+      /* Default size - can be customized */
+      width: 120px;
+      height: 120px;
+      /* Custom positioning */
+      left: 0;
+      bottom: 0;
     }
 
     #joystick {
-      width: 60px;
-      height: 60px;
       background: radial-gradient(circle, rgba(255, 255, 255, 0.8), rgba(0, 255, 255, 0.5));
       border-radius: 50%;
       position: absolute;
       touch-action: none;
-      left: calc(50% - 30px);
-      top: calc(50% - 30px);
       border: 2px solid rgba(255, 255, 255, 0.7);
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
       transition: transform 0.1s ease;
@@ -574,6 +574,11 @@
       backface-visibility: hidden;
       /* Force rendering layer on iOS */
       will-change: transform;
+      /* Default size - can be customized */
+      width: 60px;
+      height: 60px;
+      left: calc(50% - 30px);
+      top: calc(50% - 30px);
     }
 
     #joystick.active {
@@ -583,8 +588,6 @@
     }
 
     #shoot-button {
-      width: 120px;
-      height: 120px;
       background: radial-gradient(circle, rgba(255, 50, 50, 0.25), rgba(255, 0, 0, 0.08));
       border-radius: 50%;
       display: flex;
@@ -614,6 +617,12 @@
       -webkit-user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+      /* Default size - can be customized */
+      width: 120px;
+      height: 120px;
+      /* Custom positioning */
+      right: 0;
+      bottom: 0;
     }
 
     #shoot-button::before {
@@ -634,6 +643,164 @@
 
     #shoot-button.active::before {
       opacity: 1;
+    }
+
+    /* Mobile Control Customization Screen */
+    #control-customization-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8));
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 190;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    #control-customization-screen h1 {
+      font-size: 4vw;
+      margin-bottom: 30px;
+      color: #00ffff;
+      text-shadow: 0 0 30px rgba(0, 255, 255, 1);
+      animation: title-glow 2s ease-in-out infinite alternate;
+    }
+
+    .control-options {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .control-option {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(0, 255, 255, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .control-option h3 {
+      color: #00ffff;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .slider-label {
+      color: #ffffff;
+      font-size: 0.9em;
+      min-width: 60px;
+    }
+
+    .control-slider {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .control-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .control-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .slider-value {
+      color: #00ffff;
+      font-weight: bold;
+      min-width: 40px;
+      text-align: right;
+    }
+
+    .control-customization-buttons {
+      display: flex;
+      gap: 20px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .control-customization-btn {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 150px;
+    }
+
+    .control-customization-btn.save {
+      background: linear-gradient(45deg, #00ff88, #00cc66);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .control-customization-btn.save:hover {
+      background: linear-gradient(45deg, #00cc66, #00aa44);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(0, 255, 136, 0.8);
+    }
+
+    .control-customization-btn.reset {
+      background: linear-gradient(45deg, #ff8800, #cc6600);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 136, 0, 0.5);
+    }
+
+    .control-customization-btn.reset:hover {
+      background: linear-gradient(45deg, #cc6600, #aa5500);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(255, 136, 0, 0.8);
+    }
+
+    .control-customization-btn.back {
+      background: linear-gradient(45deg, #666, #444);
+      color: white;
+      box-shadow: 0 0 20px rgba(100, 100, 100, 0.5);
+    }
+
+    .control-customization-btn.back:hover {
+      background: linear-gradient(45deg, #555, #333);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
     /* Home Screen - Redesigned with Muted Colors */
@@ -835,6 +1002,19 @@
       box-shadow: 0 8px 25px rgba(218, 165, 32, 0.5);
     }
 
+    /* Add new button for mobile control customization */
+    .home-btn.controls {
+      background: linear-gradient(45deg, #FF6347, #DC143C);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 99, 71, 0.3);
+    }
+
+    .home-btn.controls:hover {
+      background: linear-gradient(45deg, #DC143C, #B22222);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 99, 71, 0.5);
+    }
+
     /* Trail Customization Screen */
     #trail-screen {
       position: absolute;
@@ -888,6 +1068,36 @@
       border-radius: 10px;
       margin: 0 auto 20px;
       display: block;
+    }
+
+    .trail-type-selector {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .trail-type-btn {
+      padding: 10px 20px;
+      background: rgba(170, 68, 255, 0.2);
+      border: 2px solid rgba(170, 68, 255, 0.5);
+      color: #aa44ff;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9em;
+    }
+
+    .trail-type-btn.active {
+      background: rgba(170, 68, 255, 0.5);
+      border-color: #aa44ff;
+      color: white;
+    }
+
+    .trail-type-btn:hover {
+      background: rgba(170, 68, 255, 0.3);
+      transform: translateY(-2px);
     }
 
     .color-grid {
@@ -1524,35 +1734,6 @@
         width: calc(100vw - max(20px, env(safe-area-inset-left) + env(safe-area-inset-right)));
       }
 
-      #joystick-container {
-        width: 100px;
-        height: 100px;
-        /* Enhanced iOS visibility */
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: flex !important;
-      }
-
-      #joystick {
-        width: 50px;
-        height: 50px;
-        left: calc(50% - 25px);
-        top: calc(50% - 25px);
-        /* Enhanced iOS visibility */
-        opacity: 1 !important;
-        visibility: visible !important;
-      }
-
-      #shoot-button {
-        width: 100px;
-        height: 100px;
-        font-size: 16px;
-        /* Enhanced iOS visibility */
-        opacity: 1 !important;
-        visibility: visible !important;
-        display: flex !important;
-      }
-
       #control-buttons {
         top: max(5px, env(safe-area-inset-top));
         right: max(5px, env(safe-area-inset-right));
@@ -1762,6 +1943,52 @@
         width: 200px;
         height: 120px;
       }
+
+      .trail-type-selector {
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .trail-type-btn {
+        padding: 8px 15px;
+        font-size: 0.8em;
+      }
+
+      /* Control customization mobile */
+      #control-customization-screen h1 {
+        font-size: 8vw;
+      }
+
+      .control-options {
+        max-width: 350px;
+      }
+
+      .control-option {
+        padding: 15px;
+      }
+
+      .slider-container {
+        flex-direction: column;
+        gap: 5px;
+        align-items: stretch;
+      }
+
+      .slider-label {
+        min-width: auto;
+        text-align: center;
+      }
+
+      .control-customization-btn {
+        width: 100%;
+        font-size: 1.0em;
+        padding: 12px 20px;
+      }
+
+      .control-customization-buttons {
+        flex-direction: column;
+        width: 100%;
+        max-width: 350px;
+      }
     }
 
     /* Extra small screens with enhanced iOS support */
@@ -1784,33 +2011,6 @@
         bottom: max(8px, env(safe-area-inset-bottom));
         left: max(8px, env(safe-area-inset-left));
         right: max(8px, env(safe-area-inset-right));
-      }
-
-      #joystick-container {
-        width: 90px;
-        height: 90px;
-        /* Force visibility on very small iOS devices */
-        min-width: 90px !important;
-        min-height: 90px !important;
-      }
-
-      #joystick {
-        width: 45px;
-        height: 45px;
-        left: calc(50% - 22.5px);
-        top: calc(50% - 22.5px);
-        /* Force visibility on very small iOS devices */
-        min-width: 45px !important;
-        min-height: 45px !important;
-      }
-
-      #shoot-button {
-        width: 90px;
-        height: 90px;
-        font-size: 14px;
-        /* Force visibility on very small iOS devices */
-        min-width: 90px !important;
-        min-height: 90px !important;
       }
     }
 
@@ -1964,17 +2164,74 @@
       <div class="home-buttons">
         <button class="home-btn start" id="home-start-btn">Start Game</button>
         <button class="home-btn customize" id="home-customize-btn">Ship Customization</button>
-        <button class="home-btn trail" id="home-trail-btn">Trail Colors</button>
+        <button class="home-btn trail" id="home-trail-btn">Trail Effects</button>
         <button class="home-btn difficulty" id="home-difficulty-btn">Difficulty</button>
+        <button class="home-btn controls" id="home-controls-btn" style="display: none;">Control Settings</button>
       </div>
     </div>
   </div>
 
+  <div id="control-customization-screen">
+    <h1>CONTROL CUSTOMIZATION</h1>
+    
+    <div class="control-options">
+      <div class="control-option">
+        <h3>Joystick Settings</h3>
+        <div class="slider-container">
+          <span class="slider-label">Size:</span>
+          <input type="range" class="control-slider" id="joystick-size" min="80" max="160" value="120">
+          <span class="slider-value" id="joystick-size-value">120px</span>
+        </div>
+        <div class="slider-container">
+          <span class="slider-label">X Position:</span>
+          <input type="range" class="control-slider" id="joystick-x" min="0" max="100" value="0">
+          <span class="slider-value" id="joystick-x-value">0%</span>
+        </div>
+        <div class="slider-container">
+          <span class="slider-label">Y Position:</span>
+          <input type="range" class="control-slider" id="joystick-y" min="0" max="100" value="0">
+          <span class="slider-value" id="joystick-y-value">0%</span>
+        </div>
+      </div>
+      
+      <div class="control-option">
+        <h3>Shoot Button Settings</h3>
+        <div class="slider-container">
+          <span class="slider-label">Size:</span>
+          <input type="range" class="control-slider" id="shoot-size" min="80" max="160" value="120">
+          <span class="slider-value" id="shoot-size-value">120px</span>
+        </div>
+        <div class="slider-container">
+          <span class="slider-label">X Position:</span>
+          <input type="range" class="control-slider" id="shoot-x" min="0" max="100" value="100">
+          <span class="slider-value" id="shoot-x-value">100%</span>
+        </div>
+        <div class="slider-container">
+          <span class="slider-label">Y Position:</span>
+          <input type="range" class="control-slider" id="shoot-y" min="0" max="100" value="0">
+          <span class="slider-value" id="shoot-y-value">0%</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="control-customization-buttons">
+      <button class="control-customization-btn save" id="save-controls-btn">Save Settings</button>
+      <button class="control-customization-btn reset" id="reset-controls-btn">Reset to Default</button>
+      <button class="control-customization-btn back" id="back-to-home-controls-btn">Back to Home</button>
+    </div>
+  </div>
+
   <div id="trail-screen">
-    <h1>TRAIL CUSTOMIZATION</h1>
+    <h1>TRAIL EFFECTS</h1>
     
     <div class="trail-preview">
       <h3>Trail Preview</h3>
+      <div class="trail-type-selector">
+        <button class="trail-type-btn active" data-type="particles">Particles</button>
+        <button class="trail-type-btn" data-type="sparkles">Sparkles</button>
+        <button class="trail-type-btn" data-type="smoke">Smoke</button>
+        <button class="trail-type-btn" data-type="energy">Energy</button>
+      </div>
       <canvas class="trail-canvas" id="trail-preview-canvas" width="250" height="150"></canvas>
     </div>
     
@@ -2138,23 +2395,23 @@
   </div>
 
   <script>
-    // Mobile device detection with enhanced iOS detection
+    // Enhanced mobile device detection with iOS-specific handling
     const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isAndroid = /Android/i.test(navigator.userAgent);
 
-    // Enhanced Audio Manager with Multi-Track Background Music System
+    // Enhanced Audio Manager with iOS-specific fixes
     class AudioManager {
       constructor() {
         this.audioContext = null;
-        this.backgroundMusicTracks = [];
         this.currentTrack = null;
         this.musicGain = null;
         this.isMuted = this.loadMutedState();
-        this.musicVolume = 0.05; // Very quiet background music
+        this.musicVolume = 0.05;
         this.isPlaying = false;
-        this.fadeInDuration = 2000; // 2 seconds fade in
-        this.fadeOutDuration = 1500; // 1.5 seconds fade out
-        this.crossFadeDuration = 3000; // 3 seconds cross-fade
+        this.fadeInDuration = 2000;
+        this.fadeOutDuration = 1500;
+        this.crossFadeDuration = 3000;
         this.trackEndedHandler = null;
         this.musicTracks = [
           'Background_Music.mp3',
@@ -2164,23 +2421,67 @@
         this.loadedTracks = new Map();
         this.currentTrackIndex = -1;
         this.preloadingComplete = false;
+        this.isUserInteracted = false;
+        this.pendingPlay = false;
         this.initializeAudio();
       }
 
       async initializeAudio() {
         try {
-          // Initialize Web Audio API
-          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          // Enhanced iOS-specific audio context creation
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) {
+            console.warn('AudioContext not supported');
+            this.createSynthesizedMusic();
+            return;
+          }
+
+          this.audioContext = new AudioContextClass();
           this.musicGain = this.audioContext.createGain();
           this.musicGain.connect(this.audioContext.destination);
           this.musicGain.gain.value = this.isMuted ? 0 : this.musicVolume;
 
-          // Preload all background music tracks
-          await this.preloadBackgroundMusic();
+          // iOS requires user interaction before playing audio
+          if (isIOS) {
+            this.setupIOSAudioInteraction();
+          } else {
+            await this.preloadBackgroundMusic();
+          }
         } catch (error) {
           console.warn('Audio initialization failed:', error);
           this.createSynthesizedMusic();
         }
+      }
+
+      setupIOSAudioInteraction() {
+        const enableAudio = async () => {
+          try {
+            if (this.audioContext.state === 'suspended') {
+              await this.audioContext.resume();
+            }
+            this.isUserInteracted = true;
+            
+            // Preload music after user interaction
+            if (!this.preloadingComplete) {
+              await this.preloadBackgroundMusic();
+            }
+            
+            // Start pending playback
+            if (this.pendingPlay) {
+              this.pendingPlay = false;
+              this.startBackgroundMusic();
+            }
+            
+            // Remove listeners after first interaction
+            document.removeEventListener('touchstart', enableAudio);
+            document.removeEventListener('click', enableAudio);
+          } catch (error) {
+            console.warn('Failed to enable iOS audio:', error);
+          }
+        };
+
+        document.addEventListener('touchstart', enableAudio, { once: true });
+        document.addEventListener('click', enableAudio, { once: true });
       }
 
       async preloadBackgroundMusic() {
@@ -2192,7 +2493,12 @@
             audio.preload = 'auto';
             audio.volume = this.isMuted ? 0 : this.musicVolume;
             
-            // Set up event listeners
+            // Enhanced iOS-specific settings
+            if (isIOS) {
+              audio.muted = this.isMuted; // iOS sometimes requires this
+              audio.playsInline = true;
+            }
+            
             const loadPromise = new Promise((resolve, reject) => {
               const onLoadComplete = () => {
                 console.log(`✓ Loaded: ${trackName}`);
@@ -2207,9 +2513,16 @@
               audio.addEventListener('canplaythrough', onLoadComplete, { once: true });
               audio.addEventListener('error', onError, { once: true });
               audio.addEventListener('abort', onError, { once: true });
+              
+              // iOS-specific timeout
+              setTimeout(() => {
+                if (!loadPromise.resolved) {
+                  console.warn(`Timeout loading ${trackName}`);
+                  reject(new Error('Load timeout'));
+                }
+              }, isIOS ? 10000 : 5000);
             });
 
-            // Start loading
             audio.src = trackName;
             audio.load();
 
@@ -2258,8 +2571,13 @@
       async startBackgroundMusic() {
         if (this.isPlaying) return;
 
+        // iOS requires user interaction first
+        if (isIOS && !this.isUserInteracted) {
+          this.pendingPlay = true;
+          return;
+        }
+
         try {
-          // Resume audio context if suspended
           if (this.audioContext && this.audioContext.state === 'suspended') {
             await this.audioContext.resume();
           }
@@ -2270,7 +2588,6 @@
             return;
           }
 
-          // Select a random track
           const selectedTrack = this.selectRandomTrack();
           if (!selectedTrack) {
             console.log('No valid track selected, starting synthesized music');
@@ -2278,9 +2595,11 @@
             return;
           }
 
+          // Stop any currently playing track
+          await this.stopCurrentTrack();
+
           this.currentTrack = selectedTrack;
           
-          // Set up track ended handler for seamless loop with random selection
           this.trackEndedHandler = () => {
             if (this.isPlaying) {
               console.log('Track ended, selecting new random track...');
@@ -2290,12 +2609,24 @@
           
           this.currentTrack.addEventListener('ended', this.trackEndedHandler);
           
-          // Start playback with fade in
           if (!this.isMuted) {
             this.currentTrack.volume = 0;
             this.currentTrack.currentTime = 0;
-            await this.currentTrack.play();
-            this.fadeInTrack(this.currentTrack);
+            
+            // Enhanced iOS play handling
+            try {
+              await this.currentTrack.play();
+              this.fadeInTrack(this.currentTrack);
+            } catch (playError) {
+              console.warn('Failed to play track:', playError);
+              if (isIOS) {
+                // iOS may require muted start
+                this.currentTrack.muted = true;
+                await this.currentTrack.play();
+                this.currentTrack.muted = this.isMuted;
+                this.fadeInTrack(this.currentTrack);
+              }
+            }
           }
           
           this.isPlaying = true;
@@ -2306,6 +2637,25 @@
         }
       }
 
+      async stopCurrentTrack() {
+        if (this.currentTrack) {
+          try {
+            if (this.trackEndedHandler) {
+              this.currentTrack.removeEventListener('ended', this.trackEndedHandler);
+            }
+            
+            if (!this.currentTrack.paused) {
+              await this.fadeOutTrack(this.currentTrack);
+            } else {
+              this.currentTrack.pause();
+            }
+          } catch (error) {
+            console.warn('Error stopping current track:', error);
+          }
+          this.currentTrack = null;
+        }
+      }
+
       async switchToRandomTrack() {
         if (!this.isPlaying || this.loadedTracks.size === 0) return;
 
@@ -2313,27 +2663,20 @@
         if (!newTrack || newTrack === this.currentTrack) return;
 
         try {
-          // Cross-fade to new track
           const oldTrack = this.currentTrack;
           
-          // Remove old event listener
           if (oldTrack && this.trackEndedHandler) {
             oldTrack.removeEventListener('ended', this.trackEndedHandler);
           }
           
-          // Prepare new track
           newTrack.volume = 0;
           newTrack.currentTime = 0;
           this.currentTrack = newTrack;
           
-          // Set up event listener for new track
           this.currentTrack.addEventListener('ended', this.trackEndedHandler);
           
           if (!this.isMuted) {
-            // Start new track
             await newTrack.play();
-            
-            // Cross-fade
             this.crossFadeTracks(oldTrack, newTrack);
           }
           
@@ -2409,32 +2752,20 @@
             return;
           }
           
-          // Fade out old track
           oldTrack.volume = Math.max(this.musicVolume - (volumeStep * currentStep), 0);
-          
-          // Fade in new track
           newTrack.volume = Math.min(volumeStep * currentStep, this.musicVolume);
           
           currentStep++;
         }, stepDuration);
       }
 
-      stopBackgroundMusic() {
+      async stopBackgroundMusic() {
         if (!this.isPlaying) return;
 
         try {
-          if (this.currentTrack) {
-            // Remove event listener
-            if (this.trackEndedHandler) {
-              this.currentTrack.removeEventListener('ended', this.trackEndedHandler);
-            }
-            
-            // Fade out and stop
-            this.fadeOutTrack(this.currentTrack);
-            this.currentTrack = null;
-          }
-          
+          await this.stopCurrentTrack();
           this.isPlaying = false;
+          this.pendingPlay = false;
           console.log('Background music stopped');
         } catch (error) {
           console.warn('Failed to stop background music:', error);
@@ -2445,7 +2776,6 @@
         if (!this.audioContext) return;
 
         try {
-          // Create a simple ambient synthesized background track
           const oscillator = this.audioContext.createOscillator();
           const gainNode = this.audioContext.createGain();
           
@@ -2458,7 +2788,6 @@
           oscillator.connect(gainNode);
           gainNode.connect(this.musicGain);
           
-          // Create a simple melody pattern
           let time = this.audioContext.currentTime;
           const notes = [220, 246.94, 261.63, 293.66, 329.63, 293.66, 261.63, 246.94];
           
@@ -2468,7 +2797,7 @@
           
           oscillator.start();
           
-          this.preloadingComplete = true; // Mark as ready for synthesized music
+          this.preloadingComplete = true;
         } catch (error) {
           console.warn('Synthesized music creation failed:', error);
         }
@@ -2492,7 +2821,6 @@
           oscillator.start();
           this.isPlaying = true;
           
-          // Create looping pattern
           this.createSynthesizedLoop();
         } catch (error) {
           console.warn('Failed to start synthesized music:', error);
@@ -2537,6 +2865,7 @@
         try {
           if (this.currentTrack) {
             this.currentTrack.volume = this.isMuted ? 0 : this.musicVolume;
+            this.currentTrack.muted = this.isMuted; // iOS compatibility
           }
           
           if (this.musicGain) {
@@ -2573,12 +2902,10 @@
         return this.isMuted;
       }
 
-      // Method to restart music (used when returning to home)
       async restartBackgroundMusic() {
         console.log('Restarting background music with new random track...');
-        this.stopBackgroundMusic();
+        await this.stopBackgroundMusic();
         
-        // Wait a moment for cleanup
         setTimeout(() => {
           this.startBackgroundMusic();
         }, 500);
@@ -2588,7 +2915,7 @@
     // Initialize audio manager
     const audioManager = new AudioManager();
 
-    // High Score Management System
+    // High Score Management System with proper display updates
     class HighScoreManager {
       constructor() {
         this.storageKey = 'spaceShooterHighScore';
@@ -2621,6 +2948,7 @@
         try {
           localStorage.setItem(this.storageKey, score.toString());
           this.highScore = score;
+          this.updateAllHighScoreDisplays();
           return true;
         } catch (error) {
           console.warn('Could not save high score:', error);
@@ -2632,15 +2960,32 @@
         try {
           this.gamesPlayed++;
           localStorage.setItem(this.gamesPlayedKey, this.gamesPlayed.toString());
+          this.updateAllGamesPlayedDisplays();
         } catch (error) {
           console.warn('Could not save games played:', error);
+        }
+      }
+
+      updateAllHighScoreDisplays() {
+        const formattedScore = this.formatScore(this.highScore);
+        const homeHighScore = document.getElementById('home-high-score');
+        const hudHighScore = document.getElementById('high-score');
+        
+        if (homeHighScore) homeHighScore.textContent = formattedScore;
+        if (hudHighScore) hudHighScore.textContent = formattedScore;
+      }
+
+      updateAllGamesPlayedDisplays() {
+        const gamesPlayedElement = document.getElementById('games-played');
+        if (gamesPlayedElement) {
+          gamesPlayedElement.textContent = this.gamesPlayed;
         }
       }
 
       checkAndUpdateHighScore(currentScore) {
         if (currentScore > this.highScore) {
           this.saveHighScore(currentScore);
-          return true; // New high score achieved
+          return true;
         }
         return false;
       }
@@ -2656,16 +3001,21 @@
       formatScore(score) {
         return score.toLocaleString();
       }
+
+      initializeDisplays() {
+        this.updateAllHighScoreDisplays();
+        this.updateAllGamesPlayedDisplays();
+      }
     }
 
     // Initialize high score manager
     const highScoreManager = new HighScoreManager();
 
-    // Trail Color Manager
-    class TrailColorManager {
+    // Enhanced Trail Color and Type Manager
+    class TrailEffectManager {
       constructor() {
-        this.storageKey = 'spaceShooterTrailColor';
-        this.currentColor = this.loadTrailColor();
+        this.storageKey = 'spaceShooterTrailSettings';
+        this.settings = this.loadTrailSettings();
         this.colors = {
           '#00ffff': 'Cyan',
           '#ff4444': 'Red',
@@ -2676,49 +3026,181 @@
           '#ff44aa': 'Pink',
           '#ffffff': 'White'
         };
+        this.types = {
+          'particles': 'Particles',
+          'sparkles': 'Sparkles',
+          'smoke': 'Smoke',
+          'energy': 'Energy'
+        };
       }
 
-      loadTrailColor() {
+      loadTrailSettings() {
         try {
           const saved = localStorage.getItem(this.storageKey);
-          return saved || '#00ffff'; // Default to cyan
+          return saved ? JSON.parse(saved) : { color: '#00ffff', type: 'particles' };
         } catch (error) {
-          console.warn('Could not load trail color:', error);
-          return '#00ffff';
+          console.warn('Could not load trail settings:', error);
+          return { color: '#00ffff', type: 'particles' };
         }
       }
 
-      saveTrailColor(color) {
+      saveTrailSettings() {
         try {
-          localStorage.setItem(this.storageKey, color);
-          this.currentColor = color;
+          localStorage.setItem(this.storageKey, JSON.stringify(this.settings));
           return true;
         } catch (error) {
-          console.warn('Could not save trail color:', error);
+          console.warn('Could not save trail settings:', error);
           return false;
         }
       }
 
       getCurrentColor() {
-        return this.currentColor;
+        return this.settings.color;
+      }
+
+      getCurrentType() {
+        return this.settings.type;
       }
 
       getColorName(color) {
         return this.colors[color] || 'Unknown';
       }
 
+      getTypeName(type) {
+        return this.types[type] || 'Unknown';
+      }
+
       setColor(color) {
         if (this.colors[color]) {
-          this.currentColor = color;
-          this.saveTrailColor(color);
+          this.settings.color = color;
+          this.saveTrailSettings();
           return true;
         }
         return false;
       }
+
+      setType(type) {
+        if (this.types[type]) {
+          this.settings.type = type;
+          this.saveTrailSettings();
+          return true;
+        }
+        return false;
+      }
+
+      createTrailParticle(x, y, angle, speed, size = null) {
+        const color = this.getCurrentColor();
+        const type = this.getCurrentType();
+        
+        switch (type) {
+          case 'sparkles':
+            return new SparkleParticle(x, y, angle, speed, color, size);
+          case 'smoke':
+            return new SmokeParticle(x, y, angle, speed, color, size);
+          case 'energy':
+            return new EnergyParticle(x, y, angle, speed, color, size);
+          default:
+            return new Particle(x, y, angle, speed, color, size, 'thruster');
+        }
+      }
     }
 
-    // Initialize trail color manager
-    const trailColorManager = new TrailColorManager();
+    // Initialize trail effect manager
+    const trailEffectManager = new TrailEffectManager();
+
+    // Mobile Control Customization Manager
+    class MobileControlManager {
+      constructor() {
+        this.storageKey = 'spaceShooterMobileControls';
+        this.settings = this.loadControlSettings();
+        this.isCustomizing = false;
+      }
+
+      loadControlSettings() {
+        try {
+          const saved = localStorage.getItem(this.storageKey);
+          return saved ? JSON.parse(saved) : {
+            joystick: { size: 120, x: 0, y: 0 },
+            shoot: { size: 120, x: 100, y: 0 }
+          };
+        } catch (error) {
+          console.warn('Could not load control settings:', error);
+          return {
+            joystick: { size: 120, x: 0, y: 0 },
+            shoot: { size: 120, x: 100, y: 0 }
+          };
+        }
+      }
+
+      saveControlSettings() {
+        try {
+          localStorage.setItem(this.storageKey, JSON.stringify(this.settings));
+          return true;
+        } catch (error) {
+          console.warn('Could not save control settings:', error);
+          return false;
+        }
+      }
+
+      applySettings() {
+        if (!isMobile) return;
+
+        const joystickContainer = document.getElementById('joystick-container');
+        const joystick = document.getElementById('joystick');
+        const shootButton = document.getElementById('shoot-button');
+
+        if (joystickContainer && joystick && shootButton) {
+          // Apply joystick settings
+          const js = this.settings.joystick;
+          joystickContainer.style.width = js.size + 'px';
+          joystickContainer.style.height = js.size + 'px';
+          joystickContainer.style.left = js.x + '%';
+          joystickContainer.style.bottom = js.y + '%';
+          
+          joystick.style.width = (js.size / 2) + 'px';
+          joystick.style.height = (js.size / 2) + 'px';
+          joystick.style.left = 'calc(50% - ' + (js.size / 4) + 'px)';
+          joystick.style.top = 'calc(50% - ' + (js.size / 4) + 'px)';
+
+          // Apply shoot button settings
+          const sb = this.settings.shoot;
+          shootButton.style.width = sb.size + 'px';
+          shootButton.style.height = sb.size + 'px';
+          
+          // Handle positioning - 100% means right side
+          if (sb.x >= 50) {
+            shootButton.style.right = (100 - sb.x) + '%';
+            shootButton.style.left = 'auto';
+          } else {
+            shootButton.style.left = sb.x + '%';
+            shootButton.style.right = 'auto';
+          }
+          shootButton.style.bottom = sb.y + '%';
+
+          // Update font size based on button size
+          shootButton.style.fontSize = Math.min(sb.size / 6, 20) + 'px';
+        }
+      }
+
+      resetToDefaults() {
+        this.settings = {
+          joystick: { size: 120, x: 0, y: 0 },
+          shoot: { size: 120, x: 100, y: 0 }
+        };
+        this.saveControlSettings();
+        this.applySettings();
+      }
+
+      updateSetting(control, property, value) {
+        if (this.settings[control]) {
+          this.settings[control][property] = value;
+          this.applySettings();
+        }
+      }
+    }
+
+    // Initialize mobile control manager
+    const mobileControlManager = new MobileControlManager();
 
     // Difficulty Configuration System
     class DifficultyManager {
@@ -2728,7 +3210,7 @@
             name: 'EASY',
             className: 'difficulty-indicator',
             enemySpeed: 1.5,
-            enemyShootChance: 0, // No shooting
+            enemyShootChance: 0,
             enemySpawnRate: 180,
             enemyDamage: 1,
             bossHealth: 150,
@@ -2740,7 +3222,7 @@
             name: 'MEDIUM',
             className: 'difficulty-indicator difficulty-medium',
             enemySpeed: 1.8,
-            enemyShootChance: 0.3, // 30% of enemies shoot
+            enemyShootChance: 0.3,
             enemySpawnRate: 150,
             enemyDamage: 1,
             bossHealth: 200,
@@ -2752,7 +3234,7 @@
             name: 'HARD',
             className: 'difficulty-indicator difficulty-hard',
             enemySpeed: 2.2,
-            enemyShootChance: 1, // All enemies shoot
+            enemyShootChance: 1,
             enemySpawnRate: 120,
             enemyDamage: 1,
             bossHealth: 250,
@@ -2788,27 +3270,24 @@
     // Initialize difficulty manager
     const difficultyManager = new DifficultyManager();
 
-    // Enhanced Fullscreen API implementation with improved mobile support
+    // Enhanced Fullscreen API implementation with improved mobile support and FIXED method name
     class FullscreenManager {
       constructor() {
         this.isFullscreen = false;
         this.fullscreenBtn = document.getElementById('fullscreen-btn');
         this.bindEvents();
-        this.mobileFullscreenSupported = this.checkMobileFullscreenSupport();
+        this.mobileFullscreenSupported = this.checkMobileFullscreenSupport(); // FIXED: Renamed method to match the call
       }
 
-      checkMobileFullscreenSupport() {
-        // Better detection for mobile fullscreen support
+      checkMobileFullscreenSupport() { // FIXED: Renamed from checkMobileFullscreenSupported to checkMobileFullscreenSupport
         const userAgent = navigator.userAgent.toLowerCase();
         const isIOS = /iphone|ipad|ipod/.test(userAgent);
         const isAndroid = /android/.test(userAgent);
         
-        // iOS Safari doesn't support programmatic fullscreen
         if (isIOS) {
           return false;
         }
         
-        // Most modern Android browsers support fullscreen
         if (isAndroid) {
           return !!(
             document.documentElement.requestFullscreen ||
@@ -2823,7 +3302,6 @@
       bindEvents() {
         this.fullscreenBtn.addEventListener('click', () => this.toggleFullscreen());
         
-        // Listen for fullscreen changes
         document.addEventListener('fullscreenchange', () => this.handleFullscreenChange());
         document.addEventListener('webkitfullscreenchange', () => this.handleFullscreenChange());
         document.addEventListener('mozfullscreenchange', () => this.handleFullscreenChange());
@@ -2834,7 +3312,6 @@
         try {
           const element = document.documentElement;
           
-          // Try different fullscreen methods with proper error handling
           if (element.requestFullscreen) {
             await element.requestFullscreen({ navigationUI: "hide" });
           } else if (element.webkitRequestFullscreen) {
@@ -2844,7 +3321,6 @@
           } else if (element.msRequestFullscreen) {
             await element.msRequestFullscreen();
           } else {
-            // Fallback for devices that don't support fullscreen
             this.simulateFullscreen();
             return true;
           }
@@ -2852,21 +3328,18 @@
           return true;
         } catch (error) {
           console.warn('Fullscreen request failed:', error);
-          // Try fallback fullscreen simulation
           this.simulateFullscreen();
           return false;
         }
       }
 
       simulateFullscreen() {
-        // For devices that don't support true fullscreen, hide browser UI as much as possible
         if (window.screen && window.screen.orientation) {
           try {
             window.screen.orientation.lock('landscape-primary').catch(() => {});
           } catch (e) {}
         }
         
-        // Hide address bar on mobile by scrolling
         setTimeout(() => {
           window.scrollTo(0, 1);
         }, 100);
@@ -2902,7 +3375,6 @@
             await this.enterFullscreen();
           }
         } else {
-          // For unsupported devices, just simulate
           this.simulateFullscreen();
         }
       }
@@ -2930,7 +3402,6 @@
 
         this.updateButtonText();
         
-        // Resize canvas when fullscreen changes
         setTimeout(() => {
           resizeCanvas();
         }, 100);
@@ -2976,7 +3447,6 @@
         this.audioBtn.addEventListener('click', () => this.toggleAudio());
         this.homeBtn.addEventListener('click', () => this.goHome());
         
-        // Keyboard shortcut
         document.addEventListener('keydown', (e) => {
           if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
             if (gameRunning) {
@@ -2994,7 +3464,6 @@
         this.pauseBtn.classList.add('paused');
         this.pauseOverlay.style.display = 'flex';
         
-        // Cancel animation frame to truly pause the game
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
         }
@@ -3008,7 +3477,6 @@
         this.pauseBtn.classList.remove('paused');
         this.pauseOverlay.style.display = 'none';
         
-        // Resume the game loop
         if (gameRunning) {
           animationFrameId = requestAnimationFrame(gameLoop);
         }
@@ -3033,7 +3501,6 @@
         gameRunning = false;
         audioManager.stopBackgroundMusic();
         showHomeScreen();
-        // Restart music when returning to home
         setTimeout(() => {
           audioManager.restartBackgroundMusic();
         }, 500);
@@ -3083,6 +3550,7 @@
     const trailScreen = document.getElementById('trail-screen');
     const difficultyScreen = document.getElementById('difficulty-screen');
     const customizationScreen = document.getElementById('customization-screen');
+    const controlCustomizationScreen = document.getElementById('control-customization-screen');
 
     function updateLoadingProgress() {
       loadingProgress += Math.random() * 15 + 5;
@@ -3103,16 +3571,23 @@
       trailScreen.style.display = 'none';
       difficultyScreen.style.display = 'none';
       customizationScreen.style.display = 'none';
+      controlCustomizationScreen.style.display = 'none';
       document.getElementById('game-over-screen').style.display = 'none';
       fullscreenManager.hide();
       pauseManager.hide();
       audioBtn.style.display = 'none';
       
-      // Update home screen stats
-      document.getElementById('home-high-score').textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
-      document.getElementById('games-played').textContent = highScoreManager.getGamesPlayed();
+      // Show mobile control customization button only on mobile
+      const controlsBtn = document.getElementById('home-controls-btn');
+      if (isMobile) {
+        controlsBtn.style.display = 'block';
+      } else {
+        controlsBtn.style.display = 'none';
+      }
       
-      // Start background music when on home screen with random selection
+      // Update displays with current values
+      highScoreManager.initializeDisplays();
+      
       audioManager.restartBackgroundMusic();
     }
 
@@ -3153,13 +3628,21 @@
       resizeCanvas();
       initGame();
       
-      // Start background music when game starts with random track
       audioManager.restartBackgroundMusic();
       
-      // Auto-enter fullscreen when game starts
       setTimeout(() => {
         fullscreenManager.autoEnterFullscreen();
       }, 500);
+    }
+
+    function showControlCustomizationScreen() {
+      hideHomeScreen();
+      controlCustomizationScreen.style.display = 'flex';
+      initializeControlCustomization();
+    }
+
+    function hideControlCustomizationScreen() {
+      controlCustomizationScreen.style.display = 'none';
     }
 
     // Home screen event listeners
@@ -3167,19 +3650,95 @@
     document.getElementById('home-customize-btn').addEventListener('click', showCustomizationScreen);
     document.getElementById('home-trail-btn').addEventListener('click', showTrailScreen);
     document.getElementById('home-difficulty-btn').addEventListener('click', showDifficultyScreen);
+    document.getElementById('home-controls-btn').addEventListener('click', showControlCustomizationScreen);
 
-    // Trail customization
+    // Control customization functions
+    function initializeControlCustomization() {
+      const settings = mobileControlManager.settings;
+      
+      // Set slider values
+      document.getElementById('joystick-size').value = settings.joystick.size;
+      document.getElementById('joystick-x').value = settings.joystick.x;
+      document.getElementById('joystick-y').value = settings.joystick.y;
+      document.getElementById('shoot-size').value = settings.shoot.size;
+      document.getElementById('shoot-x').value = settings.shoot.x;
+      document.getElementById('shoot-y').value = settings.shoot.y;
+      
+      // Update display values
+      updateControlDisplayValues();
+      
+      // Add event listeners to sliders
+      const sliders = document.querySelectorAll('.control-slider');
+      sliders.forEach(slider => {
+        slider.addEventListener('input', handleSliderChange);
+      });
+    }
+
+    function updateControlDisplayValues() {
+      document.getElementById('joystick-size-value').textContent = document.getElementById('joystick-size').value + 'px';
+      document.getElementById('joystick-x-value').textContent = document.getElementById('joystick-x').value + '%';
+      document.getElementById('joystick-y-value').textContent = document.getElementById('joystick-y').value + '%';
+      document.getElementById('shoot-size-value').textContent = document.getElementById('shoot-size').value + 'px';
+      document.getElementById('shoot-x-value').textContent = document.getElementById('shoot-x').value + '%';
+      document.getElementById('shoot-y-value').textContent = document.getElementById('shoot-y').value + '%';
+    }
+
+    function handleSliderChange(event) {
+      const sliderId = event.target.id;
+      const value = parseFloat(event.target.value);
+      
+      // Update display
+      updateControlDisplayValues();
+      
+      // Apply setting
+      if (sliderId.startsWith('joystick-')) {
+        const property = sliderId.replace('joystick-', '');
+        mobileControlManager.updateSetting('joystick', property, value);
+      } else if (sliderId.startsWith('shoot-')) {
+        const property = sliderId.replace('shoot-', '');
+        mobileControlManager.updateSetting('shoot', property, value);
+      }
+    }
+
+    // Control customization event listeners
+    document.getElementById('save-controls-btn').addEventListener('click', () => {
+      mobileControlManager.saveControlSettings();
+      hideControlCustomizationScreen();
+      showHomeScreen();
+    });
+
+    document.getElementById('reset-controls-btn').addEventListener('click', () => {
+      mobileControlManager.resetToDefaults();
+      initializeControlCustomization();
+    });
+
+    document.getElementById('back-to-home-controls-btn').addEventListener('click', () => {
+      hideControlCustomizationScreen();
+      showHomeScreen();
+    });
+
+    // Enhanced trail customization with types
     function initializeTrailCustomization() {
       const colorOptions = document.querySelectorAll('.color-option');
+      const typeButtons = document.querySelectorAll('.trail-type-btn');
       const trailCanvas = document.getElementById('trail-preview-canvas');
       const trailCtx = trailCanvas.getContext('2d');
       
-      // Set current selection
-      const currentColor = trailColorManager.getCurrentColor();
+      // Set current selections
+      const currentColor = trailEffectManager.getCurrentColor();
+      const currentType = trailEffectManager.getCurrentType();
+      
       colorOptions.forEach(option => {
         option.classList.remove('selected');
         if (option.dataset.color === currentColor) {
           option.classList.add('selected');
+        }
+      });
+      
+      typeButtons.forEach(button => {
+        button.classList.remove('active');
+        if (button.dataset.type === currentType) {
+          button.classList.add('active');
         }
       });
       
@@ -3188,14 +3747,22 @@
         option.addEventListener('click', () => {
           colorOptions.forEach(opt => opt.classList.remove('selected'));
           option.classList.add('selected');
-          updateTrailPreview(option.dataset.color);
+          updateTrailPreview(option.dataset.color, trailEffectManager.getCurrentType());
         });
       });
       
-      updateTrailPreview(currentColor);
+      typeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          typeButtons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+          updateTrailPreview(trailEffectManager.getCurrentColor(), button.dataset.type);
+        });
+      });
+      
+      updateTrailPreview(currentColor, currentType);
     }
 
-    function updateTrailPreview(color) {
+    function updateTrailPreview(color, type) {
       const trailCanvas = document.getElementById('trail-preview-canvas');
       const trailCtx = trailCanvas.getContext('2d');
       
@@ -3203,7 +3770,6 @@
       trailCtx.fillStyle = 'rgba(0, 20, 40, 0.8)';
       trailCtx.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
       
-      // Draw trail preview
       const centerX = trailCanvas.width / 2;
       const centerY = trailCanvas.height / 2;
       
@@ -3222,7 +3788,7 @@
       trailCtx.fill();
       trailCtx.restore();
       
-      // Draw trail particles
+      // Draw trail based on type
       for (let i = 0; i < 20; i++) {
         const x = centerX + 50 - i * 8 - Math.random() * 10;
         const y = centerY + (Math.random() - 0.5) * 20;
@@ -3234,19 +3800,83 @@
         trailCtx.fillStyle = color;
         trailCtx.shadowBlur = 8;
         trailCtx.shadowColor = color;
-        trailCtx.beginPath();
-        trailCtx.arc(x, y, size, 0, Math.PI * 2);
-        trailCtx.fill();
+        
+        switch (type) {
+          case 'sparkles':
+            // Draw star shape
+            trailCtx.beginPath();
+            for (let j = 0; j < 5; j++) {
+              const angle = (j * Math.PI * 2) / 5;
+              const outerRadius = size;
+              const innerRadius = size * 0.4;
+              const xOuter = x + Math.cos(angle) * outerRadius;
+              const yOuter = y + Math.sin(angle) * outerRadius;
+              const xInner = x + Math.cos(angle + Math.PI / 5) * innerRadius;
+              const yInner = y + Math.sin(angle + Math.PI / 5) * innerRadius;
+              
+              if (j === 0) {
+                trailCtx.moveTo(xOuter, yOuter);
+              } else {
+                trailCtx.lineTo(xOuter, yOuter);
+              }
+              trailCtx.lineTo(xInner, yInner);
+            }
+            trailCtx.closePath();
+            trailCtx.fill();
+            break;
+            
+          case 'smoke':
+            // Draw irregular clouds
+            trailCtx.beginPath();
+            for (let j = 0; j < 6; j++) {
+              const angle = (j * Math.PI * 2) / 6;
+              const radius = size * (0.8 + Math.random() * 0.4);
+              const px = x + Math.cos(angle) * radius;
+              const py = y + Math.sin(angle) * radius;
+              if (j === 0) {
+                trailCtx.moveTo(px, py);
+              } else {
+                trailCtx.lineTo(px, py);
+              }
+            }
+            trailCtx.closePath();
+            trailCtx.fill();
+            break;
+            
+          case 'energy':
+            // Draw diamond shape
+            trailCtx.beginPath();
+            trailCtx.moveTo(x, y - size);
+            trailCtx.lineTo(x + size, y);
+            trailCtx.lineTo(x, y + size);
+            trailCtx.lineTo(x - size, y);
+            trailCtx.closePath();
+            trailCtx.fill();
+            break;
+            
+          default: // particles
+            trailCtx.beginPath();
+            trailCtx.arc(x, y, size, 0, Math.PI * 2);
+            trailCtx.fill();
+            break;
+        }
+        
         trailCtx.restore();
       }
     }
 
     // Trail screen event listeners
     document.getElementById('save-trail-btn').addEventListener('click', () => {
-      const selectedOption = document.querySelector('.color-option.selected');
-      if (selectedOption) {
-        trailColorManager.setColor(selectedOption.dataset.color);
+      const selectedColor = document.querySelector('.color-option.selected');
+      const selectedType = document.querySelector('.trail-type-btn.active');
+      
+      if (selectedColor) {
+        trailEffectManager.setColor(selectedColor.dataset.color);
       }
+      if (selectedType) {
+        trailEffectManager.setType(selectedType.dataset.type);
+      }
+      
       hideTrailScreen();
       showHomeScreen();
     });
@@ -3345,7 +3975,6 @@
           accent: '#ffff88'
         }
       },
-      // NEW SHIP 1: Stealth Phantom
       phantom: {
         name: 'Stealth Phantom',
         theme: 'Shadow Black',
@@ -3361,7 +3990,6 @@
           accent: '#888888'
         }
       },
-      // NEW SHIP 2: Crystal Vanguard
       vanguard: {
         name: 'Crystal Vanguard',
         theme: 'Crystal White',
@@ -3407,7 +4035,7 @@
     let originalBossHealth = 0;
 
     // Initialize high score display
-    highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+    highScoreManager.initializeDisplays();
 
     // Enhanced Difficulty selection with Medium mode
     easyBtn.addEventListener('click', () => {
@@ -3766,7 +4394,7 @@
 
     // Canvas and responsiveness with optimized performance
     function resizeCanvas() {
-      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2); // Limit pixel ratio for mobile performance
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = window.innerWidth * pixelRatio;
       canvas.height = window.innerHeight * pixelRatio;
       canvas.style.width = window.innerWidth + 'px';
@@ -3790,9 +4418,8 @@
     let stars = [];
     function createStars() {
       stars = [];
-      // Reduce star count on mobile for better performance
-      const baseStarCount = isMobile ? 100 : 200;
-      const starCount = Math.min(baseStarCount, Math.floor((window.innerWidth * window.innerHeight) / (isMobile ? 8000 : 5000)));
+      const baseStarCount = isMobile ? 80 : 150; // Further reduced for mobile performance
+      const starCount = Math.min(baseStarCount, Math.floor((window.innerWidth * window.innerHeight) / (isMobile ? 10000 : 6000)));
       for (let i = 0; i < starCount; i++) {
         stars.push({
           x: Math.random() * window.innerWidth,
@@ -3805,7 +4432,7 @@
       }
     }
 
-    // Enhanced Particle class with improved performance
+    // Enhanced Trail Particle Classes
     class Particle {
       constructor(x, y, angle, speed, color = null, size = null, type = 'normal') {
         this.x = x;
@@ -3863,6 +4490,129 @@
       }
     }
 
+    // Sparkle Particle Class
+    class SparkleParticle extends Particle {
+      constructor(x, y, angle, speed, color, size) {
+        super(x, y, angle, speed, color, size, 'sparkle');
+        this.rotation = 0;
+        this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+      }
+
+      update() {
+        super.update();
+        this.rotation += this.rotationSpeed;
+      }
+
+      draw() {
+        if (!this.active) return;
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = this.color;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        
+        // Draw star shape
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          const angle = (i * Math.PI * 2) / 5;
+          const outerRadius = this.size / 2;
+          const innerRadius = this.size * 0.2;
+          const xOuter = Math.cos(angle) * outerRadius;
+          const yOuter = Math.sin(angle) * outerRadius;
+          const xInner = Math.cos(angle + Math.PI / 5) * innerRadius;
+          const yInner = Math.sin(angle + Math.PI / 5) * innerRadius;
+          
+          if (i === 0) {
+            ctx.moveTo(xOuter, yOuter);
+          } else {
+            ctx.lineTo(xOuter, yOuter);
+          }
+          ctx.lineTo(xInner, yInner);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Smoke Particle Class
+    class SmokeParticle extends Particle {
+      constructor(x, y, angle, speed, color, size) {
+        super(x, y, angle, speed, color, size, 'smoke');
+        this.expansion = 1.05;
+      }
+
+      update() {
+        super.update();
+        this.size *= this.expansion;
+        this.velX *= 0.95;
+        this.velY *= 0.95;
+      }
+
+      draw() {
+        if (!this.active) return;
+        ctx.save();
+        ctx.globalAlpha = this.alpha * 0.7;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = this.color;
+        
+        // Draw irregular cloud shape
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+          const angle = (i * Math.PI * 2) / 6;
+          const radius = (this.size / 2) * (0.8 + Math.random() * 0.4);
+          const px = this.x + Math.cos(angle) * radius;
+          const py = this.y + Math.sin(angle) * radius;
+          if (i === 0) {
+            ctx.moveTo(px, py);
+          } else {
+            ctx.lineTo(px, py);
+          }
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Energy Particle Class
+    class EnergyParticle extends Particle {
+      constructor(x, y, angle, speed, color, size) {
+        super(x, y, angle, speed, color, size, 'energy');
+        this.pulsePhase = Math.random() * Math.PI * 2;
+      }
+
+      update() {
+        super.update();
+        this.pulsePhase += 0.3;
+      }
+
+      draw() {
+        if (!this.active) return;
+        const pulse = Math.sin(this.pulsePhase) * 0.3 + 1;
+        
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 20 * pulse;
+        ctx.shadowColor = this.color;
+        
+        // Draw diamond shape
+        const size = (this.size / 2) * pulse;
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y - size);
+        ctx.lineTo(this.x + size, this.y);
+        ctx.lineTo(this.x, this.y + size);
+        ctx.lineTo(this.x - size, this.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
     // Enhanced Explosion class
     class Explosion {
       constructor(x, y, size = 50) {
@@ -3874,9 +4624,10 @@
         this.particles = [];
         this.active = true;
         
-        // Create explosion particles
-        for (let i = 0; i < 15; i++) {
-          const angle = (Math.PI * 2 * i) / 15;
+        // Create explosion particles - reduce count on mobile
+        const particleCount = isMobile ? 10 : 15;
+        for (let i = 0; i < particleCount; i++) {
+          const angle = (Math.PI * 2 * i) / particleCount;
           const speed = Math.random() * 8 + 4;
           this.particles.push(new Particle(x, y, angle, speed, '#ff4444', 8));
         }
@@ -3921,7 +4672,7 @@
       }
     }
 
-    // Enhanced Ship class with customization
+    // Enhanced Ship class with mobile speed boost
     class Ship {
       constructor() {
         this.x = window.innerWidth / 2;
@@ -3932,7 +4683,7 @@
         this.doubleShot = false;
         this.doubleTimer = 0;
         this.lastShot = 0;
-        this.shootCooldown = 150; // milliseconds
+        this.shootCooldown = 150;
         this.active = true;
         this.thrusterParticles = [];
       }
@@ -3942,16 +4693,19 @@
 
         let thrusting = false;
         const config = shipConfigs[selectedShip];
+        
+        // Mobile speed boost (20% increase)
+        const mobileSpeedBoost = isMobile ? 1.2 : 1.0;
 
         if (!isMobile) {
           this.angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
           if (keys["w"] || keys["W"]) {
-            this.vel.x += Math.cos(this.angle) * 0.3 * config.speedMultiplier;
-            this.vel.y += Math.sin(this.angle) * 0.3 * config.speedMultiplier;
+            this.vel.x += Math.cos(this.angle) * 0.3 * config.speedMultiplier * mobileSpeedBoost;
+            this.vel.y += Math.sin(this.angle) * 0.3 * config.speedMultiplier * mobileSpeedBoost;
             thrusting = true;
           }
         } else {
-          // Enhanced mobile joystick movement with iOS optimizations
+          // Enhanced mobile joystick movement with speed boost
           const joystickRect = joystick.getBoundingClientRect();
           const joystickContainerRect = joystickContainer.getBoundingClientRect();
 
@@ -3966,8 +4720,8 @@
 
           if (Math.hypot(dxJoy, dyJoy) > 10) { 
             this.angle = Math.atan2(dyJoy, dxJoy);
-            // Optimized mobile speed for better performance
-            const mobileSpeedMultiplier = isIOS ? 0.15 : 0.18; // Slightly slower on iOS for better control
+            // Mobile speed with 20% boost
+            const mobileSpeedMultiplier = (isIOS ? 0.15 : 0.18) * mobileSpeedBoost;
             this.vel.x += Math.cos(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
             this.vel.y += Math.sin(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
             thrusting = true;
@@ -3982,24 +4736,23 @@
         this.x += this.vel.x;
         this.y += this.vel.y;
 
-        // Enhanced thruster particles with custom trail color - reduce on mobile
+        // Enhanced thruster particles with custom trail effects - reduce on mobile
         if (thrusting) {
-          const particleCount = isMobile ? 2 : 4; // Reduce particles on mobile
+          const particleCount = isMobile ? 1 : 3;
           for (let i = 0; i < particleCount; i++) {
             const offsetAngle = this.angle + Math.PI + (Math.random() - 0.5) * 0.6;
             const speed = Math.random() * 6 + 3;
             const distance = 25 + Math.random() * 15;
-            const thrusterColor = trailColorManager.getCurrentColor();
             
-            particles.push(new Particle(
+            const trailParticle = trailEffectManager.createTrailParticle(
               this.x - Math.cos(this.angle) * distance,
               this.y - Math.sin(this.angle) * distance,
               offsetAngle,
               speed,
-              thrusterColor,
-              Math.random() * 4 + 2,
-              'thruster'
-            ));
+              Math.random() * 4 + 2
+            );
+            
+            particles.push(trailParticle);
           }
         }
 
@@ -4147,7 +4900,7 @@
         this.maxDistance = owner === 'player' ? 1000 : 800;
         this.distanceTraveled = 0;
         this.trail = [];
-        this.maxTrailLength = owner === 'player' ? (isMobile ? 5 : 8) : 5; // Reduce trail on mobile
+        this.maxTrailLength = owner === 'player' ? (isMobile ? 4 : 6) : 4; // Reduced trail on mobile
         this.glowIntensity = 1;
         this.active = true;
         
@@ -4175,19 +4928,29 @@
         this.energy = Math.max(0, 100 - (this.distanceTraveled / this.maxDistance) * 100);
         this.glowIntensity = this.energy / 100;
         
-        // Create particle effects with custom trail colors - reduce on mobile
-        if (Math.random() < (isMobile ? 0.1 : 0.2)) {
+        // Create particle effects with custom trail effects - reduce on mobile
+        if (Math.random() < (isMobile ? 0.05 : 0.15)) {
           const offsetAngle = this.angle + (Math.random() - 0.5) * 0.5;
-          let color = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffaa00';
           
-          particles.push(new Particle(
-            this.x - Math.cos(this.angle) * 15,
-            this.y - Math.sin(this.angle) * 15,
-            offsetAngle,
-            1,
-            color,
-            2
-          ));
+          if (this.owner === 'player') {
+            const trailParticle = trailEffectManager.createTrailParticle(
+              this.x - Math.cos(this.angle) * 15,
+              this.y - Math.sin(this.angle) * 15,
+              offsetAngle,
+              1,
+              2
+            );
+            particles.push(trailParticle);
+          } else {
+            particles.push(new Particle(
+              this.x - Math.cos(this.angle) * 15,
+              this.y - Math.sin(this.angle) * 15,
+              offsetAngle,
+              1,
+              '#ffaa00',
+              2
+            ));
+          }
         }
         
         if (this.offscreen()) this.active = false;
@@ -4205,7 +4968,7 @@
           const trailSize = (i / this.trail.length) * this.width;
           
           ctx.globalAlpha = trailAlpha;
-          let trailColor = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffcc88';
+          let trailColor = this.owner === 'player' ? trailEffectManager.getCurrentColor() : '#ffcc88';
           
           ctx.fillStyle = trailColor;
           ctx.beginPath();
@@ -4220,13 +4983,13 @@
         
         // Glow effect
         ctx.shadowBlur = 20;
-        let shadowColor = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffaa00';
+        let shadowColor = this.owner === 'player' ? trailEffectManager.getCurrentColor() : '#ffaa00';
         ctx.shadowColor = shadowColor;
         
         // Main bullet body
         const gradient = ctx.createLinearGradient(-this.length/2, 0, this.length/2, 0);
         if (this.owner === 'player') {
-          const trailColor = trailColorManager.getCurrentColor();
+          const trailColor = trailEffectManager.getCurrentColor();
           gradient.addColorStop(0, `${trailColor}40`);
           gradient.addColorStop(0.5, '#ffffff');
           gradient.addColorStop(1, `${trailColor}CC`);
@@ -4274,7 +5037,7 @@
         this.lastShot = 0;
         this.shootCooldown = diffConfig.bossShootCooldown;
         this.lastSpecialAttack = 0;
-        this.specialAttackCooldown = 3000; // Enhanced special attacks
+        this.specialAttackCooldown = 3000;
         this.movePattern = 0;
         this.moveTimer = 0;
         this.pulsePhase = 0;
@@ -4367,7 +5130,7 @@
         this.lastPhaseChange = Date.now();
         
         // Visual effect for phase transition - reduce particles on mobile
-        const particleCount = isMobile ? 10 : 20;
+        const particleCount = isMobile ? 8 : 15;
         for (let i = 0; i < particleCount; i++) {
           const angle = (Math.PI * 2 * i) / particleCount;
           particles.push(new Particle(
@@ -4590,13 +5353,13 @@
         // Enhanced shooting properties based on difficulty
         this.canShoot = Math.random() < diffConfig.enemyShootChance;
         this.lastShot = 0;
-        this.shootCooldown = 2500 + Math.random() * 1000; // 2.5-3.5 seconds
-        this.shootRange = 250; // Reduced range for balance
+        this.shootCooldown = 2500 + Math.random() * 1000;
+        this.shootRange = 250;
         
         // Visual properties
         this.pulsePhase = Math.random() * Math.PI * 2;
         this.trailPoints = [];
-        this.maxTrailLength = isMobile ? 4 : 6; // Reduce trail on mobile
+        this.maxTrailLength = isMobile ? 3 : 5; // Reduce trail on mobile
       }
 
       update(target, allEnemies) {
@@ -4841,7 +5604,7 @@
         this.y = this.baseY + Math.sin(this.pulseTime * 2) * 5;
         
         // Create particles - reduce on mobile
-        if (Math.random() < (isMobile ? 0.1 : 0.2)) {
+        if (Math.random() < (isMobile ? 0.05 : 0.15)) {
           const angle = Math.random() * Math.PI * 2;
           const speed = Math.random() * 2 + 1;
           const color = this.getParticleColor();
@@ -5050,7 +5813,7 @@
       currentBoss = null;
 
       scoreSpan.textContent = score;
-      highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+      highScoreManager.initializeDisplays();
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
       bossHealthContainer.style.display = "none";
@@ -5076,6 +5839,7 @@
       // Reset mobile controls
       if (isMobile) {
         resetJoystick();
+        mobileControlManager.applySettings();
       } else {
         mouse.x = ship.x;
         mouse.y = ship.y;
@@ -5121,9 +5885,6 @@
         highScoreMessage.style.display = 'block';
         highScoreMessage.classList.add('new-high-score');
         finalScoreSpan.classList.add('new-high-score');
-        
-        // Update high score display in HUD
-        highScoreSpan.textContent = highScoreManager.formatScore(score);
       } else {
         highScoreMessage.style.display = 'none';
         highScoreMessage.classList.remove('new-high-score');
@@ -5160,7 +5921,7 @@
       }, 2000);
     }
 
-    // Optimized game loop with performance monitoring
+    // Optimized game loop with enhanced mobile performance
     let lastFrameTime = 0;
     const targetFPS = isMobile ? 45 : 60; // Lower FPS target on mobile
     const frameInterval = 1000 / targetFPS;
@@ -5168,7 +5929,7 @@
     function gameLoop(currentTime) {
       if (!gameRunning || pauseManager.isPaused) return;
 
-      // FPS throttling for mobile performance
+      // Enhanced FPS throttling for mobile performance
       if (currentTime - lastFrameTime < frameInterval) {
         animationFrameId = requestAnimationFrame(gameLoop);
         return;
@@ -5474,7 +6235,7 @@
               }
               
               // Create pickup effect - reduce particles on mobile
-              const particleCount = isMobile ? 5 : 10;
+              const particleCount = isMobile ? 3 : 8;
               for (let j = 0; j < particleCount; j++) {
                 const angle = (Math.PI * 2 * j) / particleCount;
                 particles.push(new Particle(p.x, p.y, angle, 3, p.getParticleColor(), 5));
@@ -5584,10 +6345,19 @@
       joystick.style.opacity = "1";
       joystick.style.visibility = "visible";
 
+      // Apply mobile control settings
+      mobileControlManager.applySettings();
+
       // Update joystick center on resize and orientation change
-      window.addEventListener('resize', updateJoystickCenter);
+      window.addEventListener('resize', () => {
+        updateJoystickCenter();
+        mobileControlManager.applySettings();
+      });
       window.addEventListener('orientationchange', () => {
-        setTimeout(updateJoystickCenter, 100);
+        setTimeout(() => {
+          updateJoystickCenter();
+          mobileControlManager.applySettings();
+        }, 100);
       });
       updateJoystickCenter();
 
@@ -5760,7 +6530,10 @@
       }, { once: true });
     }
     
-    // Game will be initialized after customization
+    // Initialize mobile control settings
+    if (isMobile) {
+      mobileControlManager.applySettings();
+    }
   </script>
 </body>
 </html>
