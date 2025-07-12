@@ -5,7 +5,6 @@
   <title>Space Shooter - Enhanced Edition</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" href="icon.png" type="image/x-icon">
   <style>
     html, body {
       margin: 0;
@@ -234,27 +233,26 @@
       font-weight: 900;
     }
 
-    /* High Score specific styling */
-    .high-score {
-      color: #ffdd00;
-      text-shadow: 0 0 8px rgba(255, 221, 0, 0.8);
-      animation: high-score-glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes high-score-glow {
-      0% { text-shadow: 0 0 8px rgba(255, 221, 0, 0.8); }
-      100% { text-shadow: 0 0 15px rgba(255, 221, 0, 1), 0 0 25px rgba(255, 221, 0, 0.5); }
-    }
-
     .difficulty-indicator {
       color: #ffaa00;
       font-size: 14px;
       text-shadow: 0 0 5px rgba(255, 170, 0, 0.8);
     }
 
+    .difficulty-medium {
+      color: #ff8800;
+      text-shadow: 0 0 5px rgba(255, 136, 0, 0.8);
+    }
+
     .difficulty-hard {
       color: #ff4444;
       text-shadow: 0 0 5px rgba(255, 68, 68, 0.8);
+    }
+
+    /* High Score Display */
+    .high-score {
+      color: #ffd700;
+      text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
     }
 
     /* Boss Health Bar */
@@ -757,6 +755,18 @@
       box-shadow: 0 5px 25px rgba(0, 255, 136, 0.8);
     }
 
+    .difficulty-btn.medium {
+      background: linear-gradient(45deg, #ff8800, #cc6600);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 136, 0, 0.5);
+    }
+
+    .difficulty-btn.medium:hover {
+      background: linear-gradient(45deg, #cc6600, #aa5500);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(255, 136, 0, 0.8);
+    }
+
     .difficulty-btn.hard {
       background: linear-gradient(45deg, #ff4444, #cc0000);
       color: white;
@@ -820,26 +830,6 @@
       text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
     }
 
-    /* High score display in game over screen */
-    .score-display {
-      margin: 15px 0;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      border: 1px solid rgba(0, 255, 255, 0.3);
-    }
-
-    .new-high-score {
-      color: #ffdd00;
-      text-shadow: 0 0 20px rgba(255, 221, 0, 1);
-      animation: new-high-score-celebration 2s ease-in-out infinite;
-    }
-
-    @keyframes new-high-score-celebration {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-    }
-
     #game-over-screen button {
       padding: 20px 40px;
       font-size: 1.5em;
@@ -861,6 +851,24 @@
       background: linear-gradient(45deg, #00cccc, #0066cc);
       transform: translateY(-2px);
       box-shadow: 0 5px 25px rgba(0, 255, 255, 0.8);
+    }
+
+    /* New High Score Animation */
+    .new-high-score {
+      animation: high-score-celebration 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes high-score-celebration {
+      0% { 
+        color: #ffd700;
+        text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+        transform: scale(1);
+      }
+      100% { 
+        color: #ffff00;
+        text-shadow: 0 0 30px rgba(255, 255, 0, 1), 0 0 50px rgba(255, 215, 0, 0.8);
+        transform: scale(1.05);
+      }
     }
 
     /* Responsive Design - Enhanced Mobile Optimization */
@@ -1238,9 +1246,13 @@
         EASY MODE
         <div class="difficulty-description">Standard gameplay - enemies don't shoot back</div>
       </button>
+      <button class="difficulty-btn medium" id="medium-btn">
+        MEDIUM MODE
+        <div class="difficulty-description">Balanced challenge - some enemies shoot back</div>
+      </button>
       <button class="difficulty-btn hard" id="hard-btn">
         HARD MODE
-        <div class="difficulty-description">Intense combat - enemies shoot back at you!</div>
+        <div class="difficulty-description">Intense combat - all enemies shoot back at you!</div>
       </button>
     </div>
   </div>
@@ -1327,7 +1339,7 @@
       <span class="hud-value" id="score">0</span>
     </div>
     <div class="hud-item">
-      <span class="hud-label">HIGH SCORE:</span>
+      <span class="hud-label">HIGH:</span>
       <span class="hud-value high-score" id="high-score">0</span>
     </div>
     <div class="hud-item">
@@ -1353,90 +1365,129 @@
 
   <div id="game-over-screen">
     <h1>GAME OVER</h1>
-    <div class="score-display">
-      <p>FINAL SCORE: <span id="final-score">0</span></p>
-      <p id="high-score-message">HIGH SCORE: <span id="final-high-score">0</span></p>
-    </div>
+    <p>FINAL SCORE: <span id="final-score">0</span></p>
+    <p id="high-score-message" style="display: none;">NEW HIGH SCORE!</p>
     <button id="restart-button">RESTART MISSION</button>
     <button id="customize-button">CUSTOMIZE SHIP</button>
     <button id="difficulty-button">CHANGE DIFFICULTY</button>
   </div>
 
   <script>
-    /**
-     * HIGH SCORE SYSTEM
-     * Manages saving and loading high scores using localStorage
-     */
+    // High Score Management System
     class HighScoreManager {
       constructor() {
         this.storageKey = 'spaceShooterHighScore';
         this.highScore = this.loadHighScore();
-        this.updateHighScoreDisplay();
       }
 
-      /**
-       * Load high score from localStorage
-       * @returns {number} The saved high score or 0 if none exists
-       */
       loadHighScore() {
         try {
           const saved = localStorage.getItem(this.storageKey);
           return saved ? parseInt(saved, 10) : 0;
         } catch (error) {
-          console.warn('Could not load high score from localStorage:', error);
+          console.warn('Could not load high score:', error);
           return 0;
         }
       }
 
-      /**
-       * Save high score to localStorage
-       * @param {number} score - The score to save
-       */
       saveHighScore(score) {
         try {
           localStorage.setItem(this.storageKey, score.toString());
-          console.log(`High score saved: ${score}`);
+          this.highScore = score;
+          return true;
         } catch (error) {
-          console.warn('Could not save high score to localStorage:', error);
+          console.warn('Could not save high score:', error);
+          return false;
         }
       }
 
-      /**
-       * Check if current score is a new high score and update if necessary
-       * @param {number} currentScore - The current game score
-       * @returns {boolean} True if this is a new high score
-       */
       checkAndUpdateHighScore(currentScore) {
         if (currentScore > this.highScore) {
-          this.highScore = currentScore;
           this.saveHighScore(currentScore);
-          this.updateHighScoreDisplay();
-          return true;
+          return true; // New high score achieved
         }
         return false;
       }
 
-      /**
-       * Update the high score display in the HUD
-       */
-      updateHighScoreDisplay() {
-        const highScoreElement = document.getElementById('high-score');
-        if (highScoreElement) {
-          highScoreElement.textContent = this.highScore.toLocaleString();
-        }
-      }
-
-      /**
-       * Get the current high score
-       * @returns {number} The current high score
-       */
       getHighScore() {
         return this.highScore;
+      }
+
+      formatScore(score) {
+        return score.toLocaleString();
       }
     }
 
     // Initialize high score manager
     const highScoreManager = new HighScoreManager();
+
+    // Difficulty Configuration System
+    class DifficultyManager {
+      constructor() {
+        this.difficulties = {
+          easy: {
+            name: 'EASY',
+            className: 'difficulty-indicator',
+            enemySpeed: 1.5,
+            enemyShootChance: 0, // No shooting
+            enemySpawnRate: 180,
+            enemyDamage: 1,
+            bossHealth: 150,
+            bossSpeed: 1,
+            bossShootCooldown: 1500,
+            description: 'Standard gameplay - enemies don\'t shoot back'
+          },
+          medium: {
+            name: 'MEDIUM',
+            className: 'difficulty-indicator difficulty-medium',
+            enemySpeed: 1.8,
+            enemyShootChance: 0.3, // 30% of enemies shoot
+            enemySpawnRate: 150,
+            enemyDamage: 1,
+            bossHealth: 200,
+            bossSpeed: 1.2,
+            bossShootCooldown: 1200,
+            description: 'Balanced challenge - some enemies shoot back'
+          },
+          hard: {
+            name: 'HARD',
+            className: 'difficulty-indicator difficulty-hard',
+            enemySpeed: 2.2,
+            enemyShootChance: 1, // All enemies shoot
+            enemySpawnRate: 120,
+            enemyDamage: 1,
+            bossHealth: 250,
+            bossSpeed: 1.5,
+            bossShootCooldown: 1000,
+            description: 'Intense combat - all enemies shoot back at you!'
+          }
+        };
+        this.currentDifficulty = 'easy';
+      }
+
+      setDifficulty(difficulty) {
+        if (this.difficulties[difficulty]) {
+          this.currentDifficulty = difficulty;
+          return true;
+        }
+        return false;
+      }
+
+      getCurrentConfig() {
+        return this.difficulties[this.currentDifficulty];
+      }
+
+      getDifficultyName() {
+        return this.difficulties[this.currentDifficulty].name;
+      }
+
+      getDifficultyClass() {
+        return this.difficulties[this.currentDifficulty].className;
+      }
+    }
+
+    // Initialize difficulty manager
+    const difficultyManager = new DifficultyManager();
 
     // Enhanced Fullscreen API implementation with improved mobile support
     class FullscreenManager {
@@ -1635,7 +1686,7 @@
         if (!gameRunning || this.isPaused) return;
         
         this.isPaused = true;
-        this.pauseBtn.textContent = '<i class="fa-solid fa-play"></i> RESUME';
+        this.pauseBtn.innerHTML = '<i class="fa-solid fa-play"></i> RESUME';
         this.pauseBtn.classList.add('paused');
         this.pauseOverlay.style.display = 'flex';
         
@@ -1649,7 +1700,7 @@
         if (!this.isPaused) return;
         
         this.isPaused = false;
-        this.pauseBtn.textContent = '⏸ PAUSE';
+        this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
         this.pauseBtn.classList.remove('paused');
         this.pauseOverlay.style.display = 'none';
         
@@ -1677,7 +1728,7 @@
 
       reset() {
         this.isPaused = false;
-        this.pauseBtn.textContent = '⏸ PAUSE';
+        this.pauseBtn.innerHTML = '<i class="fas fa-pause"></i> PAUSE';
         this.pauseBtn.classList.remove('paused');
         this.pauseOverlay.style.display = 'none';
       }
@@ -1754,7 +1805,6 @@
     let gameRunning = false;
     let animationFrameId;
     let currentLives = 3;
-    let difficulty = 'easy';
     let selectedShip = 'striker';
     let currentBoss = null;
     let bossActive = false;
@@ -1860,12 +1910,12 @@
 
     const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     const scoreSpan = document.getElementById("score");
+    const highScoreSpan = document.getElementById("high-score");
     const shieldTimeSpan = document.getElementById("shield-time");
     const difficultyDisplay = document.getElementById("difficulty-display");
     const shipNameDisplay = document.getElementById("ship-name-display");
     const gameOverScreen = document.getElementById("game-over-screen");
     const finalScoreSpan = document.getElementById("final-score");
-    const finalHighScoreSpan = document.getElementById("final-high-score");
     const highScoreMessage = document.getElementById("high-score-message");
     const restartButton = document.getElementById("restart-button");
     const customizeButton = document.getElementById("customize-button");
@@ -1875,6 +1925,7 @@
     const joystick = document.getElementById("joystick");
     const shootButton = document.getElementById("shoot-button");
     const easyBtn = document.getElementById("easy-btn");
+    const mediumBtn = document.getElementById("medium-btn");
     const hardBtn = document.getElementById("hard-btn");
     const bossHealthContainer = document.getElementById("boss-health-container");
     const bossHealthFill = document.getElementById("boss-health-fill");
@@ -1884,20 +1935,33 @@
     // Store original boss health for regeneration
     let originalBossHealth = 0;
 
-    // Difficulty selection
+    // Initialize high score display
+    highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+
+    // Enhanced Difficulty selection with Medium mode
     easyBtn.addEventListener('click', () => {
-      difficulty = 'easy';
-      difficultyDisplay.textContent = 'EASY';
-      difficultyDisplay.className = 'hud-value difficulty-indicator';
+      difficultyManager.setDifficulty('easy');
+      updateDifficultyDisplay();
+      hideDifficultyScreen();
+    });
+
+    mediumBtn.addEventListener('click', () => {
+      difficultyManager.setDifficulty('medium');
+      updateDifficultyDisplay();
       hideDifficultyScreen();
     });
 
     hardBtn.addEventListener('click', () => {
-      difficulty = 'hard';
-      difficultyDisplay.textContent = 'HARD';
-      difficultyDisplay.className = 'hud-value difficulty-indicator difficulty-hard';
+      difficultyManager.setDifficulty('hard');
+      updateDifficultyDisplay();
       hideDifficultyScreen();
     });
+
+    function updateDifficultyDisplay() {
+      const config = difficultyManager.getCurrentConfig();
+      difficultyDisplay.textContent = config.name;
+      difficultyDisplay.className = `hud-value ${config.className}`;
+    }
 
     // Ship customization
     function initializeShipCustomization() {
@@ -2728,7 +2792,7 @@
       }
     }
 
-    // Enhanced Boss Enemy class with health regeneration and crash prevention
+    // Enhanced Boss Enemy class with improved AI and phases
     class Boss {
       constructor(type = 'destroyer') {
         this.type = type;
@@ -2736,20 +2800,30 @@
         this.y = -100;
         this.targetY = canvas.height * 0.2;
         this.radius = 60;
-        this.maxHealth = 200; // Increased health for better balance
+        
+        // Enhanced boss health based on difficulty
+        const diffConfig = difficultyManager.getCurrentConfig();
+        this.maxHealth = diffConfig.bossHealth;
         this.health = this.maxHealth;
-        this.speed = 1;
+        this.speed = diffConfig.bossSpeed;
+        
         this.angle = 0;
         this.active = true;
         this.phase = 'entering';
         this.lastShot = 0;
-        this.shootCooldown = 1200; // Slower shooting for balance
+        this.shootCooldown = diffConfig.bossShootCooldown;
         this.lastSpecialAttack = 0;
-        this.specialAttackCooldown = 4000; // Longer cooldown
+        this.specialAttackCooldown = 3000; // Enhanced special attacks
         this.movePattern = 0;
         this.moveTimer = 0;
         this.pulsePhase = 0;
-        this.damageReduction = 0.5; // Reduced damage from collision
+        this.damageReduction = 0.5;
+        
+        // Enhanced boss phases
+        this.currentPhase = 1;
+        this.maxPhases = 3;
+        this.phaseTransition = false;
+        this.lastPhaseChange = 0;
         
         // Store original health for regeneration
         originalBossHealth = this.maxHealth;
@@ -2764,8 +2838,7 @@
       }
 
       update(target) {
-        // Safety check: ensure boss is still active and target exists
-        if (!this.active || !target || !target.active) return;
+        if (!this.active) return;
         
         this.pulsePhase += 0.05;
         
@@ -2777,18 +2850,20 @@
           return;
         }
         
-        // Movement patterns
-        this.moveTimer += 0.02;
-        if (this.movePattern === 0) {
-          this.x += Math.sin(this.moveTimer) * 2;
-        } else if (this.movePattern === 1) {
-          this.x += Math.cos(this.moveTimer * 0.7) * 3;
-          this.y += Math.sin(this.moveTimer * 0.5) * 1;
-        }
+        // Enhanced movement patterns based on phase
+        this.moveTimer += 0.02 * this.speed;
         
-        // Change movement pattern occasionally
-        if (Math.random() < 0.005) {
-          this.movePattern = (this.movePattern + 1) % 2;
+        if (this.currentPhase === 1) {
+          // Phase 1: Basic movement
+          this.x += Math.sin(this.moveTimer) * 2 * this.speed;
+        } else if (this.currentPhase === 2) {
+          // Phase 2: More aggressive movement
+          this.x += Math.cos(this.moveTimer * 0.7) * 3 * this.speed;
+          this.y += Math.sin(this.moveTimer * 0.5) * 1.5;
+        } else if (this.currentPhase === 3) {
+          // Phase 3: Erratic movement
+          this.x += Math.sin(this.moveTimer * 1.5) * 4 * this.speed;
+          this.y += Math.cos(this.moveTimer * 1.2) * 2;
         }
         
         // Keep boss on screen
@@ -2798,54 +2873,114 @@
         // Update angle to face player
         this.angle = Math.atan2(target.y - this.y, target.x - this.x);
         
-        // Regular shooting
-        if (Date.now() - this.lastShot > this.shootCooldown) {
+        // Enhanced shooting patterns based on phase
+        const adjustedCooldown = this.shootCooldown / this.currentPhase;
+        if (Date.now() - this.lastShot > adjustedCooldown) {
           this.shoot(target);
         }
         
-        // Special attacks
-        if (Date.now() - this.lastSpecialAttack > this.specialAttackCooldown) {
+        // Enhanced special attacks
+        const specialCooldown = this.specialAttackCooldown / (this.currentPhase * 0.8);
+        if (Date.now() - this.lastSpecialAttack > specialCooldown) {
           this.specialAttack(target);
         }
         
-        // Update health bar - safety check for DOM element
-        if (bossHealthFill) {
-          const healthPercent = Math.max(0, (this.health / this.maxHealth) * 100);
-          bossHealthFill.style.width = healthPercent + '%';
+        // Phase transitions based on health
+        const healthPercent = this.health / this.maxHealth;
+        if (healthPercent <= 0.66 && this.currentPhase === 1) {
+          this.enterPhase(2);
+        } else if (healthPercent <= 0.33 && this.currentPhase === 2) {
+          this.enterPhase(3);
         }
+        
+        // Update health bar
+        const healthPercent2 = (this.health / this.maxHealth) * 100;
+        bossHealthFill.style.width = healthPercent2 + '%';
+      }
+
+      enterPhase(newPhase) {
+        if (this.currentPhase >= newPhase || this.phaseTransition) return;
+        
+        this.currentPhase = newPhase;
+        this.phaseTransition = true;
+        this.lastPhaseChange = Date.now();
+        
+        // Visual effect for phase transition
+        for (let i = 0; i < 20; i++) {
+          const angle = (Math.PI * 2 * i) / 20;
+          particles.push(new Particle(
+            this.x, this.y, angle, 8, 
+            this.currentPhase === 2 ? '#ffaa00' : '#ff0000', 
+            6
+          ));
+        }
+        
+        // Update boss name based on phase
+        if (this.currentPhase === 2) {
+          this.name = 'VOID DESTROYER - PHASE 2';
+          bossName.textContent = this.name;
+        } else if (this.currentPhase === 3) {
+          this.name = 'VOID DESTROYER - FINAL PHASE';
+          bossName.textContent = this.name;
+        }
+        
+        setTimeout(() => {
+          this.phaseTransition = false;
+        }, 1000);
       }
 
       shoot(target) {
-        // Safety check: ensure target exists
-        if (!target || !target.active) return;
-        
         this.lastShot = Date.now();
         
-        // Single shot for better balance
-        const bulletAngle = this.angle + (Math.random() - 0.5) * 0.2; // Add slight inaccuracy
-        enemyBullets.push(new Bullet(this.x, this.y, bulletAngle, 'enemy'));
+        if (this.currentPhase === 1) {
+          // Phase 1: Single shot with slight inaccuracy
+          const bulletAngle = this.angle + (Math.random() - 0.5) * 0.2;
+          enemyBullets.push(new Bullet(this.x, this.y, bulletAngle, 'enemy'));
+        } else if (this.currentPhase === 2) {
+          // Phase 2: Double shot
+          enemyBullets.push(new Bullet(this.x, this.y, this.angle - 0.1, 'enemy'));
+          enemyBullets.push(new Bullet(this.x, this.y, this.angle + 0.1, 'enemy'));
+        } else if (this.currentPhase === 3) {
+          // Phase 3: Triple shot
+          for (let i = -1; i <= 1; i++) {
+            enemyBullets.push(new Bullet(this.x, this.y, this.angle + i * 0.15, 'enemy'));
+          }
+        }
       }
 
       specialAttack(target) {
-        // Safety check: ensure target exists
-        if (!target || !target.active) return;
-        
         this.lastSpecialAttack = Date.now();
         
-        // Reduced spread shot for balance
-        for (let i = 0; i < 5; i++) {
-          const angle = (Math.PI * 2 * i) / 5;
-          enemyBullets.push(new Bullet(this.x, this.y, angle, 'enemy'));
+        if (this.currentPhase === 1) {
+          // Phase 1: 5-way spread
+          for (let i = 0; i < 5; i++) {
+            const angle = (Math.PI * 2 * i) / 5;
+            enemyBullets.push(new Bullet(this.x, this.y, angle, 'enemy'));
+          }
+        } else if (this.currentPhase === 2) {
+          // Phase 2: 8-way spread + targeted shots
+          for (let i = 0; i < 8; i++) {
+            const angle = (Math.PI * 2 * i) / 8;
+            enemyBullets.push(new Bullet(this.x, this.y, angle, 'enemy'));
+          }
+          // Add targeted shots
+          for (let i = 0; i < 3; i++) {
+            const targetAngle = this.angle + (i - 1) * 0.2;
+            enemyBullets.push(new Bullet(this.x, this.y, targetAngle, 'enemy'));
+          }
+        } else if (this.currentPhase === 3) {
+          // Phase 3: Spiral attack
+          for (let i = 0; i < 12; i++) {
+            const angle = (Math.PI * 2 * i) / 12 + this.moveTimer;
+            enemyBullets.push(new Bullet(this.x, this.y, angle, 'enemy'));
+          }
         }
       }
 
       takeDamage(amount, isShieldedHit = false) {
-        // Safety check: ensure boss is still active
-        if (!this.active) return false;
-        
         // Reduced damage from shielded player collision
         const finalDamage = isShieldedHit ? amount * 0.3 : amount;
-        this.health = Math.max(0, this.health - finalDamage);
+        this.health -= finalDamage;
         
         if (this.health <= 0) {
           this.active = false;
@@ -2854,53 +2989,64 @@
         return false;
       }
 
-      /**
-       * Regenerate boss health when player dies - prevents crashes
-       */
+      // Enhanced health regeneration when player dies
       regenerateHealth() {
-        // Safety check: ensure boss still exists and has original health reference
-        if (!this.active || !originalBossHealth) return;
-        
         this.health = originalBossHealth;
         this.maxHealth = originalBossHealth;
+        this.currentPhase = 1; // Reset to phase 1
+        this.phaseTransition = false;
+        this.name = 'VOID DESTROYER';
+        bossName.textContent = this.name;
         
-        // Update health bar to show full health - with safety check
-        if (bossHealthFill) {
-          const healthPercent = Math.max(0, (this.health / this.maxHealth) * 100);
-          bossHealthFill.style.width = healthPercent + '%';
-        }
-        
-        console.log('Boss health regenerated to:', this.health);
+        // Update health bar to show full health
+        const healthPercent = (this.health / this.maxHealth) * 100;
+        bossHealthFill.style.width = healthPercent + '%';
       }
 
       draw() {
-        // Safety check: ensure boss is still active
         if (!this.active) return;
         
         ctx.save();
         ctx.translate(this.x, this.y);
         
-        // Pulsing effect
-        const pulse = Math.sin(this.pulsePhase) * 0.2 + 1;
+        // Enhanced pulsing effect based on phase
+        const pulse = Math.sin(this.pulsePhase * this.currentPhase) * 0.2 + 1;
         ctx.scale(pulse, pulse);
         
-        // Main body
-        ctx.shadowBlur = 25;
+        // Phase-based visual enhancements
+        if (this.currentPhase >= 2) {
+          ctx.shadowBlur = 35;
+        } else {
+          ctx.shadowBlur = 25;
+        }
         ctx.shadowColor = this.color1;
         
+        // Enhanced gradient based on phase
         const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, this.radius);
-        gradient.addColorStop(0, this.color3);
-        gradient.addColorStop(0.6, this.color1);
-        gradient.addColorStop(1, this.color2);
+        if (this.currentPhase === 3) {
+          gradient.addColorStop(0, '#ffffff');
+          gradient.addColorStop(0.3, this.color3);
+          gradient.addColorStop(0.6, this.color1);
+          gradient.addColorStop(1, '#000000');
+        } else if (this.currentPhase === 2) {
+          gradient.addColorStop(0, this.color3);
+          gradient.addColorStop(0.5, '#ffaa00');
+          gradient.addColorStop(0.8, this.color1);
+          gradient.addColorStop(1, this.color2);
+        } else {
+          gradient.addColorStop(0, this.color3);
+          gradient.addColorStop(0.6, this.color1);
+          gradient.addColorStop(1, this.color2);
+        }
         
         ctx.fillStyle = gradient;
         ctx.beginPath();
         ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
         
-        // Boss details
-        ctx.strokeStyle = this.color3;
-        ctx.lineWidth = 4;
+        // Enhanced boss details based on phase
+        ctx.strokeStyle = this.currentPhase >= 2 ? '#ffaa00' : this.color3;
+        ctx.lineWidth = this.currentPhase >= 3 ? 6 : 4;
         
         // Cross pattern
         ctx.beginPath();
@@ -2910,11 +3056,12 @@
         ctx.lineTo(0, this.radius * 0.7);
         ctx.stroke();
         
-        // Outer spikes
-        for (let i = 0; i < 8; i++) {
-          const angle = (Math.PI * 2 * i) / 8;
+        // Enhanced outer spikes based on phase
+        const spikeCount = 8 + (this.currentPhase - 1) * 4;
+        for (let i = 0; i < spikeCount; i++) {
+          const angle = (Math.PI * 2 * i) / spikeCount + this.pulsePhase * 0.5;
           const innerRadius = this.radius * 0.8;
-          const outerRadius = this.radius * 1.2;
+          const outerRadius = this.radius * (1.2 + this.currentPhase * 0.1);
           
           const x1 = Math.cos(angle) * innerRadius;
           const y1 = Math.sin(angle) * innerRadius;
@@ -2927,17 +3074,17 @@
           ctx.stroke();
         }
         
-        // Core
-        ctx.fillStyle = '#ffffff';
+        // Enhanced core based on phase
+        ctx.fillStyle = this.currentPhase >= 3 ? '#ffff00' : '#ffffff';
         ctx.beginPath();
-        ctx.arc(0, 0, this.radius * 0.3, 0, Math.PI * 2);
+        ctx.arc(0, 0, this.radius * (0.3 + this.currentPhase * 0.05), 0, Math.PI * 2);
         ctx.fill();
         
         ctx.restore();
       }
     }
 
-    // Enhanced Enemy class with shooting capability
+    // Enhanced Enemy class with difficulty-based behavior
     class Enemy {
       constructor() {
         const edge = Math.floor(Math.random() * 4);
@@ -2958,7 +3105,11 @@
         }
         
         this.radius = 18;
-        this.speed = 1.5;
+        
+        // Enhanced speed based on difficulty
+        const diffConfig = difficultyManager.getCurrentConfig();
+        this.speed = diffConfig.enemySpeed;
+        
         this.health = 1;
         this.angle = 0;
         this.targetAngle = 0;
@@ -2974,10 +3125,11 @@
         this.wanderAngle = Math.random() * Math.PI * 2;
         this.wanderSpeed = 0.02;
         
-        // Shooting properties (for hard mode)
+        // Enhanced shooting properties based on difficulty
+        this.canShoot = Math.random() < diffConfig.enemyShootChance;
         this.lastShot = 0;
-        this.shootCooldown = 2500 + Math.random() * 1000; // 2.5-3.5 seconds for balance
-        this.shootRange = 250; // Reduced range
+        this.shootCooldown = 2500 + Math.random() * 1000; // 2.5-3.5 seconds
+        this.shootRange = 250; // Reduced range for balance
         
         // Visual properties
         this.pulsePhase = Math.random() * Math.PI * 2;
@@ -3026,8 +3178,8 @@
         // Update pulse
         this.pulsePhase += 0.1;
         
-        // Shooting logic for hard mode
-        if (difficulty === 'hard' && target && target.active) {
+        // Enhanced shooting logic based on difficulty
+        if (this.canShoot && target.active) {
           const distanceToTarget = Math.hypot(target.x - this.x, target.y - this.y);
           if (distanceToTarget < this.shootRange && Date.now() - this.lastShot > this.shootCooldown) {
             this.shoot(target);
@@ -3036,27 +3188,22 @@
       }
 
       shoot(target) {
-        // Safety check: ensure target exists
-        if (!target || !target.active) return;
-        
         this.lastShot = Date.now();
         const angleToTarget = Math.atan2(target.y - this.y, target.x - this.x);
         
-        // Add more inaccuracy for balance
-        const inaccuracy = (Math.random() - 0.5) * 0.5;
+        // Add inaccuracy based on difficulty (more accurate on harder difficulties)
+        const diffConfig = difficultyManager.getCurrentConfig();
+        const inaccuracy = (Math.random() - 0.5) * (0.6 - diffConfig.enemyShootChance * 0.2);
         const finalAngle = angleToTarget + inaccuracy;
         
         enemyBullets.push(new Bullet(this.x, this.y, finalAngle, 'enemy'));
       }
 
       getVectorTo(target) {
-        // Safety check: ensure target exists
-        if (!target || !target.active) return { x: 0, y: 0 };
-        
         const dx = target.x - this.x;
         const dy = target.y - this.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        return distance > 0 ? { x: dx / distance, y: dy / distance } : { x: 0, y: 0 };
+        return { x: dx / distance, y: dy / distance };
       }
 
       avoidBullets() {
@@ -3194,8 +3341,8 @@
         ctx.arc(0, 0, this.radius * 0.3, 0, Math.PI * 2);
         ctx.fill();
         
-        // Hard mode indicator (weapon glow)
-        if (difficulty === 'hard') {
+        // Shooting capability indicator
+        if (this.canShoot) {
           ctx.fillStyle = '#ffaa00';
           ctx.shadowColor = '#ffaa00';
           ctx.shadowBlur = 8;
@@ -3429,7 +3576,11 @@
       score = 0;
       shieldActive = false;
       shieldTimer = 0;
-      enemySpawnRate = 180;
+      
+      // Enhanced spawn rate based on difficulty
+      const diffConfig = difficultyManager.getCurrentConfig();
+      enemySpawnRate = diffConfig.enemySpawnRate;
+      
       waveLevel = 1;
       enemiesKilled = 0;
       nextBossAt = 20;
@@ -3437,6 +3588,7 @@
       currentBoss = null;
 
       scoreSpan.textContent = score;
+      highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
       bossHealthContainer.style.display = "none";
@@ -3476,24 +3628,13 @@
       animationFrameId = requestAnimationFrame(gameLoop);
     }
 
-    /**
-     * Enhanced game over function with high score management
-     */
     function gameOver() {
       gameRunning = false;
       ship.active = false;
       
-      // Check and update high score
-      const isNewHighScore = highScoreManager.checkAndUpdateHighScore(score);
-      
-      // Boss health regeneration when player dies - with crash prevention
+      // Enhanced boss health regeneration when player dies
       if (bossActive && currentBoss && currentBoss.active) {
-        try {
-          currentBoss.regenerateHealth();
-        } catch (error) {
-          console.warn('Error regenerating boss health:', error);
-          // Continue with game over process even if boss regeneration fails
-        }
+        currentBoss.regenerateHealth();
       }
       
       fullscreenManager.hide();
@@ -3502,18 +3643,22 @@
         cancelAnimationFrame(animationFrameId);
       }
       
-      // Update game over screen with high score information
-      finalScoreSpan.textContent = score.toLocaleString();
-      finalHighScoreSpan.textContent = highScoreManager.getHighScore().toLocaleString();
+      // Enhanced high score checking
+      const isNewHighScore = highScoreManager.checkAndUpdateHighScore(score);
       
-      // Show special message for new high score
+      finalScoreSpan.textContent = highScoreManager.formatScore(score);
+      
       if (isNewHighScore) {
-        highScoreMessage.innerHTML = '<span class="new-high-score">🎉 NEW HIGH SCORE! 🎉</span>';
+        highScoreMessage.style.display = 'block';
         highScoreMessage.classList.add('new-high-score');
-        console.log('New high score achieved:', score);
+        finalScoreSpan.classList.add('new-high-score');
+        
+        // Update high score display in HUD
+        highScoreSpan.textContent = highScoreManager.formatScore(score);
       } else {
-        highScoreMessage.innerHTML = `HIGH SCORE: <span id="final-high-score">${highScoreManager.getHighScore().toLocaleString()}</span>`;
+        highScoreMessage.style.display = 'none';
         highScoreMessage.classList.remove('new-high-score');
+        finalScoreSpan.classList.remove('new-high-score');
       }
       
       gameOverScreen.style.display = "flex";
@@ -3524,11 +3669,7 @@
     }
 
     function spawnBoss() {
-      // Crash prevention: check if boss is already active
-      if (bossActive || (currentBoss && currentBoss.active)) {
-        console.warn('Attempted to spawn boss while one is already active');
-        return;
-      }
+      if (bossActive) return;
       
       showBossWarning();
       bossActive = true;
@@ -3536,62 +3677,46 @@
       setTimeout(() => {
         try {
           currentBoss = new Boss('destroyer');
-          if (bossName) {
-            bossName.textContent = currentBoss.name;
-          }
-          if (bossHealthContainer) {
-            bossHealthContainer.style.display = 'block';
-          }
+          bossName.textContent = currentBoss.name;
+          bossHealthContainer.style.display = 'block';
           
-          // Clear regular enemies to prevent interference
+          // Clear regular enemies
           for (let enemy of enemies) {
-            if (enemy) {
-              enemy.active = false;
-            }
+            enemy.active = false;
           }
-          
-          console.log('Boss spawned successfully');
         } catch (error) {
           console.error('Error spawning boss:', error);
-          // Reset boss state if spawning fails
           bossActive = false;
-          currentBoss = null;
-          if (bossHealthContainer) {
-            bossHealthContainer.style.display = 'none';
-          }
         }
       }, 2000);
     }
 
-    /**
-     * Enhanced game loop with crash prevention for boss mechanics
-     */
     function gameLoop() {
       if (!gameRunning || pauseManager.isPaused) return;
 
-      // Clear canvas with gradient background
-      const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2);
-      gradient.addColorStop(0, '#1a1a3e');
-      gradient.addColorStop(1, '#000000');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      try {
+        // Clear canvas with gradient background
+        const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2);
+        gradient.addColorStop(0, '#1a1a3e');
+        gradient.addColorStop(1, '#000000');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw enhanced stars
-      for (let star of stars) {
-        const twinkle = Math.sin(star.twinkle) * 0.3 + 0.7;
-        ctx.fillStyle = star.color;
-        ctx.globalAlpha = twinkle;
-        ctx.shadowBlur = star.size * 2;
-        ctx.shadowColor = star.color;
-        ctx.fillRect(star.x, star.y, star.size, star.size);
-        ctx.globalAlpha = 1;
-        ctx.shadowBlur = 0;
-      }
+        // Draw enhanced stars
+        for (let star of stars) {
+          const twinkle = Math.sin(star.twinkle) * 0.3 + 0.7;
+          ctx.fillStyle = star.color;
+          ctx.globalAlpha = twinkle;
+          ctx.shadowBlur = star.size * 2;
+          ctx.shadowColor = star.color;
+          ctx.fillRect(star.x, star.y, star.size, star.size);
+          ctx.globalAlpha = 1;
+          ctx.shadowBlur = 0;
+        }
 
-      // Update and draw particles (optimized)
-      for (let i = particles.length - 1; i >= 0; i--) {
-        const p = particles[i];
-        if (p) {
+        // Update and draw particles (optimized)
+        for (let i = particles.length - 1; i >= 0; i--) {
+          const p = particles[i];
           p.update();
           if (!p.active) {
             particles.splice(i, 1);
@@ -3599,328 +3724,300 @@
             p.draw();
           }
         }
-      }
 
-      // Update and draw explosions
-      for (let i = explosions.length - 1; i >= 0; i--) {
-        const e = explosions[i];
-        if (e) {
+        // Update and draw explosions
+        for (let i = explosions.length - 1; i >= 0; i--) {
+          const e = explosions[i];
           e.update();
           e.draw();
           if (!e.active) {
             explosions.splice(i, 1);
           }
         }
-      }
 
-      // Update ship
-      ship.update();
-      ship.draw();
+        // Update ship
+        ship.update();
+        ship.draw();
 
-      // Check for boss spawn
-      if (enemiesKilled >= nextBossAt && !bossActive) {
-        spawnBoss();
-        nextBossAt += 20;
-      }
+        // Check for boss spawn
+        if (enemiesKilled >= nextBossAt && !bossActive) {
+          spawnBoss();
+          nextBossAt += 20;
+        }
 
-      // Update boss with enhanced crash prevention
-      if (currentBoss && currentBoss.active && bossActive) {
-        try {
-          currentBoss.update(ship);
-          currentBoss.draw();
-          
-          // Check collision with player bullets
-          for (let j = bullets.length - 1; j >= 0; j--) {
-            const b = bullets[j];
-            if (!b || !b.active || b.owner !== 'player') continue;
+        // Enhanced boss update with error handling
+        if (currentBoss && currentBoss.active) {
+          try {
+            currentBoss.update(ship);
+            currentBoss.draw();
             
-            const bdx = currentBoss.x - b.x;
-            const bdy = currentBoss.y - b.y;
-            if (Math.hypot(bdx, bdy) < currentBoss.radius + b.width) {
-              // Damage boss
-              try {
+            // Check collision with player bullets
+            for (let j = bullets.length - 1; j >= 0; j--) {
+              const b = bullets[j];
+              if (!b.active || b.owner !== 'player') continue;
+              const bdx = currentBoss.x - b.x;
+              const bdy = currentBoss.y - b.y;
+              if (Math.hypot(bdx, bdy) < currentBoss.radius + b.width) {
+                // Damage boss
                 const defeated = currentBoss.takeDamage(b.damage || 10);
                 explosions.push(new Explosion(b.x, b.y, 20));
                 b.active = false;
                 
                 if (defeated) {
-                  // Boss defeated - enhanced crash prevention
+                  // Boss defeated - enhanced with error handling
                   try {
                     explosions.push(new Explosion(currentBoss.x, currentBoss.y, 100));
                     score += 500; // Bonus points for boss
                     scoreSpan.textContent = score;
-                    
-                    // Safely reset boss state
                     bossActive = false;
-                    currentBoss.active = false;
                     currentBoss = null;
-                    
-                    if (bossHealthContainer) {
-                      bossHealthContainer.style.display = 'none';
-                    }
+                    bossHealthContainer.style.display = 'none';
                     
                     // Spawn special power-up
-                    const powerUpTypes = ['life', 'shield', 'double'];
-                    const randomType = powerUpTypes[Math.floor(Math.random() * powerUpTypes.length)];
-                    powerUps.push(new PowerUp(randomType));
-                    
-                    console.log('Boss defeated successfully');
+                    powerUps.push(new PowerUp(['life', 'shield', 'double'][Math.floor(Math.random() * 3)]));
                   } catch (error) {
                     console.error('Error handling boss defeat:', error);
-                    // Ensure boss is properly cleaned up even if error occurs
+                    // Ensure cleanup even if error occurs
                     bossActive = false;
                     currentBoss = null;
-                    if (bossHealthContainer) {
-                      bossHealthContainer.style.display = 'none';
-                    }
+                    bossHealthContainer.style.display = 'none';
                   }
                 }
-              } catch (error) {
-                console.error('Error processing boss damage:', error);
-                // Mark bullet as inactive to prevent further issues
-                b.active = false;
+                break;
               }
-              break;
             }
-          }
-          
-          // Enhanced boss collision mechanics with crash prevention
-          if (ship.active && currentBoss && currentBoss.active) {
-            try {
+            
+            // Enhanced boss collision mechanics
+            if (ship.active) {
               const dx = currentBoss.x - ship.x;
               const dy = currentBoss.y - ship.y;
               const dist = Math.hypot(dx, dy);
               if (dist < currentBoss.radius + ship.radius) {
                 if (shieldActive) {
                   // Reduced damage to boss with shield collision
-                  const defeated = currentBoss.takeDamage(15, true); // Reduced damage, marked as shielded hit
+                  const defeated = currentBoss.takeDamage(15, true);
                   explosions.push(new Explosion(currentBoss.x, currentBoss.y, 30));
                   if (defeated) {
                     try {
                       score += 500;
                       scoreSpan.textContent = score;
                       bossActive = false;
-                      currentBoss.active = false;
                       currentBoss = null;
-                      if (bossHealthContainer) {
-                        bossHealthContainer.style.display = 'none';
-                      }
-                      console.log('Boss defeated by shield collision');
+                      bossHealthContainer.style.display = 'none';
                     } catch (error) {
-                      console.error('Error handling shield collision boss defeat:', error);
+                      console.error('Error handling boss defeat from collision:', error);
                       bossActive = false;
                       currentBoss = null;
-                      if (bossHealthContainer) {
-                        bossHealthContainer.style.display = 'none';
-                      }
+                      bossHealthContainer.style.display = 'none';
                     }
                   }
                 } else {
                   // Balanced player damage from boss collision
                   explosions.push(new Explosion(ship.x, ship.y, 50));
-                  setLives(lives - 1); // Reduced from 2 damage to 1 for better balance
+                  setLives(lives - 1);
                   if (lives <= 0) {
                     gameOver();
                     return;
                   }
                 }
               }
-            } catch (error) {
-              console.error('Error handling boss collision:', error);
-              // Continue game loop even if collision handling fails
             }
-          }
-        } catch (error) {
-          console.error('Error updating boss:', error);
-          // Reset boss state if update fails
-          bossActive = false;
-          currentBoss = null;
-          if (bossHealthContainer) {
+          } catch (error) {
+            console.error('Error in boss update:', error);
+            // Cleanup boss if error occurs
+            bossActive = false;
+            currentBoss = null;
             bossHealthContainer.style.display = 'none';
           }
         }
-      }
 
-      // Spawn regular enemies (not when boss is active)
-      if (!bossActive) {
-        if (spawnTimer >= enemySpawnRate) {
-          enemies.push(new Enemy());
-          spawnTimer = 0;
-          
-          // Increase difficulty
-          if (enemySpawnRate > 60) {
-            enemySpawnRate -= 0.5;
-          }
-          
-          // Wave progression
-          if (enemiesKilled > 0 && enemiesKilled % 10 === 0) {
-            waveLevel++;
-            enemySpawnRate = Math.max(60, 180 - waveLevel * 15);
-          }
-        } else {
-          spawnTimer++;
-        }
-      }
-
-      // Update enemies
-      for (let i = enemies.length - 1; i >= 0; i--) {
-        const e = enemies[i];
-        if (!e || !e.active) {
-          enemies.splice(i, 1);
-          continue;
-        }
-        
-        e.update(ship, enemies);
-        e.draw();
-        
-        // Check collision with ship
-        if (ship.active) {
-          const dx = e.x - ship.x;
-          const dy = e.y - ship.y;
-          const dist = Math.hypot(dx, dy);
-          if (dist < e.radius + ship.radius) {
-            if (shieldActive) {
-              // Destroy enemy if shield is active
-              explosions.push(new Explosion(e.x, e.y, 40));
-              e.active = false;
-              score += 2; // Bonus points for shield kill
-              scoreSpan.textContent = score;
-            } else {
-              // Damage player
-              explosions.push(new Explosion(e.x, e.y, 50));
-              e.active = false;
-              setLives(lives - 1);
-              if (lives <= 0) {
-                gameOver();
-                return;
-              }
+        // Enhanced enemy spawning based on difficulty
+        if (!bossActive) {
+          if (spawnTimer >= enemySpawnRate) {
+            enemies.push(new Enemy());
+            spawnTimer = 0;
+            
+            // Increase difficulty
+            if (enemySpawnRate > 60) {
+              enemySpawnRate -= 0.5;
             }
-            continue;
+            
+            // Wave progression
+            if (enemiesKilled > 0 && enemiesKilled % 10 === 0) {
+              waveLevel++;
+              const diffConfig = difficultyManager.getCurrentConfig();
+              enemySpawnRate = Math.max(60, diffConfig.enemySpawnRate - waveLevel * 15);
+            }
+          } else {
+            spawnTimer++;
           }
         }
 
-        // Check collision with player bullets
-        for (let j = bullets.length - 1; j >= 0; j--) {
-          const b = bullets[j];
-          if (!b || !b.active || b.owner !== 'player') continue;
-          const bdx = e.x - b.x;
-          const bdy = e.y - b.y;
-          if (Math.hypot(bdx, bdy) < e.radius + b.width) {
-            // Create explosion
-            explosions.push(new Explosion(e.x, e.y, 30));
-            
-            // Remove enemy and bullet
-            e.active = false;
-            b.active = false;
-            
-            // Increase score
-            score += 10;
-            enemiesKilled++;
-            scoreSpan.textContent = score;
-            break;
-          }
-        }
-      }
-
-      // Update enemy bullets (hard mode and boss)
-      if (difficulty === 'hard' || bossActive) {
-        for (let i = enemyBullets.length - 1; i >= 0; i--) {
-          const b = enemyBullets[i];
-          if (!b || !b.active) {
-            enemyBullets.splice(i, 1);
+        // Update enemies
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+          if (!e.active) {
+            enemies.splice(i, 1);
             continue;
           }
           
-          b.update();
-          b.draw();
-          
-          if (b.offscreen()) {
-            b.active = false;
-            continue;
-          }
+          e.update(ship, enemies);
+          e.draw();
           
           // Check collision with ship
           if (ship.active) {
-            const dx = ship.x - b.x;
-            const dy = ship.y - b.y;
-            if (Math.hypot(dx, dy) < ship.radius + b.width) {
+            const dx = e.x - ship.x;
+            const dy = e.y - ship.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < e.radius + ship.radius) {
               if (shieldActive) {
-                // Bullet destroyed by shield
-                explosions.push(new Explosion(b.x, b.y, 20));
-                b.active = false;
+                // Destroy enemy if shield is active
+                explosions.push(new Explosion(e.x, e.y, 40));
+                e.active = false;
+                score += 2; // Bonus points for shield kill
+                scoreSpan.textContent = score;
               } else {
                 // Damage player
-                explosions.push(new Explosion(b.x, b.y, 25));
-                b.active = false;
+                explosions.push(new Explosion(e.x, e.y, 50));
+                e.active = false;
                 setLives(lives - 1);
                 if (lives <= 0) {
                   gameOver();
                   return;
                 }
               }
+              continue;
+            }
+          }
+
+          // Check collision with player bullets
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            const b = bullets[j];
+            if (!b.active || b.owner !== 'player') continue;
+            const bdx = e.x - b.x;
+            const bdy = e.y - b.y;
+            if (Math.hypot(bdx, bdy) < e.radius + b.width) {
+              // Create explosion
+              explosions.push(new Explosion(e.x, e.y, 30));
+              
+              // Remove enemy and bullet
+              e.active = false;
+              b.active = false;
+              
+              // Increase score
+              score += 10;
+              enemiesKilled++;
+              scoreSpan.textContent = score;
+              break;
             }
           }
         }
-      }
 
-      // Spawn power-ups
-      powerTimer++;
-      if (powerTimer > 900) { // Every 15 seconds at 60fps
-        const types = ["life", "double", "shield"];
-        const type = types[Math.floor(Math.random() * types.length)];
-        powerUps.push(new PowerUp(type));
-        powerTimer = 0;
-      }
-
-      // Update power-ups
-      for (let i = powerUps.length - 1; i >= 0; i--) {
-        const p = powerUps[i];
-        if (!p || !p.active) {
-          powerUps.splice(i, 1);
-          continue;
-        }
-        
-        p.update();
-        p.draw();
-        
-        if (ship.active) {
-          const dx = p.x - ship.x;
-          const dy = p.y - ship.y;
-          if (Math.hypot(dx, dy) < p.radius + ship.radius) {
-            if (p.type === "life") {
-              setLives(Math.min(maxLives, lives + 1));
-            } else if (p.type === "double") {
-              ship.doubleShot = true;
-              ship.doubleTimer = 900; // 15 seconds
-            } else if (p.type === "shield") {
-              shieldActive = true;
-              shieldTimer = 600; // 10 seconds
-              shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
+        // Enhanced enemy bullets update
+        const diffConfig = difficultyManager.getCurrentConfig();
+        if (diffConfig.enemyShootChance > 0 || bossActive) {
+          for (let i = enemyBullets.length - 1; i >= 0; i--) {
+            const b = enemyBullets[i];
+            if (!b.active) {
+              enemyBullets.splice(i, 1);
+              continue;
             }
             
-            // Create pickup effect
-            for (let j = 0; j < 10; j++) {
-              const angle = (Math.PI * 2 * j) / 10;
-              particles.push(new Particle(p.x, p.y, angle, 3, p.getParticleColor(), 5));
+            b.update();
+            b.draw();
+            
+            if (b.offscreen()) {
+              b.active = false;
+              continue;
             }
             
-            p.active = false;
+            // Check collision with ship
+            if (ship.active) {
+              const dx = ship.x - b.x;
+              const dy = ship.y - b.y;
+              if (Math.hypot(dx, dy) < ship.radius + b.width) {
+                if (shieldActive) {
+                  // Bullet destroyed by shield
+                  explosions.push(new Explosion(b.x, b.y, 20));
+                  b.active = false;
+                } else {
+                  // Damage player
+                  explosions.push(new Explosion(b.x, b.y, 25));
+                  b.active = false;
+                  setLives(lives - 1);
+                  if (lives <= 0) {
+                    gameOver();
+                    return;
+                  }
+                }
+              }
+            }
           }
         }
-      }
 
-      // Update bullets
-      for (let i = bullets.length - 1; i >= 0; i--) {
-        const b = bullets[i];
-        if (!b || !b.active) {
-          bullets.splice(i, 1);
-          continue;
+        // Spawn power-ups
+        powerTimer++;
+        if (powerTimer > 900) { // Every 15 seconds at 60fps
+          const types = ["life", "double", "shield"];
+          const type = types[Math.floor(Math.random() * types.length)];
+          powerUps.push(new PowerUp(type));
+          powerTimer = 0;
         }
-        b.update();
-        b.draw();
-        if (b.offscreen()) {
-          b.active = false;
+
+        // Update power-ups
+        for (let i = powerUps.length - 1; i >= 0; i--) {
+          const p = powerUps[i];
+          if (!p.active) {
+            powerUps.splice(i, 1);
+            continue;
+          }
+          
+          p.update();
+          p.draw();
+          
+          if (ship.active) {
+            const dx = p.x - ship.x;
+            const dy = p.y - ship.y;
+            if (Math.hypot(dx, dy) < p.radius + ship.radius) {
+              if (p.type === "life") {
+                setLives(Math.min(maxLives, lives + 1));
+              } else if (p.type === "double") {
+                ship.doubleShot = true;
+                ship.doubleTimer = 900; // 15 seconds
+              } else if (p.type === "shield") {
+                shieldActive = true;
+                shieldTimer = 600; // 10 seconds
+                shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
+              }
+              
+              // Create pickup effect
+              for (let j = 0; j < 10; j++) {
+                const angle = (Math.PI * 2 * j) / 10;
+                particles.push(new Particle(p.x, p.y, angle, 3, p.getParticleColor(), 5));
+              }
+              
+              p.active = false;
+            }
+          }
         }
+
+        // Update bullets
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i];
+          if (!b.active) {
+            bullets.splice(i, 1);
+            continue;
+          }
+          b.update();
+          b.draw();
+          if (b.offscreen()) {
+            b.active = false;
+          }
+        }
+
+      } catch (error) {
+        console.error('Error in game loop:', error);
+        // Continue game loop even if error occurs
       }
 
       animationFrameId = requestAnimationFrame(gameLoop);
