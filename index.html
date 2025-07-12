@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Space Shooter - Enhanced Edition</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     html, body {
       margin: 0;
@@ -14,6 +15,13 @@
       height: 100%;
       width: 100%;
       font-family: 'Orbitron', 'Arial', sans-serif;
+      /* Prevent text selection to avoid interference with shooting */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -21,6 +29,28 @@
     canvas {
       display: block;
       background: linear-gradient(45deg, #0a0a2e, #16213e, #0a0a2e);
+      /* Prevent text selection on canvas */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Prevent text selection globally */
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* Allow selection only for specific elements if needed */
+    input, textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
     }
 
     /* Hexagon Hearts Styles */
@@ -259,11 +289,19 @@
       100% { text-shadow: 0 0 20px rgba(255, 68, 68, 1), 0 0 30px rgba(255, 68, 68, 0.5); }
     }
 
-    /* Fullscreen Button */
-    #fullscreen-btn {
+    /* Control Buttons Container */
+    #control-buttons {
       position: absolute;
       top: 20px;
       right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+    }
+
+    /* Fullscreen Button */
+    #fullscreen-btn {
       background: rgba(0, 255, 255, 0.2);
       border: 2px solid rgba(0, 255, 255, 0.5);
       color: #00ffff;
@@ -272,7 +310,6 @@
       font-family: 'Orbitron', sans-serif;
       font-weight: 700;
       cursor: pointer;
-      z-index: 20;
       backdrop-filter: blur(5px);
       transition: all 0.3s ease;
     }
@@ -281,6 +318,68 @@
       background: rgba(0, 255, 255, 0.3);
       border-color: rgba(0, 255, 255, 0.8);
       transform: translateY(-2px);
+    }
+
+    /* Pause Button */
+    #pause-btn {
+      background: rgba(255, 255, 0, 0.2);
+      border: 2px solid rgba(255, 255, 0, 0.5);
+      color: #ffff00;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    #pause-btn:hover {
+      background: rgba(255, 255, 0, 0.3);
+      border-color: rgba(255, 255, 0, 0.8);
+      transform: translateY(-2px);
+    }
+
+    #pause-btn.paused {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.5);
+      color: #ff0000;
+    }
+
+    #pause-btn.paused:hover {
+      background: rgba(255, 0, 0, 0.3);
+      border-color: rgba(255, 0, 0, 0.8);
+    }
+
+    /* Pause Overlay */
+    #pause-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+
+    .pause-text {
+      color: #ffff00;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 4vw;
+      font-weight: 900;
+      text-shadow: 0 0 30px rgba(255, 255, 0, 1);
+      animation: pause-pulse 2s ease-in-out infinite alternate;
+      text-align: center;
+    }
+
+    @keyframes pause-pulse {
+      0% { opacity: 0.8; transform: scale(1); }
+      100% { opacity: 1; transform: scale(1.05); }
     }
 
     /* Enhanced Mobile Controls - More Compact */
@@ -311,7 +410,6 @@
       box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
       pointer-events: auto;
       touch-action: none;
-      user-select: none;
     }
 
     #joystick {
@@ -327,7 +425,6 @@
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
       transition: transform 0.1s ease;
       pointer-events: none;
-      user-select: none;
     }
 
     #joystick.active {
@@ -354,7 +451,6 @@
       overflow: hidden;
       transition: all 0.1s ease;
       cursor: pointer;
-      user-select: none;
       pointer-events: auto;
       touch-action: manipulation;
     }
@@ -807,9 +903,12 @@
         font-size: 16px;
       }
 
-      #fullscreen-btn {
+      #control-buttons {
         top: 5px;
         right: 5px;
+      }
+
+      #fullscreen-btn, #pause-btn {
         padding: 8px 12px;
         font-size: 12px;
       }
@@ -923,6 +1022,10 @@
 
       .ship-option {
         padding: 10px;
+      }
+
+      .pause-text {
+        font-size: 8vw;
       }
 
       /* Better scrolling for mobile */
@@ -1153,8 +1256,19 @@
 
   <canvas id="game"></canvas>
 
-  <!-- Fullscreen Button -->
-  <button id="fullscreen-btn" style="display: none;">⛶ FULLSCREEN</button>
+  <!-- Control Buttons -->
+  <div id="control-buttons">
+    <button id="fullscreen-btn" style="display: none;">⛶ FULLSCREEN</button>
+    <button id="pause-btn"><i class="fas fa-pause"></i> PAUSE</button>
+  </div>
+
+  <!-- Pause Overlay -->
+  <div id="pause-overlay">
+    <div class="pause-text">
+      <i class="fas fa-pause"></i> GAME PAUSED <i class="fas fa-pause"></i><br>
+      <small style="font-size: 0.6em;">Click RESUME to continue</small>
+    </div>
+  </div>
 
   <div id="boss-warning">
     <div class="boss-warning-text">
@@ -1209,12 +1323,36 @@
   </div>
 
   <script>
-    // Fullscreen API implementation with cross-browser support
+    // Enhanced Fullscreen API implementation with improved mobile support
     class FullscreenManager {
       constructor() {
         this.isFullscreen = false;
         this.fullscreenBtn = document.getElementById('fullscreen-btn');
         this.bindEvents();
+        this.mobileFullscreenSupported = this.checkMobileFullscreenSupport();
+      }
+
+      checkMobileFullscreenSupport() {
+        // Better detection for mobile fullscreen support
+        const userAgent = navigator.userAgent.toLowerCase();
+        const isIOS = /iphone|ipad|ipod/.test(userAgent);
+        const isAndroid = /android/.test(userAgent);
+        
+        // iOS Safari doesn't support programmatic fullscreen
+        if (isIOS) {
+          return false;
+        }
+        
+        // Most modern Android browsers support fullscreen
+        if (isAndroid) {
+          return !!(
+            document.documentElement.requestFullscreen ||
+            document.documentElement.webkitRequestFullscreen ||
+            document.documentElement.mozRequestFullScreen
+          );
+        }
+        
+        return this.isFullscreenSupported();
       }
 
       bindEvents() {
@@ -1231,21 +1369,45 @@
         try {
           const element = document.documentElement;
           
+          // Try different fullscreen methods with proper error handling
           if (element.requestFullscreen) {
-            await element.requestFullscreen();
+            await element.requestFullscreen({ navigationUI: "hide" });
           } else if (element.webkitRequestFullscreen) {
-            await element.webkitRequestFullscreen();
+            await element.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
           } else if (element.mozRequestFullScreen) {
             await element.mozRequestFullScreen();
           } else if (element.msRequestFullscreen) {
             await element.msRequestFullscreen();
+          } else {
+            // Fallback for devices that don't support fullscreen
+            this.simulateFullscreen();
+            return true;
           }
           
           return true;
         } catch (error) {
           console.warn('Fullscreen request failed:', error);
+          // Try fallback fullscreen simulation
+          this.simulateFullscreen();
           return false;
         }
+      }
+
+      simulateFullscreen() {
+        // For devices that don't support true fullscreen, hide browser UI as much as possible
+        if (window.screen && window.screen.orientation) {
+          try {
+            window.screen.orientation.lock('landscape-primary').catch(() => {});
+          } catch (e) {}
+        }
+        
+        // Hide address bar on mobile by scrolling
+        setTimeout(() => {
+          window.scrollTo(0, 1);
+        }, 100);
+        
+        this.isFullscreen = true;
+        this.updateButtonText();
       }
 
       async exitFullscreen() {
@@ -1268,13 +1430,20 @@
       }
 
       async toggleFullscreen() {
-        if (this.isFullscreenSupported()) {
+        if (this.mobileFullscreenSupported || !this.isMobile()) {
           if (this.isFullscreen) {
             await this.exitFullscreen();
           } else {
             await this.enterFullscreen();
           }
+        } else {
+          // For unsupported devices, just simulate
+          this.simulateFullscreen();
         }
+      }
+
+      isMobile() {
+        return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       }
 
       isFullscreenSupported() {
@@ -1294,7 +1463,7 @@
           document.msFullscreenElement
         );
 
-        this.fullscreenBtn.textContent = this.isFullscreen ? '⛶ EXIT FULLSCREEN' : '⛶ FULLSCREEN';
+        this.updateButtonText();
         
         // Resize canvas when fullscreen changes
         setTimeout(() => {
@@ -1302,8 +1471,12 @@
         }, 100);
       }
 
+      updateButtonText() {
+        this.fullscreenBtn.textContent = this.isFullscreen ? '⛶ EXIT FULLSCREEN' : '⛶ FULLSCREEN';
+      }
+
       async autoEnterFullscreen() {
-        if (this.isFullscreenSupported() && !this.isFullscreen) {
+        if ((this.mobileFullscreenSupported || !this.isMobile()) && !this.isFullscreen) {
           await this.enterFullscreen();
         }
       }
@@ -1319,6 +1492,84 @@
 
     // Initialize fullscreen manager
     const fullscreenManager = new FullscreenManager();
+
+    // Pause functionality
+    class PauseManager {
+      constructor() {
+        this.isPaused = false;
+        this.pauseBtn = document.getElementById('pause-btn');
+        this.pauseOverlay = document.getElementById('pause-overlay');
+        this.bindEvents();
+      }
+
+      bindEvents() {
+        this.pauseBtn.addEventListener('click', () => this.togglePause());
+        this.pauseOverlay.addEventListener('click', () => this.resume());
+        
+        // Keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
+            if (gameRunning) {
+              this.togglePause();
+            }
+          }
+        });
+      }
+
+      pause() {
+        if (!gameRunning || this.isPaused) return;
+        
+        this.isPaused = true;
+        this.pauseBtn.textContent = '<i class="fa-solid fa-play"></i> RESUME';
+        this.pauseBtn.classList.add('paused');
+        this.pauseOverlay.style.display = 'flex';
+        
+        // Cancel animation frame to truly pause the game
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+      }
+
+      resume() {
+        if (!this.isPaused) return;
+        
+        this.isPaused = false;
+        this.pauseBtn.textContent = '⏸ PAUSE';
+        this.pauseBtn.classList.remove('paused');
+        this.pauseOverlay.style.display = 'none';
+        
+        // Resume the game loop
+        if (gameRunning) {
+          animationFrameId = requestAnimationFrame(gameLoop);
+        }
+      }
+
+      togglePause() {
+        if (this.isPaused) {
+          this.resume();
+        } else {
+          this.pause();
+        }
+      }
+
+      show() {
+        this.pauseBtn.style.display = 'block';
+      }
+
+      hide() {
+        this.pauseBtn.style.display = 'none';
+      }
+
+      reset() {
+        this.isPaused = false;
+        this.pauseBtn.textContent = '⏸ PAUSE';
+        this.pauseBtn.classList.remove('paused');
+        this.pauseOverlay.style.display = 'none';
+      }
+    }
+
+    // Initialize pause manager
+    const pauseManager = new PauseManager();
 
     // Loading screen
     let loadingProgress = 0;
@@ -1358,6 +1609,7 @@
     function hideCustomizationScreen() {
       customizationScreen.style.display = 'none';
       fullscreenManager.show();
+      pauseManager.show();
       resizeCanvas();
       initGame();
       
@@ -1395,7 +1647,7 @@
     let nextBossAt = 20;
     const maxLives = 6;
 
-    // Ship configurations
+    // Enhanced Ship configurations with 2 new ships
     const shipConfigs = {
       striker: {
         name: 'Cyber Striker',
@@ -1456,6 +1708,38 @@
           secondary: '#cc9900',
           accent: '#ffff88'
         }
+      },
+      // NEW SHIP 1: Stealth Phantom
+      phantom: {
+        name: 'Stealth Phantom',
+        theme: 'Shadow Black',
+        speed: 95,
+        power: 80,
+        defense: 65,
+        speedMultiplier: 1.2,
+        powerMultiplier: 1.15,
+        defenseMultiplier: 1.0,
+        colors: {
+          primary: '#444444',
+          secondary: '#222222',
+          accent: '#888888'
+        }
+      },
+      // NEW SHIP 2: Crystal Vanguard
+      vanguard: {
+        name: 'Crystal Vanguard',
+        theme: 'Crystal White',
+        speed: 70,
+        power: 95,
+        defense: 85,
+        speedMultiplier: 0.9,
+        powerMultiplier: 1.4,
+        defenseMultiplier: 1.2,
+        colors: {
+          primary: '#ffffff',
+          secondary: '#cccccc',
+          accent: '#aaffff'
+        }
       }
     };
 
@@ -1479,6 +1763,9 @@
     const bossHealthFill = document.getElementById("boss-health-fill");
     const bossName = document.getElementById("boss-name");
     const bossWarning = document.getElementById("boss-warning");
+
+    // Store original boss health for regeneration
+    let originalBossHealth = 0;
 
     // Difficulty selection
     easyBtn.addEventListener('click', () => {
@@ -1646,6 +1933,76 @@
         ctx.moveTo(20, -2);
         ctx.lineTo(15, 0);
         ctx.lineTo(20, 2);
+        ctx.closePath();
+        ctx.fill();
+        
+      } else if (shipType === 'phantom') {
+        // Stealth Phantom - Stealthy angular design
+        ctx.fillStyle = config.colors.primary;
+        ctx.beginPath();
+        ctx.moveTo(24, 0);
+        ctx.lineTo(-14, -8);
+        ctx.lineTo(-20, -6);
+        ctx.lineTo(-16, -2);
+        ctx.lineTo(-16, 2);
+        ctx.lineTo(-20, 6);
+        ctx.lineTo(-14, 8);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Shadow accents
+        ctx.fillStyle = config.colors.secondary;
+        ctx.beginPath();
+        ctx.moveTo(16, -3);
+        ctx.lineTo(20, 0);
+        ctx.lineTo(16, 3);
+        ctx.lineTo(12, 0);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Wing details
+        ctx.fillStyle = config.colors.accent;
+        ctx.beginPath();
+        ctx.moveTo(-12, -6);
+        ctx.lineTo(-8, -4);
+        ctx.lineTo(-8, 4);
+        ctx.lineTo(-12, 6);
+        ctx.closePath();
+        ctx.fill();
+        
+      } else if (shipType === 'vanguard') {
+        // Crystal Vanguard - Crystalline design
+        ctx.fillStyle = config.colors.primary;
+        ctx.beginPath();
+        ctx.moveTo(20, 0);
+        ctx.lineTo(-12, -12);
+        ctx.lineTo(-18, -8);
+        ctx.lineTo(-14, -4);
+        ctx.lineTo(-14, 4);
+        ctx.lineTo(-18, 8);
+        ctx.lineTo(-12, 12);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Crystal facets
+        ctx.fillStyle = config.colors.accent;
+        ctx.beginPath();
+        ctx.moveTo(15, -6);
+        ctx.lineTo(18, 0);
+        ctx.lineTo(15, 6);
+        ctx.lineTo(8, 3);
+        ctx.lineTo(8, -3);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Inner crystal
+        ctx.fillStyle = config.colors.secondary;
+        ctx.beginPath();
+        ctx.moveTo(12, -4);
+        ctx.lineTo(14, 0);
+        ctx.lineTo(12, 4);
+        ctx.lineTo(6, 2);
+        ctx.lineTo(6, -2);
         ctx.closePath();
         ctx.fill();
       }
@@ -2254,7 +2611,7 @@
       }
     }
 
-    // Enhanced Boss Enemy class with balanced mechanics
+    // Enhanced Boss Enemy class with health regeneration
     class Boss {
       constructor(type = 'destroyer') {
         this.type = type;
@@ -2276,6 +2633,9 @@
         this.moveTimer = 0;
         this.pulsePhase = 0;
         this.damageReduction = 0.5; // Reduced damage from collision
+        
+        // Store original health for regeneration
+        originalBossHealth = this.maxHealth;
         
         // Boss specific properties
         if (type === 'destroyer') {
@@ -2363,6 +2723,16 @@
           return true; // Boss defeated
         }
         return false;
+      }
+
+      // NEW: Regenerate health when player dies
+      regenerateHealth() {
+        this.health = originalBossHealth;
+        this.maxHealth = originalBossHealth;
+        
+        // Update health bar to show full health
+        const healthPercent = (this.health / this.maxHealth) * 100;
+        bossHealthFill.style.width = healthPercent + '%';
       }
 
       draw() {
@@ -2925,6 +3295,7 @@
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
       bossHealthContainer.style.display = "none";
+      pauseManager.reset();
 
       // Clear arrays
       bullets.length = 0;
@@ -2963,9 +3334,14 @@
     function gameOver() {
       gameRunning = false;
       ship.active = false;
-      bossActive = false;
-      currentBoss = null;
+      
+      // Boss health regeneration when player dies
+      if (bossActive && currentBoss && currentBoss.active) {
+        currentBoss.regenerateHealth();
+      }
+      
       fullscreenManager.hide();
+      pauseManager.hide();
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
@@ -2996,7 +3372,7 @@
     }
 
     function gameLoop() {
-      if (!gameRunning) return;
+      if (!gameRunning || pauseManager.isPaused) return;
 
       // Clear canvas with gradient background
       const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2);
@@ -3469,6 +3845,7 @@
     // Restart and difficulty buttons
     restartButton.addEventListener("click", () => {
       fullscreenManager.show();
+      pauseManager.show();
       resizeCanvas();
       initGame();
       // Auto-enter fullscreen on restart
@@ -3480,12 +3857,14 @@
     customizeButton.addEventListener("click", () => {
       gameOverScreen.style.display = "none";
       fullscreenManager.hide();
+      pauseManager.hide();
       showCustomizationScreen();
     });
 
     difficultyButton.addEventListener("click", () => {
       gameOverScreen.style.display = "none";
       fullscreenManager.hide();
+      pauseManager.hide();
       showDifficultyScreen();
     });
 
