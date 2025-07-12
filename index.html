@@ -1942,8 +1942,9 @@
 
           if (Math.hypot(dxJoy, dyJoy) > 10) { 
             this.angle = Math.atan2(dyJoy, dxJoy);
-            this.vel.x += Math.cos(this.angle) * 0.3 * config.speedMultiplier;
-            this.vel.y += Math.sin(this.angle) * 0.3 * config.speedMultiplier;
+            // Reduced mobile speed: 0.18 instead of 0.3 (40% slower)
+            this.vel.x += Math.cos(this.angle) * 0.18 * config.speedMultiplier;
+            this.vel.y += Math.sin(this.angle) * 0.18 * config.speedMultiplier;
             thrusting = true;
           }
         }
