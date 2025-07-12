@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Shooter - Enhanced Edition</title>
+  <title>Space Shooter - Ilay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -363,6 +363,38 @@
       border-color: rgba(255, 0, 0, 0.8);
     }
 
+    /* Audio Button */
+    #audio-btn {
+      background: rgba(0, 255, 0, 0.2);
+      border: 2px solid rgba(0, 255, 0, 0.5);
+      color: #00ff00;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      display: none;
+    }
+
+    #audio-btn:hover {
+      background: rgba(0, 255, 0, 0.3);
+      border-color: rgba(0, 255, 0, 0.8);
+      transform: translateY(-2px);
+    }
+
+    #audio-btn.muted {
+      background: rgba(255, 0, 0, 0.2);
+      border-color: rgba(255, 0, 0, 0.5);
+      color: #ff0000;
+    }
+
+    #audio-btn.muted:hover {
+      background: rgba(255, 0, 0, 0.3);
+      border-color: rgba(255, 0, 0, 0.8);
+    }
+
     /* Pause Overlay */
     #pause-overlay {
       position: absolute;
@@ -370,27 +402,87 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.9);
       display: none;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 50;
       backdrop-filter: blur(10px);
     }
 
-    .pause-text {
-      color: #ffff00;
-      font-family: 'Orbitron', sans-serif;
-      font-size: 4vw;
-      font-weight: 900;
-      text-shadow: 0 0 30px rgba(255, 255, 0, 1);
-      animation: pause-pulse 2s ease-in-out infinite alternate;
+    .pause-menu {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid rgba(0, 255, 255, 0.5);
+      border-radius: 20px;
+      padding: 40px;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
-    @keyframes pause-pulse {
-      0% { opacity: 0.8; transform: scale(1); }
-      100% { opacity: 1; transform: scale(1.05); }
+    .pause-title {
+      color: #ffff00;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3em;
+      font-weight: 900;
+      text-shadow: 0 0 30px rgba(255, 255, 0, 1);
+      margin-bottom: 30px;
+    }
+
+    .pause-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      min-width: 200px;
+    }
+
+    .pause-btn {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .pause-btn.resume {
+      background: linear-gradient(45deg, #00ff88, #00cc66);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .pause-btn.resume:hover {
+      background: linear-gradient(45deg, #00cc66, #00aa44);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(0, 255, 136, 0.8);
+    }
+
+    .pause-btn.audio {
+      background: linear-gradient(45deg, #ffaa00, #cc8800);
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
+    }
+
+    .pause-btn.audio:hover {
+      background: linear-gradient(45deg, #cc8800, #aa6600);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(255, 170, 0, 0.8);
+    }
+
+    .pause-btn.home {
+      background: linear-gradient(45deg, #666, #444);
+      color: white;
+      box-shadow: 0 0 20px rgba(100, 100, 100, 0.5);
+    }
+
+    .pause-btn.home:hover {
+      background: linear-gradient(45deg, #555, #333);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
     /* Enhanced Mobile Controls - More Compact */
@@ -483,6 +575,355 @@
 
     #shoot-button.active::before {
       opacity: 1;
+    }
+
+    /* Home Screen - Redesigned with Muted Colors */
+    #home-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a1a3a 0%, #242447 50%, #1a1a3a 100%);
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .home-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(70, 130, 180, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(147, 112, 219, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 223, 0, 0.04) 0%, transparent 50%);
+      animation: background-pulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes background-pulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+
+    .home-content {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .game-title {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #7B68EE, #9370DB, #8A2BE2, #7B68EE);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 4s ease-in-out infinite;
+      text-shadow: 0 0 30px rgba(123, 104, 238, 0.3);
+      line-height: 1.1;
+    }
+
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .game-subtitle {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: #87CEEB;
+      margin-bottom: 40px;
+      text-shadow: 0 0 15px rgba(135, 206, 235, 0.5);
+      opacity: 0.9;
+    }
+
+    .home-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 50px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      background: rgba(0, 0, 0, 0.3);
+      border: 2px solid rgba(135, 206, 235, 0.4);
+      border-radius: 15px;
+      padding: 20px;
+      min-width: 150px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .stat-item:hover {
+      border-color: rgba(135, 206, 235, 0.7);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(135, 206, 235, 0.2);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #87CEEB;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .home-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .home-btn {
+      padding: 20px 50px;
+      font-size: 1.3rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      min-width: 250px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.5s;
+    }
+
+    .home-btn:hover::before {
+      left: 100%;
+    }
+
+    .home-btn.start {
+      background: linear-gradient(45deg, #5F9EA0, #4682B4);
+      color: white;
+      box-shadow: 0 0 20px rgba(95, 158, 160, 0.3);
+    }
+
+    .home-btn.start:hover {
+      background: linear-gradient(45deg, #4682B4, #2F4F4F);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(95, 158, 160, 0.5);
+    }
+
+    .home-btn.customize {
+      background: linear-gradient(45deg, #CD853F, #A0522D);
+      color: white;
+      box-shadow: 0 0 20px rgba(205, 133, 63, 0.3);
+    }
+
+    .home-btn.customize:hover {
+      background: linear-gradient(45deg, #A0522D, #8B4513);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(205, 133, 63, 0.5);
+    }
+
+    .home-btn.trail {
+      background: linear-gradient(45deg, #9370DB, #8A2BE2);
+      color: white;
+      box-shadow: 0 0 20px rgba(147, 112, 219, 0.3);
+    }
+
+    .home-btn.trail:hover {
+      background: linear-gradient(45deg, #8A2BE2, #7B68EE);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(147, 112, 219, 0.5);
+    }
+
+    .home-btn.difficulty {
+      background: linear-gradient(45deg, #DAA520, #B8860B);
+      color: white;
+      box-shadow: 0 0 20px rgba(218, 165, 32, 0.3);
+    }
+
+    .home-btn.difficulty:hover {
+      background: linear-gradient(45deg, #B8860B, #9ACD32);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(218, 165, 32, 0.5);
+    }
+
+    /* Trail Customization Screen */
+    #trail-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8));
+      color: white;
+      font-family: 'Orbitron', sans-serif;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 180;
+      padding: 20px;
+      box-sizing: border-box;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    #trail-screen h1 {
+      font-size: 4vw;
+      margin-bottom: 30px;
+      color: #aa44ff;
+      text-shadow: 0 0 30px rgba(170, 68, 255, 1);
+      animation: title-glow 2s ease-in-out infinite alternate;
+    }
+
+    .trail-preview {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(170, 68, 255, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      min-width: 300px;
+    }
+
+    .trail-preview h3 {
+      color: #aa44ff;
+      margin-bottom: 20px;
+      font-size: 1.4em;
+    }
+
+    .trail-canvas {
+      width: 250px;
+      height: 150px;
+      background: rgba(0, 20, 40, 0.8);
+      border: 1px solid rgba(170, 68, 255, 0.3);
+      border-radius: 10px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      max-width: 400px;
+      margin: 0 auto 30px;
+    }
+
+    .color-option {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 3px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .color-option::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .color-option:hover::before {
+      width: 100%;
+      height: 100%;
+    }
+
+    .color-option.selected {
+      border-color: #ffffff;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+      transform: scale(1.1);
+    }
+
+    .color-option.cyan { background: #00ffff; }
+    .color-option.red { background: #ff4444; }
+    .color-option.green { background: #00ff88; }
+    .color-option.purple { background: #aa44ff; }
+    .color-option.yellow { background: #ffdd00; }
+    .color-option.orange { background: #ff6600; }
+    .color-option.pink { background: #ff44aa; }
+    .color-option.white { background: #ffffff; }
+
+    .trail-buttons {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .trail-btn {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      min-width: 150px;
+    }
+
+    .trail-btn.save {
+      background: linear-gradient(45deg, #00ff88, #00cc66);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+    }
+
+    .trail-btn.save:hover {
+      background: linear-gradient(45deg, #00cc66, #00aa44);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(0, 255, 136, 0.8);
+    }
+
+    .trail-btn.back {
+      background: linear-gradient(45deg, #666, #444);
+      color: white;
+      box-shadow: 0 0 20px rgba(100, 100, 100, 0.5);
+    }
+
+    .trail-btn.back:hover {
+      background: linear-gradient(45deg, #555, #333);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
     /* Ship Customization Screen */
@@ -707,6 +1148,7 @@
       box-sizing: border-box;
       text-align: center;
       backdrop-filter: blur(10px);
+      display: none;
     }
 
     #difficulty-screen h1 {
@@ -786,7 +1228,29 @@
       line-height: 1.4;
     }
 
-    /* Enhanced Game Over Screen */
+    .back-to-home {
+      margin-top: 30px;
+      padding: 15px 30px;
+      font-size: 1.1em;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      background: linear-gradient(45deg, #666, #444);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .back-to-home:hover {
+      background: linear-gradient(45deg, #555, #333);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
+    }
+
+    /* Enhanced Game Over Screen with Standardized Buttons */
     #game-over-screen {
       position: absolute;
       top: 0;
@@ -830,27 +1294,80 @@
       text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
     }
 
-    #game-over-screen button {
+    /* Standardized Game Over Button Styles */
+    .game-over-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+      align-items: center;
+    }
+
+    .game-over-btn {
       padding: 20px 40px;
-      font-size: 1.5em;
+      width: 280px;
+      height: 70px;
+      font-size: 1.3em;
       font-family: 'Orbitron', sans-serif;
       font-weight: 700;
-      background: linear-gradient(45deg, #00ffff, #0080ff);
-      color: black;
       border: none;
       border-radius: 15px;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
       transition: all 0.3s ease;
       text-transform: uppercase;
       letter-spacing: 2px;
-      margin: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
 
-    #game-over-screen button:hover {
+    .game-over-btn.restart {
+      background: linear-gradient(45deg, #00ffff, #0080ff);
+      color: black;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+
+    .game-over-btn.restart:hover {
       background: linear-gradient(45deg, #00cccc, #0066cc);
       transform: translateY(-2px);
       box-shadow: 0 5px 25px rgba(0, 255, 255, 0.8);
+    }
+
+    .game-over-btn.customize {
+      background: linear-gradient(45deg, #CD853F, #A0522D);
+      color: white;
+      box-shadow: 0 0 20px rgba(205, 133, 63, 0.5);
+    }
+
+    .game-over-btn.customize:hover {
+      background: linear-gradient(45deg, #A0522D, #8B4513);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(205, 133, 63, 0.8);
+    }
+
+    .game-over-btn.difficulty {
+      background: linear-gradient(45deg, #DAA520, #B8860B);
+      color: white;
+      box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+    }
+
+    .game-over-btn.difficulty:hover {
+      background: linear-gradient(45deg, #B8860B, #9ACD32);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(218, 165, 32, 0.8);
+    }
+
+    .game-over-btn.home {
+      background: linear-gradient(45deg, #666, #444);
+      color: white;
+      box-shadow: 0 0 20px rgba(100, 100, 100, 0.5);
+    }
+
+    .game-over-btn.home:hover {
+      background: linear-gradient(45deg, #555, #333);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
     /* New High Score Animation */
@@ -949,7 +1466,7 @@
         right: 5px;
       }
 
-      #fullscreen-btn, #pause-btn {
+      #fullscreen-btn, #pause-btn, #audio-btn {
         padding: 8px 12px;
         font-size: 12px;
       }
@@ -960,6 +1477,13 @@
 
       #game-over-screen p {
         font-size: 6vw;
+      }
+
+      .game-over-btn {
+        width: 250px;
+        height: 60px;
+        font-size: 1.1em;
+        padding: 15px 30px;
       }
 
       #difficulty-screen h1 {
@@ -1065,8 +1589,8 @@
         padding: 10px;
       }
 
-      .pause-text {
-        font-size: 8vw;
+      .pause-title {
+        font-size: 2em;
       }
 
       /* Better scrolling for mobile */
@@ -1103,6 +1627,47 @@
       .ship-selection h3 {
         font-size: 1.2em;
         margin-bottom: 15px;
+      }
+
+      /* Home screen mobile */
+      .game-title {
+        font-size: clamp(2rem, 10vw, 4rem);
+      }
+
+      .home-stats {
+        gap: 20px;
+      }
+
+      .stat-item {
+        min-width: 120px;
+        padding: 15px;
+      }
+
+      .home-btn {
+        min-width: 200px;
+        padding: 15px 30px;
+        font-size: 1.1em;
+      }
+
+      /* Trail screen mobile */
+      #trail-screen h1 {
+        font-size: 8vw;
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        max-width: 300px;
+      }
+
+      .color-option {
+        width: 60px;
+        height: 60px;
+      }
+
+      .trail-canvas {
+        width: 200px;
+        height: 120px;
       }
     }
 
@@ -1159,7 +1724,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 200;
+      z-index: 250;
       color: white;
       font-family: 'Orbitron', sans-serif;
     }
@@ -1239,6 +1804,57 @@
     </div>
   </div>
 
+  <div id="home-screen">
+    <div class="home-background"></div>
+    <div class="home-content">
+      <h1 class="game-title">SPACE SHOOTER</h1>
+      <p class="game-subtitle">Enhanced Edition</p>
+      
+      <div class="home-stats">
+        <div class="stat-item">
+          <div class="stat-label">High Score</div>
+          <div class="stat-value" id="home-high-score">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Games Played</div>
+          <div class="stat-value" id="games-played">0</div>
+        </div>
+      </div>
+      
+      <div class="home-buttons">
+        <button class="home-btn start" id="home-start-btn">Start Game</button>
+        <button class="home-btn customize" id="home-customize-btn">Ship Customization</button>
+        <button class="home-btn trail" id="home-trail-btn">Trail Colors</button>
+        <button class="home-btn difficulty" id="home-difficulty-btn">Difficulty</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="trail-screen">
+    <h1>TRAIL CUSTOMIZATION</h1>
+    
+    <div class="trail-preview">
+      <h3>Trail Preview</h3>
+      <canvas class="trail-canvas" id="trail-preview-canvas" width="250" height="150"></canvas>
+    </div>
+    
+    <div class="color-grid">
+      <div class="color-option cyan" data-color="#00ffff"></div>
+      <div class="color-option red" data-color="#ff4444"></div>
+      <div class="color-option green" data-color="#00ff88"></div>
+      <div class="color-option purple" data-color="#aa44ff"></div>
+      <div class="color-option yellow" data-color="#ffdd00"></div>
+      <div class="color-option orange" data-color="#ff6600"></div>
+      <div class="color-option pink" data-color="#ff44aa"></div>
+      <div class="color-option white" data-color="#ffffff"></div>
+    </div>
+    
+    <div class="trail-buttons">
+      <button class="trail-btn save" id="save-trail-btn">Save & Apply</button>
+      <button class="trail-btn back" id="back-to-home-trail-btn">Back to Home</button>
+    </div>
+  </div>
+
   <div id="difficulty-screen">
     <h1>SELECT DIFFICULTY</h1>
     <div class="difficulty-buttons">
@@ -1255,6 +1871,7 @@
         <div class="difficulty-description">Intense combat - all enemies shoot back at you!</div>
       </button>
     </div>
+    <button class="back-to-home" id="back-to-home-difficulty-btn">Back to Home</button>
   </div>
 
   <div id="customization-screen">
@@ -1295,7 +1912,7 @@
     
     <div class="customization-buttons">
       <button class="customization-btn start" id="start-game-btn">Launch Mission</button>
-      <button class="customization-btn back" id="back-to-difficulty-btn">Back</button>
+      <button class="customization-btn back" id="back-to-home-customization-btn">Back to Home</button>
     </div>
   </div>
 
@@ -1305,13 +1922,18 @@
   <div id="control-buttons">
     <button id="fullscreen-btn" style="display: none;">⛶ FULLSCREEN</button>
     <button id="pause-btn"><i class="fas fa-pause"></i> PAUSE</button>
+    <button id="audio-btn"><i class="fas fa-volume-up"></i> AUDIO</button>
   </div>
 
   <!-- Pause Overlay -->
   <div id="pause-overlay">
-    <div class="pause-text">
-      <i class="fas fa-pause"></i> GAME PAUSED <i class="fas fa-pause"></i><br>
-      <small style="font-size: 0.6em;">Click RESUME to continue</small>
+    <div class="pause-menu">
+      <div class="pause-title">PAUSED</div>
+      <div class="pause-buttons">
+        <button class="pause-btn resume" id="pause-resume-btn">Resume</button>
+        <button class="pause-btn audio" id="pause-audio-btn">Toggle Audio</button>
+        <button class="pause-btn home" id="pause-home-btn">Back to Home</button>
+      </div>
     </div>
   </div>
 
@@ -1367,17 +1989,468 @@
     <h1>GAME OVER</h1>
     <p>FINAL SCORE: <span id="final-score">0</span></p>
     <p id="high-score-message" style="display: none;">NEW HIGH SCORE!</p>
-    <button id="restart-button">RESTART MISSION</button>
-    <button id="customize-button">CUSTOMIZE SHIP</button>
-    <button id="difficulty-button">CHANGE DIFFICULTY</button>
+    <div class="game-over-buttons">
+      <button class="game-over-btn restart" id="restart-button">RESTART MISSION</button>
+      <button class="game-over-btn customize" id="customize-button">CUSTOMIZE SHIP</button>
+      <button class="game-over-btn difficulty" id="difficulty-button">CHANGE DIFFICULTY</button>
+      <button class="game-over-btn home" id="home-button">BACK TO HOME</button>
+    </div>
   </div>
 
   <script>
+    // Enhanced Audio Manager with Multi-Track Background Music System
+    class AudioManager {
+      constructor() {
+        this.audioContext = null;
+        this.backgroundMusicTracks = [];
+        this.currentTrack = null;
+        this.musicGain = null;
+        this.isMuted = this.loadMutedState();
+        this.musicVolume = 0.05; // Very quiet background music
+        this.isPlaying = false;
+        this.fadeInDuration = 2000; // 2 seconds fade in
+        this.fadeOutDuration = 1500; // 1.5 seconds fade out
+        this.crossFadeDuration = 3000; // 3 seconds cross-fade
+        this.trackEndedHandler = null;
+        this.musicTracks = [
+          'Background_Music.mp3',
+          'Background_Music2.mp3', 
+          'Background_Music3.mp3'
+        ];
+        this.loadedTracks = new Map();
+        this.currentTrackIndex = -1;
+        this.preloadingComplete = false;
+        this.initializeAudio();
+      }
+
+      async initializeAudio() {
+        try {
+          // Initialize Web Audio API
+          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          this.musicGain = this.audioContext.createGain();
+          this.musicGain.connect(this.audioContext.destination);
+          this.musicGain.gain.value = this.isMuted ? 0 : this.musicVolume;
+
+          // Preload all background music tracks
+          await this.preloadBackgroundMusic();
+        } catch (error) {
+          console.warn('Audio initialization failed:', error);
+          this.createSynthesizedMusic();
+        }
+      }
+
+      async preloadBackgroundMusic() {
+        console.log('Preloading background music tracks...');
+        
+        const loadPromises = this.musicTracks.map(async (trackName, index) => {
+          try {
+            const audio = new Audio();
+            audio.preload = 'auto';
+            audio.volume = this.isMuted ? 0 : this.musicVolume;
+            
+            // Set up event listeners
+            const loadPromise = new Promise((resolve, reject) => {
+              const onLoadComplete = () => {
+                console.log(`✓ Loaded: ${trackName}`);
+                resolve(audio);
+              };
+              
+              const onError = (error) => {
+                console.warn(`✗ Failed to load: ${trackName}`, error);
+                reject(error);
+              };
+
+              audio.addEventListener('canplaythrough', onLoadComplete, { once: true });
+              audio.addEventListener('error', onError, { once: true });
+              audio.addEventListener('abort', onError, { once: true });
+            });
+
+            // Start loading
+            audio.src = trackName;
+            audio.load();
+
+            const loadedAudio = await loadPromise;
+            this.loadedTracks.set(trackName, loadedAudio);
+            
+            return loadedAudio;
+          } catch (error) {
+            console.warn(`Failed to load ${trackName}:`, error);
+            return null;
+          }
+        });
+
+        try {
+          const results = await Promise.allSettled(loadPromises);
+          const successfulTracks = results
+            .filter(result => result.status === 'fulfilled' && result.value !== null)
+            .map(result => result.value);
+          
+          if (successfulTracks.length > 0) {
+            console.log(`Successfully loaded ${successfulTracks.length} background tracks`);
+            this.preloadingComplete = true;
+          } else {
+            console.log('No background music files found, creating synthesized music');
+            this.createSynthesizedMusic();
+          }
+        } catch (error) {
+          console.warn('Background music preloading failed:', error);
+          this.createSynthesizedMusic();
+        }
+      }
+
+      selectRandomTrack() {
+        const availableTracks = Array.from(this.loadedTracks.values()).filter(track => track !== null);
+        if (availableTracks.length === 0) return null;
+        
+        let newIndex;
+        do {
+          newIndex = Math.floor(Math.random() * availableTracks.length);
+        } while (newIndex === this.currentTrackIndex && availableTracks.length > 1);
+        
+        this.currentTrackIndex = newIndex;
+        return availableTracks[newIndex];
+      }
+
+      async startBackgroundMusic() {
+        if (this.isPlaying) return;
+
+        try {
+          // Resume audio context if suspended
+          if (this.audioContext && this.audioContext.state === 'suspended') {
+            await this.audioContext.resume();
+          }
+
+          if (!this.preloadingComplete || this.loadedTracks.size === 0) {
+            console.log('No tracks available, starting synthesized music');
+            this.startSynthesizedMusic();
+            return;
+          }
+
+          // Select a random track
+          const selectedTrack = this.selectRandomTrack();
+          if (!selectedTrack) {
+            console.log('No valid track selected, starting synthesized music');
+            this.startSynthesizedMusic();
+            return;
+          }
+
+          this.currentTrack = selectedTrack;
+          
+          // Set up track ended handler for seamless loop with random selection
+          this.trackEndedHandler = () => {
+            if (this.isPlaying) {
+              console.log('Track ended, selecting new random track...');
+              this.switchToRandomTrack();
+            }
+          };
+          
+          this.currentTrack.addEventListener('ended', this.trackEndedHandler);
+          
+          // Start playback with fade in
+          if (!this.isMuted) {
+            this.currentTrack.volume = 0;
+            this.currentTrack.currentTime = 0;
+            await this.currentTrack.play();
+            this.fadeInTrack(this.currentTrack);
+          }
+          
+          this.isPlaying = true;
+          console.log('Background music started with random track');
+        } catch (error) {
+          console.warn('Failed to start background music:', error);
+          this.startSynthesizedMusic();
+        }
+      }
+
+      async switchToRandomTrack() {
+        if (!this.isPlaying || this.loadedTracks.size === 0) return;
+
+        const newTrack = this.selectRandomTrack();
+        if (!newTrack || newTrack === this.currentTrack) return;
+
+        try {
+          // Cross-fade to new track
+          const oldTrack = this.currentTrack;
+          
+          // Remove old event listener
+          if (oldTrack && this.trackEndedHandler) {
+            oldTrack.removeEventListener('ended', this.trackEndedHandler);
+          }
+          
+          // Prepare new track
+          newTrack.volume = 0;
+          newTrack.currentTime = 0;
+          this.currentTrack = newTrack;
+          
+          // Set up event listener for new track
+          this.currentTrack.addEventListener('ended', this.trackEndedHandler);
+          
+          if (!this.isMuted) {
+            // Start new track
+            await newTrack.play();
+            
+            // Cross-fade
+            this.crossFadeTracks(oldTrack, newTrack);
+          }
+          
+          console.log('Switched to new random track');
+        } catch (error) {
+          console.warn('Failed to switch tracks:', error);
+        }
+      }
+
+      fadeInTrack(track) {
+        if (!track || this.isMuted) return;
+        
+        const fadeSteps = 50;
+        const stepDuration = this.fadeInDuration / fadeSteps;
+        const volumeStep = this.musicVolume / fadeSteps;
+        let currentStep = 0;
+        
+        const fadeInterval = setInterval(() => {
+          if (currentStep >= fadeSteps || !this.isPlaying) {
+            clearInterval(fadeInterval);
+            if (this.isPlaying && !this.isMuted) {
+              track.volume = this.musicVolume;
+            }
+            return;
+          }
+          
+          track.volume = Math.min(volumeStep * currentStep, this.musicVolume);
+          currentStep++;
+        }, stepDuration);
+      }
+
+      fadeOutTrack(track) {
+        if (!track) return Promise.resolve();
+        
+        return new Promise((resolve) => {
+          const fadeSteps = 30;
+          const stepDuration = this.fadeOutDuration / fadeSteps;
+          const initialVolume = track.volume;
+          const volumeStep = initialVolume / fadeSteps;
+          let currentStep = 0;
+          
+          const fadeInterval = setInterval(() => {
+            if (currentStep >= fadeSteps) {
+              clearInterval(fadeInterval);
+              track.volume = 0;
+              track.pause();
+              resolve();
+              return;
+            }
+            
+            track.volume = Math.max(initialVolume - (volumeStep * currentStep), 0);
+            currentStep++;
+          }, stepDuration);
+        });
+      }
+
+      crossFadeTracks(oldTrack, newTrack) {
+        if (!oldTrack || !newTrack || this.isMuted) return;
+        
+        const fadeSteps = 60;
+        const stepDuration = this.crossFadeDuration / fadeSteps;
+        const volumeStep = this.musicVolume / fadeSteps;
+        let currentStep = 0;
+        
+        const crossFadeInterval = setInterval(() => {
+          if (currentStep >= fadeSteps || !this.isPlaying) {
+            clearInterval(crossFadeInterval);
+            if (this.isPlaying && !this.isMuted) {
+              newTrack.volume = this.musicVolume;
+            }
+            oldTrack.volume = 0;
+            oldTrack.pause();
+            return;
+          }
+          
+          // Fade out old track
+          oldTrack.volume = Math.max(this.musicVolume - (volumeStep * currentStep), 0);
+          
+          // Fade in new track
+          newTrack.volume = Math.min(volumeStep * currentStep, this.musicVolume);
+          
+          currentStep++;
+        }, stepDuration);
+      }
+
+      stopBackgroundMusic() {
+        if (!this.isPlaying) return;
+
+        try {
+          if (this.currentTrack) {
+            // Remove event listener
+            if (this.trackEndedHandler) {
+              this.currentTrack.removeEventListener('ended', this.trackEndedHandler);
+            }
+            
+            // Fade out and stop
+            this.fadeOutTrack(this.currentTrack);
+            this.currentTrack = null;
+          }
+          
+          this.isPlaying = false;
+          console.log('Background music stopped');
+        } catch (error) {
+          console.warn('Failed to stop background music:', error);
+        }
+      }
+
+      createSynthesizedMusic() {
+        if (!this.audioContext) return;
+
+        try {
+          // Create a simple ambient synthesized background track
+          const oscillator = this.audioContext.createOscillator();
+          const gainNode = this.audioContext.createGain();
+          
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(220, this.audioContext.currentTime);
+          
+          gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+          gainNode.gain.linearRampToValueAtTime(this.musicVolume * 0.3, this.audioContext.currentTime + 2);
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(this.musicGain);
+          
+          // Create a simple melody pattern
+          let time = this.audioContext.currentTime;
+          const notes = [220, 246.94, 261.63, 293.66, 329.63, 293.66, 261.63, 246.94];
+          
+          notes.forEach((freq, index) => {
+            oscillator.frequency.setValueAtTime(freq, time + index * 2);
+          });
+          
+          oscillator.start();
+          
+          this.preloadingComplete = true; // Mark as ready for synthesized music
+        } catch (error) {
+          console.warn('Synthesized music creation failed:', error);
+        }
+      }
+
+      startSynthesizedMusic() {
+        if (!this.audioContext || this.isPlaying) return;
+        
+        try {
+          const oscillator = this.audioContext.createOscillator();
+          const gainNode = this.audioContext.createGain();
+          
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(220, this.audioContext.currentTime);
+          
+          gainNode.gain.setValueAtTime(this.isMuted ? 0 : this.musicVolume * 0.3, this.audioContext.currentTime);
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(this.musicGain);
+          
+          oscillator.start();
+          this.isPlaying = true;
+          
+          // Create looping pattern
+          this.createSynthesizedLoop();
+        } catch (error) {
+          console.warn('Failed to start synthesized music:', error);
+        }
+      }
+
+      createSynthesizedLoop() {
+        if (!this.isPlaying || !this.audioContext) return;
+        
+        setInterval(() => {
+          if (this.isPlaying && !this.isMuted && this.audioContext) {
+            try {
+              const oscillator = this.audioContext.createOscillator();
+              const gainNode = this.audioContext.createGain();
+              
+              oscillator.type = 'sine';
+              gainNode.gain.setValueAtTime(this.musicVolume * 0.3, this.audioContext.currentTime);
+              
+              oscillator.connect(gainNode);
+              gainNode.connect(this.musicGain);
+              
+              const notes = [220, 246.94, 261.63, 293.66, 329.63, 293.66, 261.63, 246.94];
+              let currentTime = this.audioContext.currentTime;
+              
+              notes.forEach((freq, index) => {
+                oscillator.frequency.setValueAtTime(freq, currentTime + index * 2);
+              });
+              
+              oscillator.start();
+              oscillator.stop(currentTime + 16);
+            } catch (error) {
+              console.warn('Synthesized music loop error:', error);
+            }
+          }
+        }, 16000);
+      }
+
+      toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.saveMutedState();
+        
+        try {
+          if (this.currentTrack) {
+            this.currentTrack.volume = this.isMuted ? 0 : this.musicVolume;
+          }
+          
+          if (this.musicGain) {
+            this.musicGain.gain.setValueAtTime(
+              this.isMuted ? 0 : this.musicVolume,
+              this.audioContext.currentTime
+            );
+          }
+        } catch (error) {
+          console.warn('Failed to toggle mute:', error);
+        }
+        
+        console.log(`Audio ${this.isMuted ? 'muted' : 'unmuted'}`);
+        return this.isMuted;
+      }
+
+      loadMutedState() {
+        try {
+          return localStorage.getItem('spaceShooterMuted') === 'true';
+        } catch (error) {
+          return false;
+        }
+      }
+
+      saveMutedState() {
+        try {
+          localStorage.setItem('spaceShooterMuted', this.isMuted.toString());
+        } catch (error) {
+          console.warn('Could not save muted state:', error);
+        }
+      }
+
+      getMutedState() {
+        return this.isMuted;
+      }
+
+      // Method to restart music (used when returning to home)
+      async restartBackgroundMusic() {
+        console.log('Restarting background music with new random track...');
+        this.stopBackgroundMusic();
+        
+        // Wait a moment for cleanup
+        setTimeout(() => {
+          this.startBackgroundMusic();
+        }, 500);
+      }
+    }
+
+    // Initialize audio manager
+    const audioManager = new AudioManager();
+
     // High Score Management System
     class HighScoreManager {
       constructor() {
         this.storageKey = 'spaceShooterHighScore';
+        this.gamesPlayedKey = 'spaceShooterGamesPlayed';
         this.highScore = this.loadHighScore();
+        this.gamesPlayed = this.loadGamesPlayed();
       }
 
       loadHighScore() {
@@ -1386,6 +2459,16 @@
           return saved ? parseInt(saved, 10) : 0;
         } catch (error) {
           console.warn('Could not load high score:', error);
+          return 0;
+        }
+      }
+
+      loadGamesPlayed() {
+        try {
+          const saved = localStorage.getItem(this.gamesPlayedKey);
+          return saved ? parseInt(saved, 10) : 0;
+        } catch (error) {
+          console.warn('Could not load games played:', error);
           return 0;
         }
       }
@@ -1401,6 +2484,15 @@
         }
       }
 
+      incrementGamesPlayed() {
+        try {
+          this.gamesPlayed++;
+          localStorage.setItem(this.gamesPlayedKey, this.gamesPlayed.toString());
+        } catch (error) {
+          console.warn('Could not save games played:', error);
+        }
+      }
+
       checkAndUpdateHighScore(currentScore) {
         if (currentScore > this.highScore) {
           this.saveHighScore(currentScore);
@@ -1413,6 +2505,10 @@
         return this.highScore;
       }
 
+      getGamesPlayed() {
+        return this.gamesPlayed;
+      }
+
       formatScore(score) {
         return score.toLocaleString();
       }
@@ -1420,6 +2516,65 @@
 
     // Initialize high score manager
     const highScoreManager = new HighScoreManager();
+
+    // Trail Color Manager
+    class TrailColorManager {
+      constructor() {
+        this.storageKey = 'spaceShooterTrailColor';
+        this.currentColor = this.loadTrailColor();
+        this.colors = {
+          '#00ffff': 'Cyan',
+          '#ff4444': 'Red',
+          '#00ff88': 'Green',
+          '#aa44ff': 'Purple',
+          '#ffdd00': 'Yellow',
+          '#ff6600': 'Orange',
+          '#ff44aa': 'Pink',
+          '#ffffff': 'White'
+        };
+      }
+
+      loadTrailColor() {
+        try {
+          const saved = localStorage.getItem(this.storageKey);
+          return saved || '#00ffff'; // Default to cyan
+        } catch (error) {
+          console.warn('Could not load trail color:', error);
+          return '#00ffff';
+        }
+      }
+
+      saveTrailColor(color) {
+        try {
+          localStorage.setItem(this.storageKey, color);
+          this.currentColor = color;
+          return true;
+        } catch (error) {
+          console.warn('Could not save trail color:', error);
+          return false;
+        }
+      }
+
+      getCurrentColor() {
+        return this.currentColor;
+      }
+
+      getColorName(color) {
+        return this.colors[color] || 'Unknown';
+      }
+
+      setColor(color) {
+        if (this.colors[color]) {
+          this.currentColor = color;
+          this.saveTrailColor(color);
+          return true;
+        }
+        return false;
+      }
+    }
+
+    // Initialize trail color manager
+    const trailColorManager = new TrailColorManager();
 
     // Difficulty Configuration System
     class DifficultyManager {
@@ -1665,12 +2820,17 @@
         this.isPaused = false;
         this.pauseBtn = document.getElementById('pause-btn');
         this.pauseOverlay = document.getElementById('pause-overlay');
+        this.resumeBtn = document.getElementById('pause-resume-btn');
+        this.audioBtn = document.getElementById('pause-audio-btn');
+        this.homeBtn = document.getElementById('pause-home-btn');
         this.bindEvents();
       }
 
       bindEvents() {
         this.pauseBtn.addEventListener('click', () => this.togglePause());
-        this.pauseOverlay.addEventListener('click', () => this.resume());
+        this.resumeBtn.addEventListener('click', () => this.resume());
+        this.audioBtn.addEventListener('click', () => this.toggleAudio());
+        this.homeBtn.addEventListener('click', () => this.goHome());
         
         // Keyboard shortcut
         document.addEventListener('keydown', (e) => {
@@ -1718,6 +2878,23 @@
         }
       }
 
+      toggleAudio() {
+        const isMuted = audioManager.toggleMute();
+        this.audioBtn.textContent = isMuted ? 'Unmute Audio' : 'Mute Audio';
+        updateAudioButton();
+      }
+
+      goHome() {
+        this.resume();
+        gameRunning = false;
+        audioManager.stopBackgroundMusic();
+        showHomeScreen();
+        // Restart music when returning to home
+        setTimeout(() => {
+          audioManager.restartBackgroundMusic();
+        }, 500);
+      }
+
       show() {
         this.pauseBtn.style.display = 'block';
       }
@@ -1737,10 +2914,29 @@
     // Initialize pause manager
     const pauseManager = new PauseManager();
 
+    // Audio button functionality
+    const audioBtn = document.getElementById('audio-btn');
+    
+    function updateAudioButton() {
+      const isMuted = audioManager.getMutedState();
+      audioBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i> AUDIO' : '<i class="fas fa-volume-up"></i> AUDIO';
+      audioBtn.classList.toggle('muted', isMuted);
+    }
+
+    audioBtn.addEventListener('click', () => {
+      audioManager.toggleMute();
+      updateAudioButton();
+    });
+
+    // Initialize audio button
+    updateAudioButton();
+
     // Loading screen
     let loadingProgress = 0;
     const loadingProgressBar = document.getElementById('loading-progress');
     const loadingScreen = document.getElementById('loading-screen');
+    const homeScreen = document.getElementById('home-screen');
+    const trailScreen = document.getElementById('trail-screen');
     const difficultyScreen = document.getElementById('difficulty-screen');
     const customizationScreen = document.getElementById('customization-screen');
 
@@ -1751,23 +2947,56 @@
       if (loadingProgress >= 100) {
         setTimeout(() => {
           loadingScreen.style.display = 'none';
-          showDifficultyScreen();
+          showHomeScreen();
         }, 500);
       } else {
         setTimeout(updateLoadingProgress, 100);
       }
     }
 
+    function showHomeScreen() {
+      homeScreen.style.display = 'flex';
+      trailScreen.style.display = 'none';
+      difficultyScreen.style.display = 'none';
+      customizationScreen.style.display = 'none';
+      document.getElementById('game-over-screen').style.display = 'none';
+      fullscreenManager.hide();
+      pauseManager.hide();
+      audioBtn.style.display = 'none';
+      
+      // Update home screen stats
+      document.getElementById('home-high-score').textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+      document.getElementById('games-played').textContent = highScoreManager.getGamesPlayed();
+      
+      // Start background music when on home screen with random selection
+      audioManager.restartBackgroundMusic();
+    }
+
+    function hideHomeScreen() {
+      homeScreen.style.display = 'none';
+    }
+
+    function showTrailScreen() {
+      hideHomeScreen();
+      trailScreen.style.display = 'flex';
+      initializeTrailCustomization();
+    }
+
+    function hideTrailScreen() {
+      trailScreen.style.display = 'none';
+    }
+
     function showDifficultyScreen() {
+      hideHomeScreen();
       difficultyScreen.style.display = 'flex';
     }
 
     function hideDifficultyScreen() {
       difficultyScreen.style.display = 'none';
-      showCustomizationScreen();
     }
 
     function showCustomizationScreen() {
+      hideHomeScreen();
       customizationScreen.style.display = 'flex';
       initializeShipCustomization();
     }
@@ -1776,14 +3005,112 @@
       customizationScreen.style.display = 'none';
       fullscreenManager.show();
       pauseManager.show();
+      audioBtn.style.display = 'block';
       resizeCanvas();
       initGame();
+      
+      // Start background music when game starts with random track
+      audioManager.restartBackgroundMusic();
       
       // Auto-enter fullscreen when game starts
       setTimeout(() => {
         fullscreenManager.autoEnterFullscreen();
       }, 500);
     }
+
+    // Home screen event listeners
+    document.getElementById('home-start-btn').addEventListener('click', showCustomizationScreen);
+    document.getElementById('home-customize-btn').addEventListener('click', showCustomizationScreen);
+    document.getElementById('home-trail-btn').addEventListener('click', showTrailScreen);
+    document.getElementById('home-difficulty-btn').addEventListener('click', showDifficultyScreen);
+
+    // Trail customization
+    function initializeTrailCustomization() {
+      const colorOptions = document.querySelectorAll('.color-option');
+      const trailCanvas = document.getElementById('trail-preview-canvas');
+      const trailCtx = trailCanvas.getContext('2d');
+      
+      // Set current selection
+      const currentColor = trailColorManager.getCurrentColor();
+      colorOptions.forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.color === currentColor) {
+          option.classList.add('selected');
+        }
+      });
+      
+      // Add click handlers
+      colorOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          colorOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          updateTrailPreview(option.dataset.color);
+        });
+      });
+      
+      updateTrailPreview(currentColor);
+    }
+
+    function updateTrailPreview(color) {
+      const trailCanvas = document.getElementById('trail-preview-canvas');
+      const trailCtx = trailCanvas.getContext('2d');
+      
+      // Clear canvas
+      trailCtx.fillStyle = 'rgba(0, 20, 40, 0.8)';
+      trailCtx.fillRect(0, 0, trailCanvas.width, trailCanvas.height);
+      
+      // Draw trail preview
+      const centerX = trailCanvas.width / 2;
+      const centerY = trailCanvas.height / 2;
+      
+      // Draw ship
+      trailCtx.save();
+      trailCtx.translate(centerX + 50, centerY);
+      trailCtx.fillStyle = '#00ffff';
+      trailCtx.shadowBlur = 10;
+      trailCtx.shadowColor = '#00ffff';
+      trailCtx.beginPath();
+      trailCtx.moveTo(15, 0);
+      trailCtx.lineTo(-10, -8);
+      trailCtx.lineTo(-5, 0);
+      trailCtx.lineTo(-10, 8);
+      trailCtx.closePath();
+      trailCtx.fill();
+      trailCtx.restore();
+      
+      // Draw trail particles
+      for (let i = 0; i < 20; i++) {
+        const x = centerX + 50 - i * 8 - Math.random() * 10;
+        const y = centerY + (Math.random() - 0.5) * 20;
+        const alpha = 1 - (i / 20);
+        const size = 3 + Math.random() * 3;
+        
+        trailCtx.save();
+        trailCtx.globalAlpha = alpha;
+        trailCtx.fillStyle = color;
+        trailCtx.shadowBlur = 8;
+        trailCtx.shadowColor = color;
+        trailCtx.beginPath();
+        trailCtx.arc(x, y, size, 0, Math.PI * 2);
+        trailCtx.fill();
+        trailCtx.restore();
+      }
+    }
+
+    // Trail screen event listeners
+    document.getElementById('save-trail-btn').addEventListener('click', () => {
+      const selectedOption = document.querySelector('.color-option.selected');
+      if (selectedOption) {
+        trailColorManager.setColor(selectedOption.dataset.color);
+      }
+      hideTrailScreen();
+      showHomeScreen();
+    });
+
+    document.getElementById('back-to-home-trail-btn').addEventListener('click', () => {
+      hideTrailScreen();
+      showHomeScreen();
+    });
 
     // Start loading
     updateLoadingProgress();
@@ -1920,6 +3247,7 @@
     const restartButton = document.getElementById("restart-button");
     const customizeButton = document.getElementById("customize-button");
     const difficultyButton = document.getElementById("difficulty-button");
+    const homeButton = document.getElementById("home-button");
     const mobileControlsDiv = document.getElementById("mobile-controls");
     const joystickContainer = document.getElementById("joystick-container");
     const joystick = document.getElementById("joystick");
@@ -1943,18 +3271,26 @@
       difficultyManager.setDifficulty('easy');
       updateDifficultyDisplay();
       hideDifficultyScreen();
+      showCustomizationScreen();
     });
 
     mediumBtn.addEventListener('click', () => {
       difficultyManager.setDifficulty('medium');
       updateDifficultyDisplay();
       hideDifficultyScreen();
+      showCustomizationScreen();
     });
 
     hardBtn.addEventListener('click', () => {
       difficultyManager.setDifficulty('hard');
       updateDifficultyDisplay();
       hideDifficultyScreen();
+      showCustomizationScreen();
+    });
+
+    document.getElementById('back-to-home-difficulty-btn').addEventListener('click', () => {
+      hideDifficultyScreen();
+      showHomeScreen();
     });
 
     function updateDifficultyDisplay() {
@@ -2199,9 +3535,9 @@
 
     // Customization event listeners
     document.getElementById('start-game-btn').addEventListener('click', hideCustomizationScreen);
-    document.getElementById('back-to-difficulty-btn').addEventListener('click', () => {
+    document.getElementById('back-to-home-customization-btn').addEventListener('click', () => {
       customizationScreen.style.display = 'none';
-      showDifficultyScreen();
+      showHomeScreen();
     });
 
     // Heart system functions
@@ -2495,13 +3831,13 @@
         this.x += this.vel.x;
         this.y += this.vel.y;
 
-        // Enhanced thruster particles
+        // Enhanced thruster particles with custom trail color
         if (thrusting) {
           for (let i = 0; i < 4; i++) {
             const offsetAngle = this.angle + Math.PI + (Math.random() - 0.5) * 0.6;
             const speed = Math.random() * 6 + 3;
             const distance = 25 + Math.random() * 15;
-            const thrusterColor = this.getThrusterColor();
+            const thrusterColor = trailColorManager.getCurrentColor();
             
             particles.push(new Particle(
               this.x - Math.cos(this.angle) * distance,
@@ -2547,17 +3883,6 @@
           shieldActive = false;
           shieldTimeSpan.textContent = 0;
         }
-      }
-
-      getThrusterColor() {
-        const config = shipConfigs[selectedShip];
-        const colors = [
-          config.colors.primary,
-          config.colors.secondary,
-          '#ffaa00',
-          '#ff6600'
-        ];
-        return colors[Math.floor(Math.random() * colors.length)];
       }
 
       draw() {
@@ -2651,7 +3976,7 @@
       }
     }
 
-    // Enhanced Bullet class
+    // Enhanced Bullet class with custom trail colors
     class Bullet {
       constructor(x, y, angle, owner = 'player') {
         this.x = x;
@@ -2698,15 +4023,10 @@
         this.energy = Math.max(0, 100 - (this.distanceTraveled / this.maxDistance) * 100);
         this.glowIntensity = this.energy / 100;
         
-        // Create particle effects with ship colors
+        // Create particle effects with custom trail colors
         if (Math.random() < 0.2) {
           const offsetAngle = this.angle + (Math.random() - 0.5) * 0.5;
-          let color = this.owner === 'player' ? '#ff6666' : '#ffaa00';
-          
-          if (this.owner === 'player') {
-            const config = shipConfigs[selectedShip];
-            color = config.colors.primary;
-          }
+          let color = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffaa00';
           
           particles.push(new Particle(
             this.x - Math.cos(this.angle) * 15,
@@ -2726,19 +4046,14 @@
         
         ctx.save();
         
-        // Draw trail
+        // Draw trail with custom colors
         for (let i = 0; i < this.trail.length; i++) {
           const point = this.trail[i];
           const trailAlpha = (i / this.trail.length) * this.glowIntensity * 0.5;
           const trailSize = (i / this.trail.length) * this.width;
           
           ctx.globalAlpha = trailAlpha;
-          let trailColor = this.owner === 'player' ? '#ff8888' : '#ffcc88';
-          
-          if (this.owner === 'player') {
-            const config = shipConfigs[selectedShip];
-            trailColor = config.colors.secondary;
-          }
+          let trailColor = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffcc88';
           
           ctx.fillStyle = trailColor;
           ctx.beginPath();
@@ -2753,22 +4068,16 @@
         
         // Glow effect
         ctx.shadowBlur = 20;
-        let shadowColor = this.owner === 'player' ? '#ff4444' : '#ffaa00';
-        
-        if (this.owner === 'player') {
-          const config = shipConfigs[selectedShip];
-          shadowColor = config.colors.primary;
-        }
-        
+        let shadowColor = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffaa00';
         ctx.shadowColor = shadowColor;
         
         // Main bullet body
         const gradient = ctx.createLinearGradient(-this.length/2, 0, this.length/2, 0);
         if (this.owner === 'player') {
-          const config = shipConfigs[selectedShip];
-          gradient.addColorStop(0, `${config.colors.secondary}40`);
-          gradient.addColorStop(0.5, config.colors.accent);
-          gradient.addColorStop(1, `${config.colors.primary}CC`);
+          const trailColor = trailColorManager.getCurrentColor();
+          gradient.addColorStop(0, `${trailColor}40`);
+          gradient.addColorStop(0.5, '#ffffff');
+          gradient.addColorStop(1, `${trailColor}CC`);
         } else {
           gradient.addColorStop(0, 'rgba(255, 170, 0, 0.2)');
           gradient.addColorStop(0.5, 'rgba(255, 255, 100, 1)');
@@ -3637,11 +4946,18 @@
         currentBoss.regenerateHealth();
       }
       
+      // Increment games played counter
+      highScoreManager.incrementGamesPlayed();
+      
       fullscreenManager.hide();
       pauseManager.hide();
+      audioBtn.style.display = 'none';
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
+      
+      // Stop background music
+      audioManager.stopBackgroundMusic();
       
       // Enhanced high score checking
       const isNewHighScore = highScoreManager.checkAndUpdateHighScore(score);
@@ -4193,12 +5509,15 @@
       joystickTouchId = null;
     }
 
-    // Restart and difficulty buttons
+    // Enhanced Game Over Button Event Listeners
     restartButton.addEventListener("click", () => {
       fullscreenManager.show();
       pauseManager.show();
+      audioBtn.style.display = 'block';
       resizeCanvas();
       initGame();
+      // Start background music when game restarts with random track
+      audioManager.restartBackgroundMusic();
       // Auto-enter fullscreen on restart
       setTimeout(() => {
         fullscreenManager.autoEnterFullscreen();
@@ -4209,6 +5528,7 @@
       gameOverScreen.style.display = "none";
       fullscreenManager.hide();
       pauseManager.hide();
+      audioBtn.style.display = 'none';
       showCustomizationScreen();
     });
 
@@ -4216,7 +5536,17 @@
       gameOverScreen.style.display = "none";
       fullscreenManager.hide();
       pauseManager.hide();
+      audioBtn.style.display = 'none';
       showDifficultyScreen();
+    });
+
+    // New Home Button Event Listener
+    homeButton.addEventListener("click", () => {
+      gameOverScreen.style.display = "none";
+      fullscreenManager.hide();
+      pauseManager.hide();
+      audioBtn.style.display = 'none';
+      showHomeScreen();
     });
 
     // Initialize
