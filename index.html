@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Shooter - By Ilay</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Space Shooter - Enhanced Edition</title>
+  <!-- Enhanced mobile viewport settings for iOS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <!-- iOS-specific meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="format-detection" content="telephone=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="icon" href="icon.png" type="image/x-icon">
   <style>
@@ -16,13 +22,17 @@
       height: 100%;
       width: 100%;
       font-family: 'Orbitron', 'Arial', sans-serif;
-      /* Prevent text selection to avoid interference with shooting */
+      /* Enhanced text selection prevention for iOS */
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
       -webkit-tap-highlight-color: transparent;
+      /* iOS performance optimizations */
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      -webkit-perspective: 1000;
     }
 
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
@@ -30,20 +40,28 @@
     canvas {
       display: block;
       background: linear-gradient(45deg, #0a0a2e, #16213e, #0a0a2e);
-      /* Prevent text selection on canvas */
+      /* Enhanced canvas optimization for iOS */
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
+      -webkit-transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      /* Hardware acceleration for mobile */
+      transform: translateZ(0);
+      backface-visibility: hidden;
     }
 
-    /* Prevent text selection globally */
+    /* Enhanced global selection prevention for iOS */
     * {
       -webkit-user-select: none;
       -moz-user-select: none;
       -ms-user-select: none;
       user-select: none;
       -webkit-touch-callout: none;
+      /* iOS performance optimizations */
+      -webkit-transform: translateZ(0);
+      box-sizing: border-box;
     }
 
     /* Allow selection only for specific elements if needed */
@@ -215,6 +233,7 @@
       border-radius: 10px;
       border: 1px solid rgba(0, 255, 255, 0.3);
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
     }
 
     .hud-item {
@@ -323,6 +342,7 @@
       font-weight: 700;
       cursor: pointer;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       transition: all 0.3s ease;
     }
 
@@ -343,6 +363,7 @@
       font-weight: 700;
       cursor: pointer;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       transition: all 0.3s ease;
       display: none;
     }
@@ -375,6 +396,7 @@
       font-weight: 700;
       cursor: pointer;
       backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
       transition: all 0.3s ease;
       display: none;
     }
@@ -410,6 +432,7 @@
       align-items: center;
       z-index: 50;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .pause-menu {
@@ -419,6 +442,7 @@
       padding: 40px;
       text-align: center;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     .pause-title {
@@ -486,7 +510,7 @@
       box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
-    /* Enhanced Mobile Controls - More Compact */
+    /* Enhanced Mobile Controls - iOS Optimized */
     #mobile-controls {
       position: fixed;
       bottom: 15px;
@@ -498,6 +522,9 @@
       width: calc(100% - 30px);
       z-index: 20;
       pointer-events: none;
+      /* iOS optimization */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
     }
 
     #joystick-container {
@@ -514,6 +541,17 @@
       box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
       pointer-events: auto;
       touch-action: none;
+      /* iOS visibility fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      /* Force rendering layer on iOS */
+      will-change: transform;
+      /* iOS touch optimization */
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #joystick {
@@ -529,10 +567,18 @@
       box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
       transition: transform 0.1s ease;
       pointer-events: none;
+      /* iOS visibility fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      /* Force rendering layer on iOS */
+      will-change: transform;
     }
 
     #joystick.active {
-      transform: scale(0.95);
+      transform: scale(0.95) translateZ(0);
+      -webkit-transform: scale(0.95) translateZ(0);
       box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
     }
 
@@ -557,6 +603,17 @@
       cursor: pointer;
       pointer-events: auto;
       touch-action: manipulation;
+      /* iOS visibility fixes */
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      -webkit-backface-visibility: hidden;
+      backface-visibility: hidden;
+      /* Force rendering layer on iOS */
+      will-change: transform;
+      /* iOS touch optimization */
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     #shoot-button::before {
@@ -570,7 +627,8 @@
     }
 
     #shoot-button.active {
-      transform: scale(0.95);
+      transform: scale(0.95) translateZ(0);
+      -webkit-transform: scale(0.95) translateZ(0);
       box-shadow: 0 0 25px rgba(255, 50, 50, 0.7);
     }
 
@@ -666,6 +724,7 @@
       padding: 20px;
       min-width: 150px;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       transition: all 0.3s ease;
     }
 
@@ -795,6 +854,7 @@
       box-sizing: border-box;
       text-align: center;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     #trail-screen h1 {
@@ -847,6 +907,10 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      /* iOS touch optimization */
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .color-option::before {
@@ -946,6 +1010,7 @@
       box-sizing: border-box;
       text-align: center;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: none;
     }
 
@@ -1048,6 +1113,10 @@
       cursor: pointer;
       transition: all 0.3s ease;
       text-align: center;
+      /* iOS touch optimization */
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .ship-option:hover {
@@ -1149,6 +1218,7 @@
       box-sizing: border-box;
       text-align: center;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       display: none;
     }
 
@@ -1272,6 +1342,7 @@
       box-sizing: border-box;
       text-align: center;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
     #game-over-screen h1 {
@@ -1389,14 +1460,22 @@
       }
     }
 
-    /* Responsive Design - Enhanced Mobile Optimization */
+    /* Enhanced Mobile Optimization with iOS Safe Areas */
     @media (max-width: 600px) {
+      /* iOS safe area support */
+      body {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+
       #hud {
         font-size: 12px;
         padding: 8px;
-        top: 5px;
-        left: 5px;
-        right: 5px;
+        top: max(5px, env(safe-area-inset-top));
+        left: max(5px, env(safe-area-inset-left));
+        right: max(5px, env(safe-area-inset-right));
         width: auto;
         max-width: calc(100vw - 10px);
         box-sizing: border-box;
@@ -1431,7 +1510,7 @@
 
       #boss-health-container {
         width: 90%;
-        top: 5px;
+        top: max(5px, env(safe-area-inset-top));
       }
 
       .boss-name {
@@ -1439,14 +1518,19 @@
       }
 
       #mobile-controls {
-        bottom: 10px;
-        left: 10px;
-        right: 10px;
+        bottom: max(10px, env(safe-area-inset-bottom));
+        left: max(10px, env(safe-area-inset-left));
+        right: max(10px, env(safe-area-inset-right));
+        width: calc(100vw - max(20px, env(safe-area-inset-left) + env(safe-area-inset-right)));
       }
 
       #joystick-container {
         width: 100px;
         height: 100px;
+        /* Enhanced iOS visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
       }
 
       #joystick {
@@ -1454,17 +1538,24 @@
         height: 50px;
         left: calc(50% - 25px);
         top: calc(50% - 25px);
+        /* Enhanced iOS visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
       }
 
       #shoot-button {
         width: 100px;
         height: 100px;
         font-size: 16px;
+        /* Enhanced iOS visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
       }
 
       #control-buttons {
-        top: 5px;
-        right: 5px;
+        top: max(5px, env(safe-area-inset-top));
+        right: max(5px, env(safe-area-inset-right));
       }
 
       #fullscreen-btn, #pause-btn, #audio-btn {
@@ -1536,7 +1627,7 @@
         flex-direction: column;
         align-items: center;
         position: fixed;
-        bottom: 20px;
+        bottom: max(20px, env(safe-area-inset-bottom));
         left: 50%;
         transform: translateX(-50%);
         background: rgba(0, 0, 0, 0.9);
@@ -1544,6 +1635,7 @@
         border-radius: 15px;
         border: 1px solid rgba(0, 255, 255, 0.3);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         z-index: 170;
         gap: 10px;
         width: calc(100% - 40px);
@@ -1672,7 +1764,7 @@
       }
     }
 
-    /* Extra small screens */
+    /* Extra small screens with enhanced iOS support */
     @media (max-width: 400px) {
       #hud {
         font-size: 10px;
@@ -1689,14 +1781,17 @@
       }
 
       #mobile-controls {
-        bottom: 8px;
-        left: 8px;
-        right: 8px;
+        bottom: max(8px, env(safe-area-inset-bottom));
+        left: max(8px, env(safe-area-inset-left));
+        right: max(8px, env(safe-area-inset-right));
       }
 
       #joystick-container {
         width: 90px;
         height: 90px;
+        /* Force visibility on very small iOS devices */
+        min-width: 90px !important;
+        min-height: 90px !important;
       }
 
       #joystick {
@@ -1704,12 +1799,18 @@
         height: 45px;
         left: calc(50% - 22.5px);
         top: calc(50% - 22.5px);
+        /* Force visibility on very small iOS devices */
+        min-width: 45px !important;
+        min-height: 45px !important;
       }
 
       #shoot-button {
         width: 90px;
         height: 90px;
         font-size: 14px;
+        /* Force visibility on very small iOS devices */
+        min-width: 90px !important;
+        min-height: 90px !important;
       }
     }
 
@@ -1793,6 +1894,44 @@
       100% { 
         opacity: 1;
         transform: scale(1.05);
+      }
+    }
+
+    /* iOS-specific fixes */
+    @supports (-webkit-appearance: none) {
+      #mobile-controls {
+        /* Force hardware acceleration on iOS */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Ensure visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
+      }
+
+      #joystick-container,
+      #shoot-button {
+        /* Force rendering layer on iOS */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Ensure visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: flex !important;
+      }
+
+      #joystick {
+        /* Force rendering layer on iOS */
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+        /* Ensure visibility */
+        opacity: 1 !important;
+        visibility: visible !important;
       }
     }
   </style>
@@ -1999,6 +2138,10 @@
   </div>
 
   <script>
+    // Mobile device detection with enhanced iOS detection
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
     // Enhanced Audio Manager with Multi-Track Background Music System
     class AudioManager {
       constructor() {
@@ -2965,7 +3108,7 @@
       pauseManager.hide();
       audioBtn.style.display = 'none';
       
-      // Update home screen stats - FIXED
+      // Update home screen stats
       document.getElementById('home-high-score').textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
       document.getElementById('games-played').textContent = highScoreManager.getGamesPlayed();
       
@@ -3114,10 +3257,7 @@
     });
 
     // Start loading
-    // Ensure stats are updated before showing home screen
-    setTimeout(() => {
-      updateLoadingProgress();
-    }, 100);
+    updateLoadingProgress();
 
     // Game variables
     const canvas = document.getElementById("game");
@@ -3239,7 +3379,6 @@
       }
     };
 
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
     const scoreSpan = document.getElementById("score");
     const highScoreSpan = document.getElementById("high-score");
     const shieldTimeSpan = document.getElementById("shield-time");
@@ -3267,22 +3406,8 @@
     // Store original boss health for regeneration
     let originalBossHealth = 0;
 
-    // Initialize high score display - FIXED
+    // Initialize high score display
     highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
-    
-    // Initialize home screen stats when page loads
-    document.addEventListener('DOMContentLoaded', () => {
-      // Update home screen stats immediately when page loads
-      const homeHighScore = document.getElementById('home-high-score');
-      const gamesPlayedElement = document.getElementById('games-played');
-      
-      if (homeHighScore) {
-        homeHighScore.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
-      }
-      if (gamesPlayedElement) {
-        gamesPlayedElement.textContent = highScoreManager.getGamesPlayed();
-      }
-    });
 
     // Enhanced Difficulty selection with Medium mode
     easyBtn.addEventListener('click', () => {
@@ -3639,13 +3764,18 @@
       }
     }
 
-    // Canvas and responsiveness
+    // Canvas and responsiveness with optimized performance
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const pixelRatio = Math.min(window.devicePixelRatio || 1, 2); // Limit pixel ratio for mobile performance
+      canvas.width = window.innerWidth * pixelRatio;
+      canvas.height = window.innerHeight * pixelRatio;
+      canvas.style.width = window.innerWidth + 'px';
+      canvas.style.height = window.innerHeight + 'px';
+      ctx.scale(pixelRatio, pixelRatio);
+      
       if (ship) {
-        ship.x = canvas.width / 2;
-        ship.y = canvas.height / 2;
+        ship.x = window.innerWidth / 2;
+        ship.y = window.innerHeight / 2;
         if (!isMobile) {
           mouse.x = ship.x;
           mouse.y = ship.y;
@@ -3656,15 +3786,17 @@
 
     window.addEventListener('resize', resizeCanvas);
 
-    // Enhanced star generation
+    // Enhanced star generation with mobile optimization
     let stars = [];
     function createStars() {
       stars = [];
-      const starCount = Math.min(200, Math.floor((canvas.width * canvas.height) / 5000));
+      // Reduce star count on mobile for better performance
+      const baseStarCount = isMobile ? 100 : 200;
+      const starCount = Math.min(baseStarCount, Math.floor((window.innerWidth * window.innerHeight) / (isMobile ? 8000 : 5000)));
       for (let i = 0; i < starCount; i++) {
         stars.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
           size: Math.random() * 3,
           speed: Math.random() * 0.8 + 0.2,
           twinkle: Math.random() * Math.PI * 2,
@@ -3792,8 +3924,8 @@
     // Enhanced Ship class with customization
     class Ship {
       constructor() {
-        this.x = canvas.width / 2;
-        this.y = canvas.height / 2;
+        this.x = window.innerWidth / 2;
+        this.y = window.innerHeight / 2;
         this.angle = 0;
         this.vel = { x: 0, y: 0 };
         this.radius = 20;
@@ -3819,7 +3951,7 @@
             thrusting = true;
           }
         } else {
-          // Mobile joystick movement
+          // Enhanced mobile joystick movement with iOS optimizations
           const joystickRect = joystick.getBoundingClientRect();
           const joystickContainerRect = joystickContainer.getBoundingClientRect();
 
@@ -3834,9 +3966,10 @@
 
           if (Math.hypot(dxJoy, dyJoy) > 10) { 
             this.angle = Math.atan2(dyJoy, dxJoy);
-            // Reduced mobile speed: 0.18 instead of 0.3 (40% slower)
-            this.vel.x += Math.cos(this.angle) * 0.18 * config.speedMultiplier;
-            this.vel.y += Math.sin(this.angle) * 0.18 * config.speedMultiplier;
+            // Optimized mobile speed for better performance
+            const mobileSpeedMultiplier = isIOS ? 0.15 : 0.18; // Slightly slower on iOS for better control
+            this.vel.x += Math.cos(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
+            this.vel.y += Math.sin(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
             thrusting = true;
           }
         }
@@ -3849,9 +3982,10 @@
         this.x += this.vel.x;
         this.y += this.vel.y;
 
-        // Enhanced thruster particles with custom trail color
+        // Enhanced thruster particles with custom trail color - reduce on mobile
         if (thrusting) {
-          for (let i = 0; i < 4; i++) {
+          const particleCount = isMobile ? 2 : 4; // Reduce particles on mobile
+          for (let i = 0; i < particleCount; i++) {
             const offsetAngle = this.angle + Math.PI + (Math.random() - 0.5) * 0.6;
             const speed = Math.random() * 6 + 3;
             const distance = 25 + Math.random() * 15;
@@ -3875,17 +4009,17 @@
           star.y -= this.vel.y * star.speed * 0.5;
           star.twinkle += 0.1;
           
-          if (star.x < -10) star.x = canvas.width + 10;
-          if (star.x > canvas.width + 10) star.x = -10;
-          if (star.y < -10) star.y = canvas.height + 10;
-          if (star.y > canvas.height + 10) star.y = -10;
+          if (star.x < -10) star.x = window.innerWidth + 10;
+          if (star.x > window.innerWidth + 10) star.x = -10;
+          if (star.y < -10) star.y = window.innerHeight + 10;
+          if (star.y > window.innerHeight + 10) star.y = -10;
         }
 
         // Screen wrapping
-        if (this.x < 0) this.x = canvas.width;
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-        if (this.y > canvas.height) this.y = 0;
+        if (this.x < 0) this.x = window.innerWidth;
+        if (this.x > window.innerWidth) this.x = 0;
+        if (this.y < 0) this.y = window.innerHeight;
+        if (this.y > window.innerHeight) this.y = 0;
 
         // Update power-ups
         if (this.doubleShot && this.doubleTimer > 0) {
@@ -4013,7 +4147,7 @@
         this.maxDistance = owner === 'player' ? 1000 : 800;
         this.distanceTraveled = 0;
         this.trail = [];
-        this.maxTrailLength = owner === 'player' ? 8 : 5;
+        this.maxTrailLength = owner === 'player' ? (isMobile ? 5 : 8) : 5; // Reduce trail on mobile
         this.glowIntensity = 1;
         this.active = true;
         
@@ -4041,8 +4175,8 @@
         this.energy = Math.max(0, 100 - (this.distanceTraveled / this.maxDistance) * 100);
         this.glowIntensity = this.energy / 100;
         
-        // Create particle effects with custom trail colors
-        if (Math.random() < 0.2) {
+        // Create particle effects with custom trail colors - reduce on mobile
+        if (Math.random() < (isMobile ? 0.1 : 0.2)) {
           const offsetAngle = this.angle + (Math.random() - 0.5) * 0.5;
           let color = this.owner === 'player' ? trailColorManager.getCurrentColor() : '#ffaa00';
           
@@ -4114,8 +4248,8 @@
 
       offscreen() {
         return this.energy <= 0 || 
-               this.x < -100 || this.x > canvas.width + 100 ||
-               this.y < -100 || this.y > canvas.height + 100;
+               this.x < -100 || this.x > window.innerWidth + 100 ||
+               this.y < -100 || this.y > window.innerHeight + 100;
       }
     }
 
@@ -4123,9 +4257,9 @@
     class Boss {
       constructor(type = 'destroyer') {
         this.type = type;
-        this.x = canvas.width / 2;
+        this.x = window.innerWidth / 2;
         this.y = -100;
-        this.targetY = canvas.height * 0.2;
+        this.targetY = window.innerHeight * 0.2;
         this.radius = 60;
         
         // Enhanced boss health based on difficulty
@@ -4194,8 +4328,8 @@
         }
         
         // Keep boss on screen
-        this.x = Math.max(this.radius, Math.min(canvas.width - this.radius, this.x));
-        this.y = Math.max(this.radius, Math.min(canvas.height * 0.4, this.y));
+        this.x = Math.max(this.radius, Math.min(window.innerWidth - this.radius, this.x));
+        this.y = Math.max(this.radius, Math.min(window.innerHeight * 0.4, this.y));
         
         // Update angle to face player
         this.angle = Math.atan2(target.y - this.y, target.x - this.x);
@@ -4232,9 +4366,10 @@
         this.phaseTransition = true;
         this.lastPhaseChange = Date.now();
         
-        // Visual effect for phase transition
-        for (let i = 0; i < 20; i++) {
-          const angle = (Math.PI * 2 * i) / 20;
+        // Visual effect for phase transition - reduce particles on mobile
+        const particleCount = isMobile ? 10 : 20;
+        for (let i = 0; i < particleCount; i++) {
+          const angle = (Math.PI * 2 * i) / particleCount;
           particles.push(new Particle(
             this.x, this.y, angle, 8, 
             this.currentPhase === 2 ? '#ffaa00' : '#ff0000', 
@@ -4418,17 +4553,17 @@
         const padding = 100;
         
         if (edge === 0) {
-          this.x = Math.random() * canvas.width;
+          this.x = Math.random() * window.innerWidth;
           this.y = -padding;
         } else if (edge === 1) {
-          this.x = canvas.width + padding;
-          this.y = Math.random() * canvas.height;
+          this.x = window.innerWidth + padding;
+          this.y = Math.random() * window.innerHeight;
         } else if (edge === 2) {
-          this.x = Math.random() * canvas.width;
-          this.y = canvas.height + padding;
+          this.x = Math.random() * window.innerWidth;
+          this.y = window.innerHeight + padding;
         } else {
           this.x = -padding;
-          this.y = Math.random() * canvas.height;
+          this.y = Math.random() * window.innerHeight;
         }
         
         this.radius = 18;
@@ -4461,7 +4596,7 @@
         // Visual properties
         this.pulsePhase = Math.random() * Math.PI * 2;
         this.trailPoints = [];
-        this.maxTrailLength = 6;
+        this.maxTrailLength = isMobile ? 4 : 6; // Reduce trail on mobile
       }
 
       update(target, allEnemies) {
@@ -4685,8 +4820,8 @@
     // Enhanced PowerUp class
     class PowerUp {
       constructor(type) {
-        this.x = Math.random() * (canvas.width - 200) + 100;
-        this.y = Math.random() * (canvas.height - 200) + 100;
+        this.x = Math.random() * (window.innerWidth - 200) + 100;
+        this.y = Math.random() * (window.innerHeight - 200) + 100;
         this.type = type;
         this.radius = 25;
         this.pulseTime = 0;
@@ -4705,8 +4840,8 @@
         // Floating effect
         this.y = this.baseY + Math.sin(this.pulseTime * 2) * 5;
         
-        // Create particles
-        if (Math.random() < 0.2) {
+        // Create particles - reduce on mobile
+        if (Math.random() < (isMobile ? 0.1 : 0.2)) {
           const angle = Math.random() * Math.PI * 2;
           const speed = Math.random() * 2 + 1;
           const color = this.getParticleColor();
@@ -4915,7 +5050,6 @@
       currentBoss = null;
 
       scoreSpan.textContent = score;
-      // Update high score display - FIXED
       highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
@@ -4931,8 +5065,8 @@
       enemyBullets.length = 0;
 
       // Reset ship
-      ship.x = canvas.width / 2;
-      ship.y = canvas.height / 2;
+      ship.x = window.innerWidth / 2;
+      ship.y = window.innerHeight / 2;
       ship.vel.x = 0;
       ship.vel.y = 0;
       ship.doubleShot = false;
@@ -4965,7 +5099,7 @@
         currentBoss.regenerateHealth();
       }
       
-      // Increment games played counter - FIXED
+      // Increment games played counter
       highScoreManager.incrementGamesPlayed();
       
       fullscreenManager.hide();
@@ -4981,15 +5115,15 @@
       // Enhanced high score checking
       const isNewHighScore = highScoreManager.checkAndUpdateHighScore(score);
       
-      // Update the high score display immediately
-      highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
-      
       finalScoreSpan.textContent = highScoreManager.formatScore(score);
       
       if (isNewHighScore) {
         highScoreMessage.style.display = 'block';
         highScoreMessage.classList.add('new-high-score');
         finalScoreSpan.classList.add('new-high-score');
+        
+        // Update high score display in HUD
+        highScoreSpan.textContent = highScoreManager.formatScore(score);
       } else {
         highScoreMessage.style.display = 'none';
         highScoreMessage.classList.remove('new-high-score');
@@ -5026,27 +5160,41 @@
       }, 2000);
     }
 
-    function gameLoop() {
+    // Optimized game loop with performance monitoring
+    let lastFrameTime = 0;
+    const targetFPS = isMobile ? 45 : 60; // Lower FPS target on mobile
+    const frameInterval = 1000 / targetFPS;
+
+    function gameLoop(currentTime) {
       if (!gameRunning || pauseManager.isPaused) return;
+
+      // FPS throttling for mobile performance
+      if (currentTime - lastFrameTime < frameInterval) {
+        animationFrameId = requestAnimationFrame(gameLoop);
+        return;
+      }
+      lastFrameTime = currentTime;
 
       try {
         // Clear canvas with gradient background
-        const gradient = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)/2);
+        const gradient = ctx.createRadialGradient(window.innerWidth/2, window.innerHeight/2, 0, window.innerWidth/2, window.innerHeight/2, Math.max(window.innerWidth, window.innerHeight)/2);
         gradient.addColorStop(0, '#1a1a3e');
         gradient.addColorStop(1, '#000000');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
-        // Draw enhanced stars
+        // Draw enhanced stars with reduced processing on mobile
         for (let star of stars) {
           const twinkle = Math.sin(star.twinkle) * 0.3 + 0.7;
           ctx.fillStyle = star.color;
           ctx.globalAlpha = twinkle;
-          ctx.shadowBlur = star.size * 2;
-          ctx.shadowColor = star.color;
+          if (!isMobile) {
+            ctx.shadowBlur = star.size * 2;
+            ctx.shadowColor = star.color;
+          }
           ctx.fillRect(star.x, star.y, star.size, star.size);
           ctx.globalAlpha = 1;
-          ctx.shadowBlur = 0;
+          if (!isMobile) ctx.shadowBlur = 0;
         }
 
         // Update and draw particles (optimized)
@@ -5325,9 +5473,10 @@
                 shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
               }
               
-              // Create pickup effect
-              for (let j = 0; j < 10; j++) {
-                const angle = (Math.PI * 2 * j) / 10;
+              // Create pickup effect - reduce particles on mobile
+              const particleCount = isMobile ? 5 : 10;
+              for (let j = 0; j < particleCount; j++) {
+                const angle = (Math.PI * 2 * j) / particleCount;
                 particles.push(new Particle(p.x, p.y, angle, 3, p.getParticleColor(), 5));
               }
               
@@ -5393,7 +5542,7 @@
       }
     });
 
-    // Enhanced Mobile Controls with better performance
+    // Enhanced Mobile Controls with iOS optimizations
     let joystickActive = false;
     let joystickTouchId = null;
     let shootingInterval = null;
@@ -5401,14 +5550,16 @@
     let maxJoystickDistance = 0;
 
     function resetJoystick() {
-      joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
-      joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
-      joystick.classList.remove('active');
-      joystickActive = false;
-      joystickTouchId = null;
+      if (isMobile) {
+        joystick.style.transform = 'translate(0px, 0px)';
+        joystick.classList.remove('active');
+        joystickActive = false;
+        joystickTouchId = null;
+      }
     }
 
     function updateJoystickCenter() {
+      if (!isMobile) return;
       const containerRect = joystickContainer.getBoundingClientRect();
       joystickCenter.x = containerRect.left + containerRect.width / 2;
       joystickCenter.y = containerRect.top + containerRect.height / 2;
@@ -5416,16 +5567,35 @@
     }
 
     if (isMobile) {
+      // Force controls to be visible immediately
       mobileControlsDiv.style.display = "flex";
+      mobileControlsDiv.style.opacity = "1";
+      mobileControlsDiv.style.visibility = "visible";
+      
+      // Force individual control visibility
+      joystickContainer.style.opacity = "1";
+      joystickContainer.style.visibility = "visible";
+      joystickContainer.style.display = "flex";
+      
+      shootButton.style.opacity = "1";
+      shootButton.style.visibility = "visible";
+      shootButton.style.display = "flex";
+      
+      joystick.style.opacity = "1";
+      joystick.style.visibility = "visible";
 
-      // Update joystick center on resize
+      // Update joystick center on resize and orientation change
       window.addEventListener('resize', updateJoystickCenter);
+      window.addEventListener('orientationchange', () => {
+        setTimeout(updateJoystickCenter, 100);
+      });
       updateJoystickCenter();
 
-      // Optimized touch events with passive listeners where possible
+      // Enhanced touch events with iOS-specific optimizations
       joystickContainer.addEventListener("touchstart", (e) => {
         if (!gameRunning || joystickTouchId !== null) return;
         e.preventDefault();
+        e.stopPropagation();
         
         const touch = e.changedTouches[0];
         joystickTouchId = touch.identifier;
@@ -5433,33 +5603,36 @@
         joystick.classList.add('active');
         
         updateJoystickCenter();
-      }, { passive: false });
+      }, { passive: false, capture: true });
 
-      // Improved shoot button with better feedback
+      // Enhanced shoot button with iOS optimizations
       shootButton.addEventListener("touchstart", (e) => {
         if (!gameRunning) return;
         e.preventDefault();
+        e.stopPropagation();
         shootButton.classList.add('active');
         fireBullet();
         
-        // Optimized shooting interval
+        // Optimized shooting interval for iOS
+        const shootInterval = isIOS ? 150 : 120; // Slightly slower on iOS
         shootingInterval = setInterval(() => {
           if (gameRunning) {
             fireBullet();
           }
-        }, 120); // Faster shooting on mobile
-      }, { passive: false });
+        }, shootInterval);
+      }, { passive: false, capture: true });
 
       shootButton.addEventListener("touchend", (e) => {
         e.preventDefault();
+        e.stopPropagation();
         shootButton.classList.remove('active');
         if (shootingInterval) {
           clearInterval(shootingInterval);
           shootingInterval = null;
         }
-      }, { passive: false });
+      }, { passive: false, capture: true });
 
-      // Optimized global touch move
+      // Enhanced global touch move with iOS optimizations
       document.addEventListener("touchmove", (e) => {
         if (!gameRunning || joystickTouchId === null) return;
         e.preventDefault();
@@ -5478,14 +5651,15 @@
               deltaY = Math.sin(angle) * maxJoystickDistance;
             }
 
-            // Use transform for better performance
+            // Use transform for better performance on iOS
             joystick.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+            joystick.style.webkitTransform = `translate(${deltaX}px, ${deltaY}px)`; // iOS fallback
             break;
           }
         }
       }, { passive: false });
 
-      // Global touch end
+      // Enhanced global touch end with iOS handling
       document.addEventListener("touchend", (e) => {
         if (!gameRunning) return;
 
@@ -5504,7 +5678,7 @@
         shootButton.classList.remove('active');
       }, { passive: false });
 
-      // Touch cancel
+      // Enhanced touch cancel for iOS
       document.addEventListener("touchcancel", (e) => {
         resetJoystick();
         if (shootingInterval) {
@@ -5514,18 +5688,22 @@
         shootButton.classList.remove('active');
       }, { passive: false });
 
+      // iOS-specific visibility fix
+      if (isIOS) {
+        // Force redraw on iOS to ensure visibility
+        setTimeout(() => {
+          mobileControlsDiv.style.transform = 'translateZ(0)';
+          joystickContainer.style.transform = 'translateZ(0)';
+          shootButton.style.transform = 'translateZ(0)';
+          joystick.style.transform = 'translateZ(0)';
+          
+          // Force a repaint
+          mobileControlsDiv.offsetHeight;
+        }, 100);
+      }
+
     } else {
       mobileControlsDiv.style.display = "none";
-    }
-
-    // Enhanced reset joystick function
-    function resetJoystick() {
-      joystick.style.transform = 'translate(0px, 0px)';
-      joystick.style.left = `calc(50% - ${joystick.clientWidth / 2}px)`;
-      joystick.style.top = `calc(50% - ${joystick.clientHeight / 2}px)`;
-      joystick.classList.remove('active');
-      joystickActive = false;
-      joystickTouchId = null;
     }
 
     // Enhanced Game Over Button Event Listeners
@@ -5570,6 +5748,18 @@
 
     // Initialize
     resizeCanvas();
+    
+    // iOS-specific initialization
+    if (isIOS) {
+      // Ensure audio context is properly initialized on iOS
+      document.addEventListener('touchstart', function initAudioOnIOS() {
+        if (audioManager.audioContext && audioManager.audioContext.state === 'suspended') {
+          audioManager.audioContext.resume();
+        }
+        document.removeEventListener('touchstart', initAudioOnIOS);
+      }, { once: true });
+    }
+    
     // Game will be initialized after customization
   </script>
 </body>
