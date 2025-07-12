@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Space Shooter - Ilay</title>
+  <title>Space Shooter - By Ilay</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" href="icon.png" type="image/x-icon">
   <style>
     html, body {
       margin: 0;
@@ -2964,7 +2965,7 @@
       pauseManager.hide();
       audioBtn.style.display = 'none';
       
-      // Update home screen stats
+      // Update home screen stats - FIXED
       document.getElementById('home-high-score').textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
       document.getElementById('games-played').textContent = highScoreManager.getGamesPlayed();
       
@@ -3113,7 +3114,10 @@
     });
 
     // Start loading
-    updateLoadingProgress();
+    // Ensure stats are updated before showing home screen
+    setTimeout(() => {
+      updateLoadingProgress();
+    }, 100);
 
     // Game variables
     const canvas = document.getElementById("game");
@@ -3263,8 +3267,22 @@
     // Store original boss health for regeneration
     let originalBossHealth = 0;
 
-    // Initialize high score display
+    // Initialize high score display - FIXED
     highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+    
+    // Initialize home screen stats when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Update home screen stats immediately when page loads
+      const homeHighScore = document.getElementById('home-high-score');
+      const gamesPlayedElement = document.getElementById('games-played');
+      
+      if (homeHighScore) {
+        homeHighScore.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+      }
+      if (gamesPlayedElement) {
+        gamesPlayedElement.textContent = highScoreManager.getGamesPlayed();
+      }
+    });
 
     // Enhanced Difficulty selection with Medium mode
     easyBtn.addEventListener('click', () => {
@@ -4897,6 +4915,7 @@
       currentBoss = null;
 
       scoreSpan.textContent = score;
+      // Update high score display - FIXED
       highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
       shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
@@ -4946,7 +4965,7 @@
         currentBoss.regenerateHealth();
       }
       
-      // Increment games played counter
+      // Increment games played counter - FIXED
       highScoreManager.incrementGamesPlayed();
       
       fullscreenManager.hide();
@@ -4962,15 +4981,15 @@
       // Enhanced high score checking
       const isNewHighScore = highScoreManager.checkAndUpdateHighScore(score);
       
+      // Update the high score display immediately
+      highScoreSpan.textContent = highScoreManager.formatScore(highScoreManager.getHighScore());
+      
       finalScoreSpan.textContent = highScoreManager.formatScore(score);
       
       if (isNewHighScore) {
         highScoreMessage.style.display = 'block';
         highScoreMessage.classList.add('new-high-score');
         finalScoreSpan.classList.add('new-high-score');
-        
-        // Update high score display in HUD
-        highScoreSpan.textContent = highScoreManager.formatScore(score);
       } else {
         highScoreMessage.style.display = 'none';
         highScoreMessage.classList.remove('new-high-score');
