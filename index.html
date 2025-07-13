@@ -218,7 +218,7 @@
       50% { box-shadow: 0 0 25px rgba(255, 215, 0, 1), 0 0 35px rgba(255, 107, 107, 0.8); }
     }
 
-    /* Enhanced HUD */
+    /* Enhanced HUD without shield timer */
     #hud {
       position: absolute;
       top: 20px;
@@ -276,10 +276,97 @@
       text-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
     }
 
+    /* NEW: Power-up Timer System */
+    #powerup-timers {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      z-index: 25;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .powerup-timer {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid;
+      border-radius: 15px;
+      padding: 10px 15px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      animation: powerup-timer-pulse 2s ease-in-out infinite;
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .powerup-timer.shield {
+      border-color: #00aaff;
+      background: rgba(0, 170, 255, 0.1);
+    }
+
+    .powerup-timer.double {
+      border-color: #ffdd00;
+      background: rgba(255, 221, 0, 0.1);
+    }
+
+    .powerup-timer.life {
+      border-color: #00ff88;
+      background: rgba(0, 255, 136, 0.1);
+    }
+
+    .powerup-timer-icon {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .powerup-timer.shield .powerup-timer-icon {
+      color: #00aaff;
+      text-shadow: 0 0 10px rgba(0, 170, 255, 0.8);
+    }
+
+    .powerup-timer.double .powerup-timer-icon {
+      color: #ffdd00;
+      text-shadow: 0 0 10px rgba(255, 221, 0, 0.8);
+    }
+
+    .powerup-timer.life .powerup-timer-icon {
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(0, 255, 136, 0.8);
+    }
+
+    .powerup-timer-text {
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .powerup-timer-time {
+      color: #ffffff;
+      font-weight: 900;
+      font-size: 16px;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes powerup-timer-pulse {
+      0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        transform: scale(1);
+      }
+      50% { 
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        transform: scale(1.02);
+      }
+    }
+
     /* Boss Health Bar */
     #boss-health-container {
       position: absolute;
-      top: 20px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       width: 400px;
@@ -872,7 +959,7 @@
       box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
     }
 
-    /* Home Screen - Redesigned with Muted Colors */
+    /* Home Screen - Redesigned with Muted Colors and FIXED stats */
     #home-screen {
       position: absolute;
       top: 0;
@@ -1820,6 +1907,32 @@
         left: 3px;
       }
 
+      /* Mobile optimized power-up timers */
+      #powerup-timers {
+        top: max(60px, env(safe-area-inset-top) + 40px);
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .powerup-timer {
+        min-width: 100px;
+        padding: 8px 12px;
+        font-size: 12px;
+      }
+
+      .powerup-timer-icon {
+        font-size: 14px;
+      }
+
+      .powerup-timer-text {
+        font-size: 11px;
+      }
+
+      .powerup-timer-time {
+        font-size: 13px;
+      }
+
       #boss-health-container {
         width: 90%;
         top: max(5px, env(safe-area-inset-top));
@@ -2029,18 +2142,27 @@
         margin-bottom: 15px;
       }
 
-      /* Home screen mobile */
+      /* Home screen mobile optimizations */
       .game-title {
         font-size: clamp(2rem, 10vw, 4rem);
       }
 
       .home-stats {
-        gap: 20px;
+        gap: 15px;
+        margin-bottom: 30px;
       }
 
       .stat-item {
-        min-width: 120px;
-        padding: 15px;
+        min-width: 100px;
+        padding: 12px;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
       }
 
       .home-btn {
@@ -2137,6 +2259,29 @@
         bottom: max(8px, env(safe-area-inset-bottom));
         left: max(8px, env(safe-area-inset-left));
         right: max(8px, env(safe-area-inset-right));
+      }
+
+      /* Smaller power-up timers for very small screens */
+      #powerup-timers {
+        gap: 5px;
+      }
+
+      .powerup-timer {
+        min-width: 80px;
+        padding: 6px 10px;
+        font-size: 10px;
+      }
+
+      .powerup-timer-icon {
+        font-size: 12px;
+      }
+
+      .powerup-timer-text {
+        font-size: 9px;
+      }
+
+      .powerup-timer-time {
+        font-size: 11px;
       }
     }
 
@@ -2457,6 +2602,25 @@
 
   <canvas id="game"></canvas>
 
+  <!-- NEW: Power-up Timer System -->
+  <div id="powerup-timers">
+    <div class="powerup-timer shield" id="shield-timer">
+      <div class="powerup-timer-icon">🛡️</div>
+      <div class="powerup-timer-text">SHIELD</div>
+      <div class="powerup-timer-time" id="shield-time">0s</div>
+    </div>
+    <div class="powerup-timer double" id="double-timer">
+      <div class="powerup-timer-icon">⚡</div>
+      <div class="powerup-timer-text">MULTI-SHOT</div>
+      <div class="powerup-timer-time" id="double-time">0s</div>
+    </div>
+    <div class="powerup-timer life" id="life-timer">
+      <div class="powerup-timer-icon">💚</div>
+      <div class="powerup-timer-text">LIFE BOOST</div>
+      <div class="powerup-timer-time" id="life-time">0s</div>
+    </div>
+  </div>
+
   <!-- Control Buttons -->
   <div id="control-buttons">
     <button id="fullscreen-btn" style="display: none;">⛶ FULLSCREEN</button>
@@ -2501,6 +2665,7 @@
     </div>
   </div>
 
+  <!-- HUD without shield timer -->
   <div id="hud">
     <div class="hud-item health-container">
       <span class="hud-label">HP:</span>
@@ -2513,10 +2678,6 @@
     <div class="hud-item">
       <span class="hud-label">HIGH:</span>
       <span class="hud-value high-score" id="high-score">0</span>
-    </div>
-    <div class="hud-item">
-      <span class="hud-label">SHIELD:</span>
-      <span class="hud-value" id="shield-time">0</span>
     </div>
     <div class="hud-item">
       <span class="hud-label">DIFFICULTY:</span>
@@ -2552,6 +2713,75 @@
     const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
     const isAndroid = /Android/i.test(navigator.userAgent);
+
+    // NEW: Power-up Timer Manager
+    class PowerUpTimerManager {
+      constructor() {
+        this.timers = {
+          shield: { element: document.getElementById('shield-timer'), timeElement: document.getElementById('shield-time'), active: false, timeLeft: 0 },
+          double: { element: document.getElementById('double-timer'), timeElement: document.getElementById('double-time'), active: false, timeLeft: 0 },
+          life: { element: document.getElementById('life-timer'), timeElement: document.getElementById('life-time'), active: false, timeLeft: 0 }
+        };
+      }
+
+      activatePowerUp(type, duration) {
+        if (!this.timers[type]) return;
+        
+        const timer = this.timers[type];
+        timer.active = true;
+        timer.timeLeft = duration;
+        timer.element.style.display = 'flex';
+        this.updateDisplay(type);
+      }
+
+      deactivatePowerUp(type) {
+        if (!this.timers[type]) return;
+        
+        const timer = this.timers[type];
+        timer.active = false;
+        timer.timeLeft = 0;
+        timer.element.style.display = 'none';
+      }
+
+      updateTimers() {
+        Object.keys(this.timers).forEach(type => {
+          const timer = this.timers[type];
+          if (timer.active && timer.timeLeft > 0) {
+            timer.timeLeft--;
+            this.updateDisplay(type);
+            
+            if (timer.timeLeft <= 0) {
+              this.deactivatePowerUp(type);
+            }
+          }
+        });
+      }
+
+      updateDisplay(type) {
+        const timer = this.timers[type];
+        if (timer.active) {
+          const seconds = Math.ceil(timer.timeLeft / 60); // Convert frames to seconds
+          timer.timeElement.textContent = seconds + 's';
+        }
+      }
+
+      reset() {
+        Object.keys(this.timers).forEach(type => {
+          this.deactivatePowerUp(type);
+        });
+      }
+
+      isActive(type) {
+        return this.timers[type] && this.timers[type].active;
+      }
+
+      getTimeLeft(type) {
+        return this.timers[type] ? this.timers[type].timeLeft : 0;
+      }
+    }
+
+    // Initialize power-up timer manager
+    const powerUpTimers = new PowerUpTimerManager();
 
     // Enhanced Audio Manager with iOS-specific fixes
     class AudioManager {
@@ -3068,7 +3298,7 @@
     // Initialize audio manager
     const audioManager = new AudioManager();
 
-    // Enhanced High Score Management System with boss tracking
+    // Enhanced High Score Management System with boss tracking - FIXED to ensure proper initialization
     class HighScoreManager {
       constructor() {
         this.storageKey = 'spaceShooterHighScore';
@@ -3077,6 +3307,9 @@
         this.highScore = this.loadHighScore();
         this.gamesPlayed = this.loadGamesPlayed();
         this.bossesDefeated = this.loadBossesDefeated();
+        
+        // FIXED: Ensure displays are initialized immediately
+        this.initializeDisplays();
       }
 
       loadHighScore() {
@@ -3189,9 +3422,12 @@
       }
 
       initializeDisplays() {
-        this.updateAllHighScoreDisplays();
-        this.updateAllGamesPlayedDisplays();
-        this.updateAllBossesDefeatedDisplays();
+        // FIXED: Force update all displays on initialization with a small delay to ensure DOM is ready
+        setTimeout(() => {
+          this.updateAllHighScoreDisplays();
+          this.updateAllGamesPlayedDisplays();
+          this.updateAllBossesDefeatedDisplays();
+        }, 10);
       }
     }
 
@@ -3821,7 +4057,7 @@
         controlsBtn.style.display = 'none';
       }
       
-      // Update displays with current values
+      // FIXED: Update displays with current values
       highScoreManager.initializeDisplays();
       
       audioManager.restartBackgroundMusic();
@@ -4255,7 +4491,6 @@
 
     const scoreSpan = document.getElementById("score");
     const highScoreSpan = document.getElementById("high-score");
-    const shieldTimeSpan = document.getElementById("shield-time");
     const difficultyDisplay = document.getElementById("difficulty-display");
     const shipNameDisplay = document.getElementById("ship-name-display");
     const gameOverScreen = document.getElementById("game-over-screen");
@@ -5034,7 +5269,7 @@
         if (this.y < 0) this.y = window.innerHeight;
         if (this.y > window.innerHeight) this.y = 0;
 
-        // Update power-ups
+        // UPDATED: Power-up management with new timer system
         if (this.doubleShot && this.doubleTimer > 0) {
           this.doubleTimer--;
         } else {
@@ -5043,10 +5278,8 @@
 
         if (shieldActive && shieldTimer > 0) {
           shieldTimer--;
-          shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
         } else {
           shieldActive = false;
-          shieldTimeSpan.textContent = 0;
         }
       }
 
@@ -6076,10 +6309,12 @@
 
       scoreSpan.textContent = score;
       highScoreManager.initializeDisplays();
-      shieldTimeSpan.textContent = 0;
       gameOverScreen.style.display = "none";
       bossHealthContainer.style.display = "none";
       pauseManager.reset();
+
+      // NEW: Reset power-up timers
+      powerUpTimers.reset();
 
       // Clear arrays
       bullets.length = 0;
@@ -6134,6 +6369,9 @@
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
+      
+      // NEW: Reset power-up timers
+      powerUpTimers.reset();
       
       // Stop background music
       audioManager.stopBackgroundMusic();
@@ -6199,6 +6437,9 @@
       lastFrameTime = currentTime;
 
       try {
+        // NEW: Update power-up timers
+        powerUpTimers.updateTimers();
+
         // Clear canvas with gradient background
         const gradient = ctx.createRadialGradient(window.innerWidth/2, window.innerHeight/2, 0, window.innerWidth/2, window.innerHeight/2, Math.max(window.innerWidth, window.innerHeight)/2);
         gradient.addColorStop(0, '#1a1a3e');
@@ -6274,7 +6515,7 @@
                   try {
                     explosions.push(new Explosion(currentBoss.x, currentBoss.y, 100));
                     score += 500; // Bonus points for boss
-                    scoreSpan.textContent = score;
+                    scoreSpan.textContent =score;
                     bossActive = false;
                     currentBoss = null;
                     bossHealthContainer.style.display = 'none';
@@ -6487,13 +6728,18 @@
             if (Math.hypot(dx, dy) < p.radius + ship.radius) {
               if (p.type === "life") {
                 setLives(Math.min(maxLives, lives + 1));
+                // NEW: Activate life boost timer (visual feedback only)
+                powerUpTimers.activatePowerUp('life', 300); // 5 seconds
               } else if (p.type === "double") {
                 ship.doubleShot = true;
                 ship.doubleTimer = 900; // 15 seconds
+                // NEW: Activate double shot timer
+                powerUpTimers.activatePowerUp('double', 900);
               } else if (p.type === "shield") {
                 shieldActive = true;
                 shieldTimer = 600; // 10 seconds
-                shieldTimeSpan.textContent = Math.ceil(shieldTimer / 60);
+                // NEW: Activate shield timer
+                powerUpTimers.activatePowerUp('shield', 600);
               }
               
               // Create pickup effect - reduce particles on mobile
