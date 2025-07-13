@@ -444,6 +444,9 @@
       text-align: center;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .pause-title {
@@ -509,6 +512,71 @@
       background: linear-gradient(45deg, #555, #333);
       transform: translateY(-2px);
       box-shadow: 0 5px 25px rgba(100, 100, 100, 0.8);
+    }
+
+    /* Mobile Speed Control in Pause Menu */
+    .mobile-speed-control {
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 10px;
+      display: none; /* Show only on mobile */
+    }
+
+    .mobile-speed-control h3 {
+      color: #00ffff;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+    }
+
+    .speed-slider-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 15px 0;
+    }
+
+    .speed-slider-label {
+      color: #ffffff;
+      font-size: 0.9em;
+      min-width: 80px;
+    }
+
+    .speed-slider {
+      flex: 1;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .speed-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .speed-slider::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: #00ffff;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .speed-value {
+      color: #00ffff;
+      font-weight: bold;
+      min-width: 50px;
+      text-align: right;
     }
 
     /* Enhanced Mobile Controls - iOS Optimized */
@@ -1364,6 +1432,31 @@
       display: block;
     }
 
+    /* Enhanced ship stat display */
+    .ship-quick-stats {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8em;
+      margin-top: 8px;
+    }
+
+    .quick-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .quick-stat-label {
+      color: #00ffff;
+      font-size: 0.7em;
+    }
+
+    .quick-stat-value {
+      color: #ffffff;
+      font-weight: bold;
+    }
+
     .customization-buttons {
       display: flex;
       gap: 20px;
@@ -1508,6 +1601,14 @@
       margin-top: 10px;
       opacity: 0.8;
       line-height: 1.4;
+    }
+
+    /* Boss progression indicator */
+    .boss-progression {
+      font-size: 0.7em;
+      margin-top: 5px;
+      color: #ffaa00;
+      font-style: italic;
     }
 
     .back-to-home {
@@ -1868,6 +1969,30 @@
         font-size: 2em;
       }
 
+      /* Mobile speed control in pause menu */
+      .mobile-speed-control {
+        display: block;
+        margin: 15px 0;
+        padding: 15px;
+      }
+
+      .mobile-speed-control h3 {
+        font-size: 1em;
+        margin-bottom: 10px;
+      }
+
+      .speed-slider-container {
+        flex-direction: column;
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .speed-slider-label {
+        min-width: auto;
+        text-align: center;
+        font-size: 0.8em;
+      }
+
       /* Better scrolling for mobile */
       .customization-content::-webkit-scrollbar {
         width: 4px;
@@ -2160,6 +2285,10 @@
           <div class="stat-label">Games Played</div>
           <div class="stat-value" id="games-played">0</div>
         </div>
+        <div class="stat-item">
+          <div class="stat-label">Bosses Defeated</div>
+          <div class="stat-value" id="bosses-defeated">0</div>
+        </div>
       </div>
       
       <div class="home-buttons">
@@ -2176,6 +2305,15 @@
     <h1>CONTROL CUSTOMIZATION</h1>
     
     <div class="control-options">
+      <div class="control-option">
+        <h3>Mobile Game Speed</h3>
+        <div class="slider-container">
+          <span class="slider-label">Speed:</span>
+          <input type="range" class="control-slider" id="mobile-speed" min="0.75" max="2" step="0.05" value="1">
+          <span class="slider-value" id="mobile-speed-value">1.00x</span>
+        </div>
+      </div>
+      
       <div class="control-option">
         <h3>Joystick Settings</h3>
         <div class="slider-container">
@@ -2259,14 +2397,17 @@
       <button class="difficulty-btn easy" id="easy-btn">
         EASY MODE
         <div class="difficulty-description">Standard gameplay - enemies don't shoot back</div>
+        <div class="boss-progression">Boss Health: +10% per boss defeated</div>
       </button>
       <button class="difficulty-btn medium" id="medium-btn">
         MEDIUM MODE
         <div class="difficulty-description">Balanced challenge - some enemies shoot back</div>
+        <div class="boss-progression">Boss Health: +25% per boss defeated</div>
       </button>
       <button class="difficulty-btn hard" id="hard-btn">
         HARD MODE
         <div class="difficulty-description">Intense combat - all enemies shoot back at you!</div>
+        <div class="boss-progression">Boss Health: +50% per boss defeated</div>
       </button>
     </div>
     <button class="back-to-home" id="back-to-home-difficulty-btn">Back to Home</button>
@@ -2286,7 +2427,7 @@
             </div>
           </div>
           <div class="stat-bar">
-            <span class="stat-label">Power:</span>
+            <span class="stat-label">Fire Rate:</span>
             <div class="stat-value">
               <div class="stat-fill power" id="power-stat"></div>
             </div>
@@ -2327,6 +2468,17 @@
   <div id="pause-overlay">
     <div class="pause-menu">
       <div class="pause-title">PAUSED</div>
+      
+      <!-- Mobile Speed Control in Pause Menu -->
+      <div class="mobile-speed-control" id="mobile-speed-control-pause">
+        <h3>Game Speed</h3>
+        <div class="speed-slider-container">
+          <span class="speed-slider-label">Speed:</span>
+          <input type="range" class="speed-slider" id="pause-mobile-speed" min="0.75" max="2" step="0.05" value="1">
+          <span class="speed-value" id="pause-mobile-speed-value">1.00x</span>
+        </div>
+      </div>
+      
       <div class="pause-buttons">
         <button class="pause-btn resume" id="pause-resume-btn">Resume</button>
         <button class="pause-btn audio" id="pause-audio-btn">Toggle Audio</button>
@@ -2916,13 +3068,15 @@
     // Initialize audio manager
     const audioManager = new AudioManager();
 
-    // High Score Management System with proper display updates
+    // Enhanced High Score Management System with boss tracking
     class HighScoreManager {
       constructor() {
         this.storageKey = 'spaceShooterHighScore';
         this.gamesPlayedKey = 'spaceShooterGamesPlayed';
+        this.bossesDefeatedKey = 'spaceShooterBossesDefeated';
         this.highScore = this.loadHighScore();
         this.gamesPlayed = this.loadGamesPlayed();
+        this.bossesDefeated = this.loadBossesDefeated();
       }
 
       loadHighScore() {
@@ -2941,6 +3095,16 @@
           return saved ? parseInt(saved, 10) : 0;
         } catch (error) {
           console.warn('Could not load games played:', error);
+          return 0;
+        }
+      }
+
+      loadBossesDefeated() {
+        try {
+          const saved = localStorage.getItem(this.bossesDefeatedKey);
+          return saved ? parseInt(saved, 10) : 0;
+        } catch (error) {
+          console.warn('Could not load bosses defeated:', error);
           return 0;
         }
       }
@@ -2967,6 +3131,16 @@
         }
       }
 
+      incrementBossesDefeated() {
+        try {
+          this.bossesDefeated++;
+          localStorage.setItem(this.bossesDefeatedKey, this.bossesDefeated.toString());
+          this.updateAllBossesDefeatedDisplays();
+        } catch (error) {
+          console.warn('Could not save bosses defeated:', error);
+        }
+      }
+
       updateAllHighScoreDisplays() {
         const formattedScore = this.formatScore(this.highScore);
         const homeHighScore = document.getElementById('home-high-score');
@@ -2980,6 +3154,13 @@
         const gamesPlayedElement = document.getElementById('games-played');
         if (gamesPlayedElement) {
           gamesPlayedElement.textContent = this.gamesPlayed;
+        }
+      }
+
+      updateAllBossesDefeatedDisplays() {
+        const bossesDefeatedElement = document.getElementById('bosses-defeated');
+        if (bossesDefeatedElement) {
+          bossesDefeatedElement.textContent = this.bossesDefeated;
         }
       }
 
@@ -2999,6 +3180,10 @@
         return this.gamesPlayed;
       }
 
+      getBossesDefeated() {
+        return this.bossesDefeated;
+      }
+
       formatScore(score) {
         return score.toLocaleString();
       }
@@ -3006,6 +3191,7 @@
       initializeDisplays() {
         this.updateAllHighScoreDisplays();
         this.updateAllGamesPlayedDisplays();
+        this.updateAllBossesDefeatedDisplays();
       }
     }
 
@@ -3109,7 +3295,7 @@
     // Initialize trail effect manager
     const trailEffectManager = new TrailEffectManager();
 
-    // Mobile Control Customization Manager
+    // Enhanced Mobile Control Customization Manager with Game Speed
     class MobileControlManager {
       constructor() {
         this.storageKey = 'spaceShooterMobileControls';
@@ -3122,13 +3308,15 @@
           const saved = localStorage.getItem(this.storageKey);
           return saved ? JSON.parse(saved) : {
             joystick: { size: 120, x: 0, y: 0 },
-            shoot: { size: 120, x: 100, y: 0 }
+            shoot: { size: 120, x: 100, y: 0 },
+            gameSpeed: 1.0 // New game speed setting
           };
         } catch (error) {
           console.warn('Could not load control settings:', error);
           return {
             joystick: { size: 120, x: 0, y: 0 },
-            shoot: { size: 120, x: 100, y: 0 }
+            shoot: { size: 120, x: 100, y: 0 },
+            gameSpeed: 1.0
           };
         }
       }
@@ -3141,6 +3329,15 @@
           console.warn('Could not save control settings:', error);
           return false;
         }
+      }
+
+      getGameSpeed() {
+        return this.settings.gameSpeed || 1.0;
+      }
+
+      setGameSpeed(speed) {
+        this.settings.gameSpeed = Math.max(0.75, Math.min(2.0, speed));
+        this.saveControlSettings();
       }
 
       applySettings() {
@@ -3186,14 +3383,17 @@
       resetToDefaults() {
         this.settings = {
           joystick: { size: 120, x: 0, y: 0 },
-          shoot: { size: 120, x: 100, y: 0 }
+          shoot: { size: 120, x: 100, y: 0 },
+          gameSpeed: 1.0
         };
         this.saveControlSettings();
         this.applySettings();
       }
 
       updateSetting(control, property, value) {
-        if (this.settings[control]) {
+        if (control === 'gameSpeed') {
+          this.setGameSpeed(value);
+        } else if (this.settings[control]) {
           this.settings[control][property] = value;
           this.applySettings();
         }
@@ -3203,7 +3403,7 @@
     // Initialize mobile control manager
     const mobileControlManager = new MobileControlManager();
 
-    // Difficulty Configuration System
+    // Enhanced Difficulty Configuration System with Progressive Boss Health
     class DifficultyManager {
       constructor() {
         this.difficulties = {
@@ -3217,6 +3417,7 @@
             bossHealth: 150,
             bossSpeed: 1,
             bossShootCooldown: 1500,
+            bossHealthMultiplier: 0.10, // +10% per boss
             description: 'Standard gameplay - enemies don\'t shoot back'
           },
           medium: {
@@ -3229,6 +3430,7 @@
             bossHealth: 200,
             bossSpeed: 1.2,
             bossShootCooldown: 1200,
+            bossHealthMultiplier: 0.25, // +25% per boss
             description: 'Balanced challenge - some enemies shoot back'
           },
           hard: {
@@ -3241,6 +3443,7 @@
             bossHealth: 250,
             bossSpeed: 1.5,
             bossShootCooldown: 1000,
+            bossHealthMultiplier: 0.50, // +50% per boss
             description: 'Intense combat - all enemies shoot back at you!'
           }
         };
@@ -3265,6 +3468,18 @@
 
       getDifficultyClass() {
         return this.difficulties[this.currentDifficulty].className;
+      }
+
+      // Calculate progressive boss health based on bosses defeated
+      calculateBossHealth(bossNumber = 0) {
+        const config = this.getCurrentConfig();
+        const baseHealth = config.bossHealth;
+        const multiplier = config.bossHealthMultiplier;
+        const bossesDefeated = highScoreManager.getBossesDefeated();
+        
+        // Each boss gets stronger based on total bosses defeated
+        const healthIncrease = baseHealth * multiplier * bossesDefeated;
+        return Math.floor(baseHealth + healthIncrease);
       }
     }
 
@@ -3430,7 +3645,7 @@
     // Initialize fullscreen manager
     const fullscreenManager = new FullscreenManager();
 
-    // Pause functionality
+    // Enhanced Pause functionality with mobile speed control
     class PauseManager {
       constructor() {
         this.isPaused = false;
@@ -3439,6 +3654,9 @@
         this.resumeBtn = document.getElementById('pause-resume-btn');
         this.audioBtn = document.getElementById('pause-audio-btn');
         this.homeBtn = document.getElementById('pause-home-btn');
+        this.mobileSpeedControl = document.getElementById('mobile-speed-control-pause');
+        this.mobileSpeedSlider = document.getElementById('pause-mobile-speed');
+        this.mobileSpeedValue = document.getElementById('pause-mobile-speed-value');
         this.bindEvents();
       }
 
@@ -3447,6 +3665,15 @@
         this.resumeBtn.addEventListener('click', () => this.resume());
         this.audioBtn.addEventListener('click', () => this.toggleAudio());
         this.homeBtn.addEventListener('click', () => this.goHome());
+        
+        // Mobile speed control in pause menu
+        if (this.mobileSpeedSlider) {
+          this.mobileSpeedSlider.addEventListener('input', (e) => {
+            const speed = parseFloat(e.target.value);
+            mobileControlManager.setGameSpeed(speed);
+            this.mobileSpeedValue.textContent = speed.toFixed(2) + 'x';
+          });
+        }
         
         document.addEventListener('keydown', (e) => {
           if (e.key === 'p' || e.key === 'P' || e.key === 'Escape') {
@@ -3464,6 +3691,14 @@
         this.pauseBtn.innerHTML = '<i class="fa-solid fa-play"></i> RESUME';
         this.pauseBtn.classList.add('paused');
         this.pauseOverlay.style.display = 'flex';
+        
+        // Show mobile speed control only on mobile
+        if (isMobile && this.mobileSpeedControl) {
+          this.mobileSpeedControl.style.display = 'block';
+          const currentSpeed = mobileControlManager.getGameSpeed();
+          this.mobileSpeedSlider.value = currentSpeed;
+          this.mobileSpeedValue.textContent = currentSpeed.toFixed(2) + 'x';
+        }
         
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
@@ -3653,11 +3888,12 @@
     document.getElementById('home-difficulty-btn').addEventListener('click', showDifficultyScreen);
     document.getElementById('home-controls-btn').addEventListener('click', showControlCustomizationScreen);
 
-    // Control customization functions
+    // Enhanced control customization functions
     function initializeControlCustomization() {
       const settings = mobileControlManager.settings;
       
       // Set slider values
+      document.getElementById('mobile-speed').value = settings.gameSpeed || 1.0;
       document.getElementById('joystick-size').value = settings.joystick.size;
       document.getElementById('joystick-x').value = settings.joystick.x;
       document.getElementById('joystick-y').value = settings.joystick.y;
@@ -3676,6 +3912,7 @@
     }
 
     function updateControlDisplayValues() {
+      document.getElementById('mobile-speed-value').textContent = parseFloat(document.getElementById('mobile-speed').value).toFixed(2) + 'x';
       document.getElementById('joystick-size-value').textContent = document.getElementById('joystick-size').value + 'px';
       document.getElementById('joystick-x-value').textContent = document.getElementById('joystick-x').value + '%';
       document.getElementById('joystick-y-value').textContent = document.getElementById('joystick-y').value + '%';
@@ -3692,7 +3929,9 @@
       updateControlDisplayValues();
       
       // Apply setting
-      if (sliderId.startsWith('joystick-')) {
+      if (sliderId === 'mobile-speed') {
+        mobileControlManager.updateSetting('gameSpeed', null, value);
+      } else if (sliderId.startsWith('joystick-')) {
         const property = sliderId.replace('joystick-', '');
         mobileControlManager.updateSetting('joystick', property, value);
       } else if (sliderId.startsWith('shoot-')) {
@@ -3914,97 +4153,103 @@
     let nextBossAt = 20;
     const maxLives = 6;
 
-    // Enhanced Ship configurations with 2 new ships
+    // Enhanced and Balanced Ship configurations
     const shipConfigs = {
       striker: {
         name: 'Cyber Striker',
         theme: 'Cyber Blue',
-        speed: 85,
-        power: 70,
-        defense: 60,
+        speed: 75,
+        fireRate: 80,
+        defense: 70,
         speedMultiplier: 1.0,
-        powerMultiplier: 1.0,
+        fireRateMultiplier: 1.0,
         defenseMultiplier: 1.0,
         colors: {
           primary: '#00ffff',
           secondary: '#0080ff',
           accent: '#ffffff'
-        }
+        },
+        description: 'Balanced fighter with steady performance'
       },
       hunter: {
         name: 'Plasma Hunter',
         theme: 'Plasma Red',
-        speed: 90,
-        power: 85,
-        defense: 50,
+        speed: 80,
+        fireRate: 90,
+        defense: 60,
         speedMultiplier: 1.1,
-        powerMultiplier: 1.2,
-        defenseMultiplier: 0.9,
+        fireRateMultiplier: 1.3,
+        defenseMultiplier: 0.85,
         colors: {
           primary: '#ff4444',
           secondary: '#cc0000',
           accent: '#ffaaaa'
-        }
+        },
+        description: 'High damage output with faster fire rate'
       },
       guardian: {
         name: 'Void Guardian',
         theme: 'Void Purple',
         speed: 60,
-        power: 60,
+        fireRate: 70,
         defense: 95,
         speedMultiplier: 0.8,
-        powerMultiplier: 0.9,
-        defenseMultiplier: 1.3,
+        fireRateMultiplier: 0.9,
+        defenseMultiplier: 1.4,
         colors: {
           primary: '#aa44ff',
           secondary: '#6600aa',
           accent: '#ddaaff'
-        }
+        },
+        description: 'Heavy armor with superior defense'
       },
       interceptor: {
         name: 'Solar Interceptor',
         theme: 'Solar Gold',
-        speed: 100,
-        power: 75,
-        defense: 40,
-        speedMultiplier: 1.3,
-        powerMultiplier: 1.1,
+        speed: 95,
+        fireRate: 75,
+        defense: 50,
+        speedMultiplier: 1.35,
+        fireRateMultiplier: 1.1,
         defenseMultiplier: 0.7,
         colors: {
           primary: '#ffdd00',
           secondary: '#cc9900',
           accent: '#ffff88'
-        }
+        },
+        description: 'Lightning fast with superior mobility'
       },
       phantom: {
         name: 'Stealth Phantom',
         theme: 'Shadow Black',
-        speed: 95,
-        power: 80,
+        speed: 85,
+        fireRate: 85,
         defense: 65,
-        speedMultiplier: 1.2,
-        powerMultiplier: 1.15,
-        defenseMultiplier: 1.0,
+        speedMultiplier: 1.15,
+        fireRateMultiplier: 1.2,
+        defenseMultiplier: 0.95,
         colors: {
           primary: '#444444',
           secondary: '#222222',
           accent: '#888888'
-        }
+        },
+        description: 'Stealthy assassin with balanced stats'
       },
       vanguard: {
         name: 'Crystal Vanguard',
         theme: 'Crystal White',
         speed: 70,
-        power: 95,
-        defense: 85,
+        fireRate: 95,
+        defense: 80,
         speedMultiplier: 0.9,
-        powerMultiplier: 1.4,
-        defenseMultiplier: 1.2,
+        fireRateMultiplier: 1.4,
+        defenseMultiplier: 1.15,
         colors: {
           primary: '#ffffff',
           secondary: '#cccccc',
           accent: '#aaffff'
-        }
+        },
+        description: 'Devastating firepower with solid armor'
       }
     };
 
@@ -4038,7 +4283,7 @@
     // Initialize high score display
     highScoreManager.initializeDisplays();
 
-    // Enhanced Difficulty selection with Medium mode
+    // Enhanced Difficulty selection with Progressive Boss Health information
     easyBtn.addEventListener('click', () => {
       difficultyManager.setDifficulty('easy');
       updateDifficultyDisplay();
@@ -4071,7 +4316,7 @@
       difficultyDisplay.className = `hud-value ${config.className}`;
     }
 
-    // Ship customization
+    // Enhanced ship customization with better stat display
     function initializeShipCustomization() {
       const shipGrid = document.getElementById('ship-grid');
       const previewCanvas = document.getElementById('preview-canvas');
@@ -4091,6 +4336,20 @@
           <canvas class="mini-ship-canvas" width="120" height="80"></canvas>
           <h4>${config.name}</h4>
           <div class="ship-theme">${config.theme}</div>
+          <div class="ship-quick-stats">
+            <div class="quick-stat">
+              <div class="quick-stat-label">SPD</div>
+              <div class="quick-stat-value">${config.speed}</div>
+            </div>
+            <div class="quick-stat">
+              <div class="quick-stat-label">PWR</div>
+              <div class="quick-stat-value">${config.fireRate}</div>
+            </div>
+            <div class="quick-stat">
+              <div class="quick-stat-label">DEF</div>
+              <div class="quick-stat-value">${config.defense}</div>
+            </div>
+          </div>
         `;
         
         const miniCanvas = shipOption.querySelector('.mini-ship-canvas');
@@ -4124,7 +4383,7 @@
       
       // Update stats
       document.getElementById('speed-stat').style.width = config.speed + '%';
-      document.getElementById('power-stat').style.width = config.power + '%';
+      document.getElementById('power-stat').style.width = config.fireRate + '%';
       document.getElementById('defense-stat').style.width = config.defense + '%';
       
       // Update ship name in HUD
@@ -4673,7 +4932,7 @@
       }
     }
 
-    // Enhanced Ship class with mobile speed boost
+    // Enhanced Ship class with mobile speed adjustment and balanced stats
     class Ship {
       constructor() {
         this.x = window.innerWidth / 2;
@@ -4695,18 +4954,18 @@
         let thrusting = false;
         const config = shipConfigs[selectedShip];
         
-        // Mobile speed boost (20% increase)
-        const mobileSpeedBoost = isMobile ? 1.2 : 1.0;
+        // Mobile speed with game speed multiplier
+        const mobileSpeedBoost = isMobile ? mobileControlManager.getGameSpeed() : 1.0;
 
         if (!isMobile) {
           this.angle = Math.atan2(mouse.y - this.y, mouse.x - this.x);
           if (keys["w"] || keys["W"]) {
-            this.vel.x += Math.cos(this.angle) * 0.3 * config.speedMultiplier * mobileSpeedBoost;
-            this.vel.y += Math.sin(this.angle) * 0.3 * config.speedMultiplier * mobileSpeedBoost;
+            this.vel.x += Math.cos(this.angle) * 0.3 * config.speedMultiplier;
+            this.vel.y += Math.sin(this.angle) * 0.3 * config.speedMultiplier;
             thrusting = true;
           }
         } else {
-          // Enhanced mobile joystick movement with speed boost
+          // Enhanced mobile joystick movement with speed multiplier
           const joystickRect = joystick.getBoundingClientRect();
           const joystickContainerRect = joystickContainer.getBoundingClientRect();
 
@@ -4721,7 +4980,7 @@
 
           if (Math.hypot(dxJoy, dyJoy) > 10) { 
             this.angle = Math.atan2(dyJoy, dxJoy);
-            // Mobile speed with 20% boost
+            // Mobile speed with game speed multiplier
             const mobileSpeedMultiplier = (isIOS ? 0.15 : 0.18) * mobileSpeedBoost;
             this.vel.x += Math.cos(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
             this.vel.y += Math.sin(this.angle) * mobileSpeedMultiplier * config.speedMultiplier;
@@ -4865,7 +5124,7 @@
 
       canShoot() {
         const config = shipConfigs[selectedShip];
-        const adjustedCooldown = this.shootCooldown / config.powerMultiplier;
+        const adjustedCooldown = this.shootCooldown / config.fireRateMultiplier;
         return Date.now() - this.lastShot > adjustedCooldown;
       }
 
@@ -4908,7 +5167,7 @@
         // Enhanced damage based on ship config
         if (owner === 'player') {
           const config = shipConfigs[selectedShip];
-          this.damage = Math.floor(10 * config.powerMultiplier);
+          this.damage = Math.floor(10 * config.fireRateMultiplier);
         }
       }
 
@@ -5017,7 +5276,7 @@
       }
     }
 
-    // Enhanced Boss Enemy class with improved AI and phases
+    // Enhanced Boss Enemy class with progressive health scaling
     class Boss {
       constructor(type = 'destroyer') {
         this.type = type;
@@ -5026,9 +5285,9 @@
         this.targetY = window.innerHeight * 0.2;
         this.radius = 60;
         
-        // Enhanced boss health based on difficulty
+        // Progressive boss health based on difficulty and bosses defeated
         const diffConfig = difficultyManager.getCurrentConfig();
-        this.maxHealth = diffConfig.bossHealth;
+        this.maxHealth = difficultyManager.calculateBossHealth();
         this.health = this.maxHealth;
         this.speed = diffConfig.bossSpeed;
         
@@ -5055,7 +5314,7 @@
         
         // Boss specific properties
         if (type === 'destroyer') {
-          this.name = 'VOID DESTROYER';
+          this.name = `VOID DESTROYER - LV.${highScoreManager.getBossesDefeated() + 1}`;
           this.color1 = '#cc0000';
           this.color2 = '#880000';
           this.color3 = '#ff4444';
@@ -5143,10 +5402,10 @@
         
         // Update boss name based on phase
         if (this.currentPhase === 2) {
-          this.name = 'VOID DESTROYER - PHASE 2';
+          this.name = `VOID DESTROYER - LV.${highScoreManager.getBossesDefeated() + 1} PHASE 2`;
           bossName.textContent = this.name;
         } else if (this.currentPhase === 3) {
-          this.name = 'VOID DESTROYER - FINAL PHASE';
+          this.name = `VOID DESTROYER - LV.${highScoreManager.getBossesDefeated() + 1} FINAL PHASE`;
           bossName.textContent = this.name;
         }
         
@@ -5210,6 +5469,8 @@
         
         if (this.health <= 0) {
           this.active = false;
+          // Increment bosses defeated counter
+          highScoreManager.incrementBossesDefeated();
           return true; // Boss defeated
         }
         return false;
@@ -5221,7 +5482,7 @@
         this.maxHealth = originalBossHealth;
         this.currentPhase = 1; // Reset to phase 1
         this.phaseTransition = false;
-        this.name = 'VOID DESTROYER';
+        this.name = `VOID DESTROYER - LV.${highScoreManager.getBossesDefeated() + 1}`;
         bossName.textContent = this.name;
         
         // Update health bar to show full health
